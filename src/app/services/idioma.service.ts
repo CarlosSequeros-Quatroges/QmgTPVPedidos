@@ -1,0 +1,410 @@
+import { Injectable, computed, signal } from '@angular/core';
+
+import { Idioma } from '../models/carta.models';
+
+/** Idioma disponible en el selector, con su etiqueta y bandera. */
+export interface OpcionIdioma {
+  codigo: Idioma;
+  nombre: string;
+  /** Ruta relativa al SVG de la bandera. */
+  bandera: string;
+}
+
+/** Textos de interfaz (no de contenido) traducidos. */
+interface TextosUI {
+  // Marca / cabecera
+  subtitulo: string;
+  cambiarLocal: string;
+  abierto: string;
+  cerrado: string;
+  miCodigo: string;
+  enLinea: string;
+  sinConexion: string;
+  pie: string;
+  // Selección de local
+  eligeLocal: string;
+  cargandoLocales: string;
+  sinLocales: string;
+  verCarta: string;
+  // Carta
+  nuestraCarta: string;
+  eligeCategoria: string;
+  platos: string;
+  volverCarta: string;
+  alergenos: string;
+  sinAlergenos: string;
+  cargando: string;
+  errorCarga: string;
+  familiaNoEncontrada: string;
+  platoNoEncontrado: string;
+  // Horario
+  fueraDeHorario: string;
+  puedesConsultar: string;
+  abrePedidos: string;
+  // Detalle / extras
+  extras: string;
+  anadir: string;
+  quitar: string;
+  notaCocina: string;
+  notaPlaceholder: string;
+  cantidad: string;
+  anadirCesta: string;
+  anadido: string;
+  // Cesta
+  tuPedido: string;
+  cestaVacia: string;
+  seguirComprando: string;
+  total: string;
+  tramitar: string;
+  eliminar: string;
+  nota: string;
+  // Checkout
+  formaPago: string;
+  efectivo: string;
+  tarjeta: string;
+  cargoHabitacion: string;
+  registraCodigo: string;
+  comprobarSaldo: string;
+  saldoDisponible: string;
+  saldoInsuficiente: string;
+  codigoInvalido: string;
+  cargoOk: string;
+  confirmarPedido: string;
+  avisoPago: string;
+  // Confirmación
+  pedidoRecibido: string;
+  numeroPedido: string;
+  pagaras: string;
+  graciasPedido: string;
+  // Registro de código
+  codigoTitulo: string;
+  codigoTexto: string;
+  codigoPlaceholder: string;
+  guardar: string;
+  borrar: string;
+  codigoActivo: string;
+  sinCodigo: string;
+}
+
+const OPCIONES: OpcionIdioma[] = [
+  { codigo: 'es', nombre: 'Español', bandera: 'img/banderas/es.svg' },
+  { codigo: 'en', nombre: 'English', bandera: 'img/banderas/en.svg' },
+  { codigo: 'fr', nombre: 'Français', bandera: 'img/banderas/fr.svg' },
+  { codigo: 'de', nombre: 'Deutsch', bandera: 'img/banderas/de.svg' },
+];
+
+const UI: Record<Idioma, TextosUI> = {
+  es: {
+    subtitulo: 'Pedidos',
+    cambiarLocal: 'Cambiar',
+    abierto: 'Abierto',
+    cerrado: 'Cerrado',
+    miCodigo: 'Mi código',
+    enLinea: 'En línea',
+    sinConexion: 'Sin conexión',
+    pie: 'Sistema de pedidos · datos ficticios · QUATROGES 2026',
+    eligeLocal: '¿Dónde quieres pedir?',
+    cargandoLocales: 'Cargando locales…',
+    sinLocales: 'No hay locales disponibles.',
+    verCarta: 'Ver carta',
+    nuestraCarta: 'Nuestra carta',
+    eligeCategoria: 'Elige una categoría',
+    platos: 'platos',
+    volverCarta: 'Volver a la carta',
+    alergenos: 'Alérgenos',
+    sinAlergenos: 'Sin alérgenos declarados.',
+    cargando: 'Cargando…',
+    errorCarga: 'No se pudo cargar la carta.',
+    familiaNoEncontrada: 'Familia no encontrada.',
+    platoNoEncontrado: 'Plato no encontrado.',
+    fueraDeHorario: 'Fuera de horario de pedidos',
+    puedesConsultar: 'Puedes consultar la carta; ahora no se pueden hacer pedidos.',
+    abrePedidos: 'Los pedidos abren a las',
+    extras: 'Extras',
+    anadir: 'Añadir',
+    quitar: 'Quitar',
+    notaCocina: 'Nota para cocina',
+    notaPlaceholder: 'Ej: poco hecho, sin sal…',
+    cantidad: 'Cantidad',
+    anadirCesta: 'Añadir a la cesta',
+    anadido: 'Añadido a la cesta',
+    tuPedido: 'Tu pedido',
+    cestaVacia: 'Tu cesta está vacía.',
+    seguirComprando: 'Seguir mirando la carta',
+    total: 'Total',
+    tramitar: 'Tramitar pedido',
+    eliminar: 'Eliminar',
+    nota: 'Nota',
+    formaPago: 'Forma de pago',
+    efectivo: 'Efectivo',
+    tarjeta: 'Tarjeta',
+    cargoHabitacion: 'Cargo a la habitación',
+    registraCodigo:
+      'Registra tu código de cliente para pagar con cargo a la habitación.',
+    comprobarSaldo: 'Comprobar saldo',
+    saldoDisponible: 'Saldo disponible',
+    saldoInsuficiente: 'Saldo insuficiente',
+    codigoInvalido: 'Código no válido',
+    cargoOk: 'Cargo disponible',
+    confirmarPedido: 'Confirmar pedido',
+    avisoPago: 'El camarero verá cómo vas a pagar al entregar el pedido.',
+    pedidoRecibido: '¡Pedido recibido!',
+    numeroPedido: 'Nº de pedido',
+    pagaras: 'Pagarás con',
+    graciasPedido: 'Gracias, tu pedido está en camino.',
+    codigoTitulo: 'Código de cliente',
+    codigoTexto:
+      'Introduce el código que te dieron en recepción para cargar pedidos a tu habitación.',
+    codigoPlaceholder: 'Ej: HAB101',
+    guardar: 'Guardar',
+    borrar: 'Borrar código',
+    codigoActivo: 'Código registrado',
+    sinCodigo: 'Sin código',
+  },
+  en: {
+    subtitulo: 'Orders',
+    cambiarLocal: 'Change',
+    abierto: 'Open',
+    cerrado: 'Closed',
+    miCodigo: 'My code',
+    enLinea: 'Online',
+    sinConexion: 'Offline',
+    pie: 'Ordering system · sample data · QUATROGES 2026',
+    eligeLocal: 'Where would you like to order?',
+    cargandoLocales: 'Loading venues…',
+    sinLocales: 'No venues available.',
+    verCarta: 'View menu',
+    nuestraCarta: 'Our menu',
+    eligeCategoria: 'Choose a category',
+    platos: 'dishes',
+    volverCarta: 'Back to the menu',
+    alergenos: 'Allergens',
+    sinAlergenos: 'No declared allergens.',
+    cargando: 'Loading…',
+    errorCarga: 'The menu could not be loaded.',
+    familiaNoEncontrada: 'Category not found.',
+    platoNoEncontrado: 'Dish not found.',
+    fueraDeHorario: 'Outside ordering hours',
+    puedesConsultar: 'You can browse the menu; ordering is closed right now.',
+    abrePedidos: 'Ordering opens at',
+    extras: 'Extras',
+    anadir: 'Add',
+    quitar: 'Remove',
+    notaCocina: 'Note for the kitchen',
+    notaPlaceholder: 'e.g. well done, no salt…',
+    cantidad: 'Quantity',
+    anadirCesta: 'Add to cart',
+    anadido: 'Added to cart',
+    tuPedido: 'Your order',
+    cestaVacia: 'Your cart is empty.',
+    seguirComprando: 'Keep browsing the menu',
+    total: 'Total',
+    tramitar: 'Check out',
+    eliminar: 'Remove',
+    nota: 'Note',
+    formaPago: 'Payment method',
+    efectivo: 'Cash',
+    tarjeta: 'Card',
+    cargoHabitacion: 'Charge to room',
+    registraCodigo: 'Register your guest code to charge orders to your room.',
+    comprobarSaldo: 'Check balance',
+    saldoDisponible: 'Available balance',
+    saldoInsuficiente: 'Insufficient balance',
+    codigoInvalido: 'Invalid code',
+    cargoOk: 'Charge available',
+    confirmarPedido: 'Confirm order',
+    avisoPago: 'The waiter will see how you plan to pay when they bring the order.',
+    pedidoRecibido: 'Order received!',
+    numeroPedido: 'Order no.',
+    pagaras: 'You will pay with',
+    graciasPedido: 'Thank you, your order is on its way.',
+    codigoTitulo: 'Guest code',
+    codigoTexto:
+      'Enter the code you were given at reception to charge orders to your room.',
+    codigoPlaceholder: 'e.g. HAB101',
+    guardar: 'Save',
+    borrar: 'Remove code',
+    codigoActivo: 'Code registered',
+    sinCodigo: 'No code',
+  },
+  fr: {
+    subtitulo: 'Commandes',
+    cambiarLocal: 'Changer',
+    abierto: 'Ouvert',
+    cerrado: 'Fermé',
+    miCodigo: 'Mon code',
+    enLinea: 'En ligne',
+    sinConexion: 'Hors ligne',
+    pie: 'Système de commandes · données fictives · QUATROGES 2026',
+    eligeLocal: 'Où souhaitez-vous commander ?',
+    cargandoLocales: 'Chargement des points de vente…',
+    sinLocales: 'Aucun point de vente disponible.',
+    verCarta: 'Voir la carte',
+    nuestraCarta: 'Notre carte',
+    eligeCategoria: 'Choisissez une catégorie',
+    platos: 'plats',
+    volverCarta: 'Retour à la carte',
+    alergenos: 'Allergènes',
+    sinAlergenos: 'Aucun allergène déclaré.',
+    cargando: 'Chargement…',
+    errorCarga: 'Impossible de charger la carte.',
+    familiaNoEncontrada: 'Catégorie introuvable.',
+    platoNoEncontrado: 'Plat introuvable.',
+    fueraDeHorario: 'Hors des horaires de commande',
+    puedesConsultar:
+      'Vous pouvez consulter la carte ; les commandes sont fermées.',
+    abrePedidos: 'Les commandes ouvrent à',
+    extras: 'Suppléments',
+    anadir: 'Ajouter',
+    quitar: 'Retirer',
+    notaCocina: 'Note pour la cuisine',
+    notaPlaceholder: 'Ex : bien cuit, sans sel…',
+    cantidad: 'Quantité',
+    anadirCesta: 'Ajouter au panier',
+    anadido: 'Ajouté au panier',
+    tuPedido: 'Votre commande',
+    cestaVacia: 'Votre panier est vide.',
+    seguirComprando: 'Continuer à parcourir la carte',
+    total: 'Total',
+    tramitar: 'Valider la commande',
+    eliminar: 'Supprimer',
+    nota: 'Note',
+    formaPago: 'Mode de paiement',
+    efectivo: 'Espèces',
+    tarjeta: 'Carte',
+    cargoHabitacion: 'Sur la note de chambre',
+    registraCodigo:
+      'Enregistrez votre code client pour imputer les commandes à votre chambre.',
+    comprobarSaldo: 'Vérifier le solde',
+    saldoDisponible: 'Solde disponible',
+    saldoInsuficiente: 'Solde insuffisant',
+    codigoInvalido: 'Code non valide',
+    cargoOk: 'Imputation possible',
+    confirmarPedido: 'Confirmer la commande',
+    avisoPago: 'Le serveur verra votre mode de paiement à la livraison.',
+    pedidoRecibido: 'Commande reçue !',
+    numeroPedido: 'Commande n°',
+    pagaras: 'Vous paierez par',
+    graciasPedido: 'Merci, votre commande arrive.',
+    codigoTitulo: 'Code client',
+    codigoTexto:
+      'Saisissez le code remis à la réception pour imputer vos commandes à la chambre.',
+    codigoPlaceholder: 'Ex : HAB101',
+    guardar: 'Enregistrer',
+    borrar: 'Effacer le code',
+    codigoActivo: 'Code enregistré',
+    sinCodigo: 'Sans code',
+  },
+  de: {
+    subtitulo: 'Bestellungen',
+    cambiarLocal: 'Wechseln',
+    abierto: 'Geöffnet',
+    cerrado: 'Geschlossen',
+    miCodigo: 'Mein Code',
+    enLinea: 'Online',
+    sinConexion: 'Offline',
+    pie: 'Bestellsystem · Beispieldaten · QUATROGES 2026',
+    eligeLocal: 'Wo möchten Sie bestellen?',
+    cargandoLocales: 'Lokale werden geladen…',
+    sinLocales: 'Keine Lokale verfügbar.',
+    verCarta: 'Karte ansehen',
+    nuestraCarta: 'Unsere Karte',
+    eligeCategoria: 'Wählen Sie eine Kategorie',
+    platos: 'Gerichte',
+    volverCarta: 'Zurück zur Karte',
+    alergenos: 'Allergene',
+    sinAlergenos: 'Keine deklarierten Allergene.',
+    cargando: 'Wird geladen…',
+    errorCarga: 'Die Karte konnte nicht geladen werden.',
+    familiaNoEncontrada: 'Kategorie nicht gefunden.',
+    platoNoEncontrado: 'Gericht nicht gefunden.',
+    fueraDeHorario: 'Außerhalb der Bestellzeiten',
+    puedesConsultar:
+      'Sie können die Karte ansehen; Bestellungen sind gerade geschlossen.',
+    abrePedidos: 'Bestellungen öffnen um',
+    extras: 'Extras',
+    anadir: 'Hinzufügen',
+    quitar: 'Entfernen',
+    notaCocina: 'Notiz für die Küche',
+    notaPlaceholder: 'z. B. durchgebraten, ohne Salz…',
+    cantidad: 'Menge',
+    anadirCesta: 'In den Warenkorb',
+    anadido: 'Zum Warenkorb hinzugefügt',
+    tuPedido: 'Ihre Bestellung',
+    cestaVacia: 'Ihr Warenkorb ist leer.',
+    seguirComprando: 'Weiter in der Karte stöbern',
+    total: 'Gesamt',
+    tramitar: 'Zur Kasse',
+    eliminar: 'Entfernen',
+    nota: 'Notiz',
+    formaPago: 'Zahlungsart',
+    efectivo: 'Bar',
+    tarjeta: 'Karte',
+    cargoHabitacion: 'Auf die Zimmerrechnung',
+    registraCodigo:
+      'Registrieren Sie Ihren Gästecode, um Bestellungen aufs Zimmer zu buchen.',
+    comprobarSaldo: 'Guthaben prüfen',
+    saldoDisponible: 'Verfügbares Guthaben',
+    saldoInsuficiente: 'Nicht genügend Guthaben',
+    codigoInvalido: 'Ungültiger Code',
+    cargoOk: 'Buchung möglich',
+    confirmarPedido: 'Bestellung bestätigen',
+    avisoPago: 'Der Kellner sieht bei der Lieferung, wie Sie zahlen möchten.',
+    pedidoRecibido: 'Bestellung erhalten!',
+    numeroPedido: 'Bestell-Nr.',
+    pagaras: 'Sie zahlen mit',
+    graciasPedido: 'Danke, Ihre Bestellung ist unterwegs.',
+    codigoTitulo: 'Gästecode',
+    codigoTexto:
+      'Geben Sie den Code von der Rezeption ein, um Bestellungen aufs Zimmer zu buchen.',
+    codigoPlaceholder: 'z. B. HAB101',
+    guardar: 'Speichern',
+    borrar: 'Code löschen',
+    codigoActivo: 'Code registriert',
+    sinCodigo: 'Kein Code',
+  },
+};
+
+const STORAGE_KEY = 'pedidos.idioma';
+
+/**
+ * Gestiona el idioma activo.
+ * El idioma se guarda en `localStorage` y se expone como signal, de modo que
+ * al cambiarlo toda la interfaz y el contenido reaccionan en caliente.
+ */
+@Injectable({ providedIn: 'root' })
+export class IdiomaService {
+  readonly opciones = OPCIONES;
+
+  private readonly _idioma = signal<Idioma>(this.leerInicial());
+
+  /** Idioma activo. */
+  readonly idioma = this._idioma.asReadonly();
+
+  /** Textos de interfaz para el idioma activo. */
+  readonly txt = computed(() => UI[this._idioma()]);
+
+  cambiar(idioma: Idioma): void {
+    this._idioma.set(idioma);
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = idioma;
+    }
+    try {
+      localStorage.setItem(STORAGE_KEY, idioma);
+    } catch {
+      /* localStorage puede no estar disponible */
+    }
+  }
+
+  private leerInicial(): Idioma {
+    try {
+      const guardado = localStorage.getItem(STORAGE_KEY);
+      if (guardado && OPCIONES.some((o) => o.codigo === guardado)) {
+        return guardado as Idioma;
+      }
+    } catch {
+      /* ignore */
+    }
+    return 'es';
+  }
+}

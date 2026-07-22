@@ -1,0 +1,66 @@
+<a class="volver" routerLink="/carta">← {{ idiomas.txt().seguirComprando }}</a>
+<h1 class="titulo">{{ idiomas.txt().tuPedido }}</h1>
+
+@if (cesta.vacia()) {
+  <p class="vacia">{{ idiomas.txt().cestaVacia }}</p>
+} @else {
+  <app-aviso-horario />
+
+  <ul class="lineas">
+    @for (linea of cesta.lineas(); track linea.id) {
+      <li class="linea">
+        <img class="linea__img" [src]="linea.imagen" [alt]="linea.nombre | loc: idiomas.idioma()" />
+
+        <div class="linea__cuerpo">
+          <div class="linea__cabecera">
+            <span class="linea__nombre">{{ linea.nombre | loc: idiomas.idioma() }}</span>
+            <button
+              type="button"
+              class="linea__eliminar"
+              (click)="cesta.eliminar(linea.id)"
+              [title]="idiomas.txt().eliminar"
+            >✕</button>
+          </div>
+
+          @if (linea.extras.length) {
+            <ul class="linea__extras">
+              @for (e of linea.extras; track e.extraId) {
+                <li>
+                  {{ e.tipo === 'anadir' ? '+' : '−' }}
+                  {{ e.nombre | loc: idiomas.idioma() }}
+                  @if (e.precio > 0) { ({{ e.precio.toFixed(2) }} €) }
+                </li>
+              }
+            </ul>
+          }
+
+          @if (linea.nota) {
+            <p class="linea__nota">{{ idiomas.txt().nota }}: {{ linea.nota }}</p>
+          }
+
+          <div class="linea__pie">
+            <div class="stepper">
+              <button type="button" (click)="cesta.editarCantidad(linea.id, linea.cantidad - 1)">−</button>
+              <span class="stepper__valor">{{ linea.cantidad }}</span>
+              <button type="button" (click)="cesta.editarCantidad(linea.id, linea.cantidad + 1)">+</button>
+            </div>
+            <span class="linea__subtotal">{{ linea.subtotal.toFixed(2) }} €</span>
+          </div>
+        </div>
+      </li>
+    }
+  </ul>
+
+  <div class="resumen">
+    <div class="resumen__total">
+      <span>{{ idiomas.txt().total }}</span>
+      <span>{{ cesta.total().toFixed(2) }} €</span>
+    </div>
+    <button
+      type="button"
+      class="btn btn--primario btn--bloque"
+      [disabled]="!horario.pedidosAbiertos()"
+      (click)="irACheckout()"
+    >{{ idiomas.txt().tramitar }}</button>
+  </div>
+}

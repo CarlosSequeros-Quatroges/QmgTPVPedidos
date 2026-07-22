@@ -1,0 +1,86 @@
+<a class="volver" routerLink="/cesta">← {{ idiomas.txt().tuPedido }}</a>
+
+@if (cesta.vacia()) {
+  <p class="estado-carga">{{ idiomas.txt().cestaVacia }}</p>
+} @else {
+  <app-aviso-horario />
+
+  <div class="total-barra">
+    <span>{{ idiomas.txt().total }}</span>
+    <span>{{ cesta.total().toFixed(2) }} €</span>
+  </div>
+
+  <h1 class="titulo">{{ idiomas.txt().formaPago }}</h1>
+
+  <div class="pagos">
+    <button
+      type="button"
+      class="pago"
+      [class.pago--activo]="formaPago() === 'efectivo'"
+      (click)="seleccionarPago('efectivo')"
+    >
+      <span class="pago__icono">💵</span>
+      <span>{{ idiomas.txt().efectivo }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="pago"
+      [class.pago--activo]="formaPago() === 'tarjeta'"
+      (click)="seleccionarPago('tarjeta')"
+    >
+      <span class="pago__icono">💳</span>
+      <span>{{ idiomas.txt().tarjeta }}</span>
+    </button>
+
+    <button
+      type="button"
+      class="pago"
+      [class.pago--activo]="formaPago() === 'habitacion'"
+      (click)="seleccionarPago('habitacion')"
+    >
+      <span class="pago__icono">🏨</span>
+      <span>{{ idiomas.txt().cargoHabitacion }}</span>
+    </button>
+  </div>
+
+  @if (formaPago() === 'habitacion') {
+    <div class="cargo">
+      @if (!cliente.tieneCodigo()) {
+        <p>{{ idiomas.txt().registraCodigo }}</p>
+        <a class="btn" routerLink="/mi-codigo">{{ idiomas.txt().miCodigo }}</a>
+      } @else if (validando()) {
+        <p>{{ idiomas.txt().comprobarSaldo }}…</p>
+      } @else if (validacion(); as v) {
+        @if (v.permitido) {
+          <p class="cargo__ok">
+            ✓ {{ idiomas.txt().cargoOk }}
+            @if (v.saldoDisponible != null) {
+              · {{ idiomas.txt().saldoDisponible }}: {{ v.saldoDisponible.toFixed(2) }} €
+            }
+          </p>
+        } @else if (v.motivo === 'sin_saldo') {
+          <p class="cargo__error">
+            ✕ {{ idiomas.txt().saldoInsuficiente }}
+            @if (v.saldoDisponible != null) {
+              · {{ idiomas.txt().saldoDisponible }}: {{ v.saldoDisponible.toFixed(2) }} €
+            }
+          </p>
+        } @else {
+          <p class="cargo__error">✕ {{ idiomas.txt().codigoInvalido }}</p>
+        }
+      }
+    </div>
+  }
+
+  <p class="aviso-pago">{{ idiomas.txt().avisoPago }}</p>
+
+  <button
+    type="button"
+    class="btn btn--primario btn--bloque"
+    [disabled]="!puedeConfirmar() || enviando()"
+    (click)="confirmar()"
+  >
+    {{ idiomas.txt().confirmarPedido }} · {{ cesta.total().toFixed(2) }} €
+  </button>
+}

@@ -1,0 +1,199 @@
+.estado {
+  padding: 2rem 0;
+  color: var(--color-texto-suave);
+}
+
+.detalle {
+  background: var(--color-tarjeta);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+
+  &__img {
+    width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+  }
+
+  &__cuerpo {
+    padding: 1.4rem 1.6rem 1.8rem;
+  }
+
+  &__cabecera {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  &__nombre {
+    margin: 0;
+    font-size: 1.6rem;
+  }
+
+  &__precio {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-acento);
+    white-space: nowrap;
+  }
+
+  &__desc {
+    margin: 0.75rem 0 1.5rem;
+    color: var(--color-texto-suave);
+    line-height: 1.5;
+    font-size: 1.05rem;
+  }
+}
+
+.bloque-titulo {
+  margin: 0 0 0.7rem;
+  font-size: 1.05rem;
+}
+
+.alergenos,
+.extras,
+.nota {
+  border-top: 1px solid var(--color-borde);
+  padding-top: 1.2rem;
+  margin-top: 1.2rem;
+}
+
+.alergenos {
+  &__lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  &__ninguno {
+    color: var(--color-texto-suave);
+    margin: 0;
+  }
+}
+
+.alergeno {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-arena);
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem 0.35rem 0.4rem;
+  font-size: 0.95rem;
+
+  &__icono {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.extras {
+  &__grupo {
+    margin: 0.8rem 0 0.5rem;
+    font-weight: 700;
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  &__lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+}
+
+.extra {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--color-borde);
+  background: #fff;
+  border-radius: 999px;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  user-select: none;
+
+  input {
+    accent-color: var(--color-acento);
+  }
+
+  &--activo {
+    border-color: var(--color-acento);
+    background: #fdf0e7;
+  }
+
+  &__precio {
+    color: var(--color-acento);
+    font-weight: 700;
+  }
+}
+
+.nota__campo {
+  width: 100%;
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+
+  &:focus {
+    outline: 2px solid var(--color-mar-claro);
+    border-color: var(--color-mar-claro);
+  }
+}
+
+.pedir {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-top: 1.6rem;
+  flex-wrap: wrap;
+
+  .btn {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.cantidad {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  overflow: hidden;
+
+  button {
+    border: 0;
+    background: var(--color-arena);
+    width: 42px;
+    height: 44px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    color: var(--color-mar);
+
+    &:hover {
+      background: #e9e0d2;
+    }
+  }
+
+  &__valor {
+    min-width: 44px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+}

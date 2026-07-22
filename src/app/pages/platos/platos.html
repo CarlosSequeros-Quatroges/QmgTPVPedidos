@@ -1,0 +1,45 @@
+@if (carta.cargando()) {
+  <p class="estado">{{ idiomas.txt().cargando }}</p>
+} @else if (!familia()) {
+  <p class="estado">{{ idiomas.txt().familiaNoEncontrada }}</p>
+  <a class="volver" routerLink="/carta">← {{ idiomas.txt().volverCarta }}</a>
+} @else {
+  <a class="volver" routerLink="/carta">← {{ idiomas.txt().volverCarta }}</a>
+  <h1 class="titulo">{{ familia()!.nombre | loc: idiomas.idioma() }}</h1>
+
+  <ul class="platos">
+    @for (plato of platos(); track plato.id) {
+      <li class="plato">
+        <a class="plato__link" [routerLink]="['/plato', plato.id]">
+          <img
+            class="plato__img"
+            [src]="plato.imagen"
+            [alt]="plato.nombre | loc: idiomas.idioma()"
+          />
+          <div class="plato__cuerpo">
+            <div class="plato__cabecera">
+              <span class="plato__nombre">
+                {{ plato.nombre | loc: idiomas.idioma() }}
+              </span>
+              <span class="plato__precio">{{ plato.precio.toFixed(2) }} €</span>
+            </div>
+            <p class="plato__desc">{{ plato.descripcion | loc: idiomas.idioma() }}</p>
+
+            @if (plato.alergenos.length) {
+              <div class="plato__alergenos">
+                @for (a of plato.alergenos; track a.id) {
+                  <img
+                    class="chip-alergeno"
+                    [src]="a.icono"
+                    [alt]="a.nombre | loc: idiomas.idioma()"
+                    [title]="a.nombre | loc: idiomas.idioma()"
+                  />
+                }
+              </div>
+            }
+          </div>
+        </a>
+      </li>
+    }
+  </ul>
+}

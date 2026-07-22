@@ -1,0 +1,97 @@
+{
+  "restaurante": {
+    "codtpv": "02",
+    "codmenu": "01",
+    "nombre": { "es": "Bar Piscina", "en": "Pool Bar", "fr": "Bar Piscine", "de": "Poolbar" },
+    "horario": {
+      "dias": {
+        "0": [{ "desde": "08:00", "hasta": "02:00" }],
+        "1": [{ "desde": "08:00", "hasta": "02:00" }],
+        "2": [{ "desde": "08:00", "hasta": "02:00" }],
+        "3": [{ "desde": "08:00", "hasta": "02:00" }],
+        "4": [{ "desde": "08:00", "hasta": "02:00" }],
+        "5": [{ "desde": "08:00", "hasta": "02:00" }],
+        "6": [{ "desde": "08:00", "hasta": "02:00" }]
+      }
+    }
+  },
+  "familias": [
+    { "id": 1, "nombre": { "es": "Snacks", "en": "Snacks", "fr": "En-cas", "de": "Snacks" }, "orden": 1, "imagen": "img/familias/snacks.svg" },
+    { "id": 2, "nombre": { "es": "Refrescos", "en": "Drinks", "fr": "Boissons", "de": "Getränke" }, "orden": 2, "imagen": "img/familias/refrescos.svg" }
+  ],
+  "extras": [
+    { "id": 1, "tipo": "anadir", "precio": 0.8, "nombre": { "es": "Salsa extra", "en": "Extra sauce", "fr": "Sauce supplémentaire", "de": "Extra Soße" } },
+    { "id": 2, "tipo": "anadir", "precio": 3.0, "nombre": { "es": "Doble de nachos", "en": "Double nachos", "fr": "Double de nachos", "de": "Doppelte Nachos" } },
+    { "id": 3, "tipo": "quitar", "precio": 0, "nombre": { "es": "Sin picante", "en": "Not spicy", "fr": "Sans piment", "de": "Nicht scharf" } },
+    { "id": 4, "tipo": "quitar", "precio": 0, "nombre": { "es": "Sin hielo", "en": "No ice", "fr": "Sans glace", "de": "Ohne Eis" } },
+    { "id": 5, "tipo": "quitar", "precio": 0, "nombre": { "es": "Sin alcohol", "en": "Non-alcoholic", "fr": "Sans alcool", "de": "Alkoholfrei" } }
+  ],
+  "platos": [
+    {
+      "id": 301,
+      "familiaId": 1,
+      "nombre": { "es": "Nachos con guacamole", "en": "Nachos with guacamole", "fr": "Nachos au guacamole", "de": "Nachos mit Guacamole" },
+      "descripcion": { "es": "Totopos de maíz con guacamole, queso fundido y jalapeños.", "en": "Corn tortilla chips with guacamole, melted cheese and jalapeños.", "fr": "Chips de maïs, guacamole, fromage fondu et jalapeños.", "de": "Mais-Tortillachips mit Guacamole, geschmolzenem Käse und Jalapeños." },
+      "precio": 7.5,
+      "imagen": "img/platos/nachos.svg",
+      "alergenos": [7],
+      "extras": [1, 2, 3],
+      "disponible": true
+    },
+    {
+      "id": 302,
+      "familiaId": 1,
+      "nombre": { "es": "Alitas de pollo BBQ", "en": "BBQ chicken wings", "fr": "Ailes de poulet BBQ", "de": "BBQ-Hähnchenflügel" },
+      "descripcion": { "es": "Ocho alitas glaseadas en salsa barbacoa, con dip ranchero.", "en": "Eight wings glazed in barbecue sauce, with ranch dip.", "fr": "Huit ailes glacées à la sauce barbecue, avec sauce ranch.", "de": "Acht Flügel in Barbecue-Soße glasiert, mit Ranch-Dip." },
+      "precio": 8.0,
+      "imagen": "img/platos/alitas.svg",
+      "alergenos": [6],
+      "extras": [1, 3],
+      "disponible": true
+    },
+    {
+      "id": 303,
+      "familiaId": 1,
+      "nombre": { "es": "Patatas bravas", "en": "Patatas bravas", "fr": "Patatas bravas", "de": "Patatas bravas" },
+      "descripcion": { "es": "Patatas fritas con salsa brava picante y alioli.", "en": "Fried potatoes with spicy brava sauce and aioli.", "fr": "Pommes de terre frites, sauce brava épicée et aïoli.", "de": "Bratkartoffeln mit scharfer Brava-Soße und Aioli." },
+      "precio": 5.5,
+      "imagen": "img/platos/bravas.svg",
+      "alergenos": [3],
+      "extras": [1, 3],
+      "disponible": true
+    },
+    {
+      "id": 401,
+      "familiaId": 2,
+      "nombre": { "es": "Mojito", "en": "Mojito", "fr": "Mojito", "de": "Mojito" },
+      "descripcion": { "es": "Ron, lima, hierbabuena, azúcar y soda.", "en": "Rum, lime, mint, sugar and soda.", "fr": "Rhum, citron vert, menthe, sucre et soda.", "de": "Rum, Limette, Minze, Zucker und Soda." },
+      "precio": 8.5,
+      "imagen": "img/platos/mojito.svg",
+      "alergenos": [],
+      "extras": [4, 5],
+      "disponible": true
+    },
+    {
+      "id": 402,
+      "familiaId": 2,
+      "nombre": { "es": "Refresco de cola", "en": "Cola", "fr": "Soda cola", "de": "Cola" },
+      "descripcion": { "es": "Lata de 33 cl bien fría.", "en": "Ice-cold 33 cl can.", "fr": "Canette de 33 cl bien fraîche.", "de": "Eiskalte 33-cl-Dose." },
+      "precio": 2.8,
+      "imagen": "img/platos/refresco.svg",
+      "alergenos": [],
+      "extras": [4],
+      "disponible": true
+    },
+    {
+      "id": 403,
+      "familiaId": 2,
+      "nombre": { "es": "Zumo natural de naranja", "en": "Fresh orange juice", "fr": "Jus d'orange pressé", "de": "Frisch gepresster Orangensaft" },
+      "descripcion": { "es": "Naranjas exprimidas al momento.", "en": "Freshly squeezed oranges.", "fr": "Oranges pressées minute.", "de": "Frisch gepresste Orangen." },
+      "precio": 4.0,
+      "imagen": "img/platos/zumo.svg",
+      "alergenos": [],
+      "extras": [4],
+      "disponible": true
+    }
+  ]
+}

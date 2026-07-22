@@ -1,0 +1,31 @@
+<a class="volver" routerLink="/carta">← {{ idiomas.txt().volverCarta }}</a>
+
+<div class="tarjeta">
+  <h1 class="tarjeta__titulo">🔑 {{ idiomas.txt().codigoTitulo }}</h1>
+  <p class="tarjeta__texto">{{ idiomas.txt().codigoTexto }}</p>
+
+  <input
+    class="tarjeta__input"
+    type="text"
+    [value]="entrada()"
+    (input)="setEntrada($any($event.target).value)"
+    [placeholder]="idiomas.txt().codigoPlaceholder"
+    autocapitalize="characters"
+  />
+
+  <button
+    type="button"
+    class="btn btn--primario btn--bloque"
+    [disabled]="!entrada().trim()"
+    (click)="guardar()"
+  >{{ idiomas.txt().guardar }}</button>
+
+  @if (cliente.tieneCodigo()) {
+    <div class="tarjeta__activo">
+      <span>✓ {{ idiomas.txt().codigoActivo }}: <strong>{{ cliente.codigo() }}</strong></span>
+      <button type="button" class="enlace-borrar" (click)="borrar()">
+        {{ idiomas.txt().borrar }}
+      </button>
+    </div>
+  }
+</div>

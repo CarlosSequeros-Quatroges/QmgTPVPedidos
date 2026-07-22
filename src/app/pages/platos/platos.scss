@@ -1,0 +1,87 @@
+.volver {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: var(--color-mar);
+  font-weight: 600;
+}
+
+.titulo {
+  margin: 0 0 1.5rem;
+  font-size: 1.8rem;
+}
+
+.estado {
+  padding: 2rem 0;
+  color: var(--color-texto-suave);
+}
+
+.platos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+
+.plato {
+  background: var(--color-tarjeta);
+  border-radius: var(--radio);
+  overflow: hidden;
+  box-shadow: var(--sombra);
+
+  &__link {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+
+    @media (max-width: 560px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    min-height: 150px;
+    object-fit: cover;
+  }
+
+  &__cuerpo {
+    padding: 1rem 1.2rem;
+  }
+
+  &__cabecera {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  &__nombre {
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  &__precio {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-acento);
+    white-space: nowrap;
+  }
+
+  &__desc {
+    margin: 0.5rem 0 0.9rem;
+    color: var(--color-texto-suave);
+    line-height: 1.4;
+  }
+
+  &__alergenos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+}
+
+.chip-alergeno {
+  width: 34px;
+  height: 34px;
+}

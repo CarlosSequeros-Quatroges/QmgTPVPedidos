@@ -1,0 +1,30 @@
+@if (carta.cargando()) {
+  <p class="estado">{{ idiomas.txt().cargando }}</p>
+} @else if (carta.error()) {
+  <p class="estado estado--error">{{ idiomas.txt().errorCarga }}</p>
+} @else {
+  <app-aviso-horario />
+
+  <h1 class="titulo">{{ idiomas.txt().nuestraCarta }}</h1>
+  <p class="subtitulo">{{ idiomas.txt().eligeCategoria }}</p>
+
+  <div class="familias">
+    @for (familia of carta.familias(); track familia.id) {
+      <a class="familia" [routerLink]="['/familia', familia.id]">
+        <img
+          class="familia__img"
+          [src]="familia.imagen"
+          [alt]="familia.nombre | loc: idiomas.idioma()"
+        />
+        <div class="familia__pie">
+          <span class="familia__nombre">
+            {{ familia.nombre | loc: idiomas.idioma() }}
+          </span>
+          <span class="familia__conteo">
+            {{ carta.platosDeFamilia(familia.id).length }} {{ idiomas.txt().platos }}
+          </span>
+        </div>
+      </a>
+    }
+  </div>
+}

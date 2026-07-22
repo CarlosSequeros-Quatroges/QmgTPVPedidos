@@ -1,0 +1,5 @@
+[
+  { "codigo": "HAB101", "saldo": 50.0, "huesped": "Habitación 101" },
+  { "codigo": "HAB102", "saldo": 3.5, "huesped": "Habitación 102" },
+  { "codigo": "HAB205", "saldo": 250.0, "huesped": "Suite 205" }
+]

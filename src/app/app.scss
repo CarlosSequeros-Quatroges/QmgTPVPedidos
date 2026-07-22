@@ -1,0 +1,220 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.9rem;
+  padding: 0.7rem 1.25rem;
+  background: linear-gradient(120deg, var(--color-mar), var(--color-mar-claro));
+  color: #fff;
+  box-shadow: var(--sombra);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+
+  &__mark {
+    font-size: 1.5rem;
+  }
+
+  &__name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  &__sub {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+  }
+}
+
+.local {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.85rem;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  font-size: 0.9rem;
+
+  &__nombre {
+    font-weight: 700;
+  }
+
+  &__cambiar {
+    border: 0;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--color-mar);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+  }
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &--abierto {
+    color: #1c7a3e;
+    background: #cdeecf;
+  }
+
+  &--cerrado {
+    color: #9a2b2b;
+    background: #f3d3d0;
+  }
+}
+
+.acciones {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.idiomas {
+  display: inline-flex;
+  gap: 0.2rem;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.2rem;
+  border-radius: 999px;
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    border: 0;
+    background: transparent;
+    padding: 0.25rem;
+    border-radius: 999px;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.65;
+    transition: opacity 0.15s ease, background 0.15s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &--activo {
+      background: #fff;
+      opacity: 1;
+    }
+  }
+
+  &__bandera {
+    display: block;
+    height: 15px;
+    width: 22px;
+    object-fit: cover;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+  }
+}
+
+.conexion {
+  display: inline-flex;
+  align-items: center;
+  color: #b8f5c8;
+
+  &__punto {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.22);
+  }
+
+  &--offline {
+    color: #ffd0a1;
+  }
+}
+
+.icono-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 1.05rem;
+  filter: grayscale(1) opacity(0.7);
+
+  &--activo {
+    filter: none;
+    background: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.cesta-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 1.15rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+
+  &__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: var(--color-acento);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.app-footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--color-texto-suave);
+  font-size: 0.85rem;
+}

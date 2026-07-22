@@ -1,0 +1,16 @@
+[
+  { "id": 1,  "codigo": "gluten",         "icono": "img/alergenos/gluten.svg",         "nombre": { "es": "Gluten",                       "en": "Gluten",                     "fr": "Gluten",                       "de": "Gluten" } },
+  { "id": 2,  "codigo": "crustaceos",     "icono": "img/alergenos/crustaceos.svg",     "nombre": { "es": "Crustáceos",                   "en": "Crustaceans",                "fr": "Crustacés",                    "de": "Krebstiere" } },
+  { "id": 3,  "codigo": "huevo",          "icono": "img/alergenos/huevo.svg",          "nombre": { "es": "Huevos",                       "en": "Eggs",                       "fr": "Œufs",                         "de": "Eier" } },
+  { "id": 4,  "codigo": "pescado",        "icono": "img/alergenos/pescado.svg",        "nombre": { "es": "Pescado",                      "en": "Fish",                       "fr": "Poisson",                      "de": "Fisch" } },
+  { "id": 5,  "codigo": "cacahuetes",     "icono": "img/alergenos/cacahuetes.svg",     "nombre": { "es": "Cacahuetes",                   "en": "Peanuts",                    "fr": "Arachides",                    "de": "Erdnüsse" } },
+  { "id": 6,  "codigo": "soja",           "icono": "img/alergenos/soja.svg",           "nombre": { "es": "Soja",                         "en": "Soya",                       "fr": "Soja",                         "de": "Soja" } },
+  { "id": 7,  "codigo": "lacteos",        "icono": "img/alergenos/lacteos.svg",        "nombre": { "es": "Lácteos",                      "en": "Milk",                       "fr": "Lait",                         "de": "Milch" } },
+  { "id": 8,  "codigo": "frutos-cascara", "icono": "img/alergenos/frutos-cascara.svg", "nombre": { "es": "Frutos de cáscara",            "en": "Tree nuts",                  "fr": "Fruits à coque",               "de": "Schalenfrüchte" } },
+  { "id": 9,  "codigo": "apio",           "icono": "img/alergenos/apio.svg",           "nombre": { "es": "Apio",                         "en": "Celery",                     "fr": "Céleri",                       "de": "Sellerie" } },
+  { "id": 10, "codigo": "mostaza",        "icono": "img/alergenos/mostaza.svg",        "nombre": { "es": "Mostaza",                      "en": "Mustard",                    "fr": "Moutarde",                     "de": "Senf" } },
+  { "id": 11, "codigo": "sesamo",         "icono": "img/alergenos/sesamo.svg",         "nombre": { "es": "Granos de sésamo",             "en": "Sesame seeds",               "fr": "Graines de sésame",            "de": "Sesamsamen" } },
+  { "id": 12, "codigo": "sulfitos",       "icono": "img/alergenos/sulfitos.svg",       "nombre": { "es": "Dióxido de azufre y sulfitos", "en": "Sulphur dioxide and sulphites", "fr": "Anhydride sulfureux et sulfites", "de": "Schwefeldioxid und Sulfite" } },
+  { "id": 13, "codigo": "altramuces",     "icono": "img/alergenos/altramuces.svg",     "nombre": { "es": "Altramuces",                   "en": "Lupin",                      "fr": "Lupin",                        "de": "Lupinen" } },
+  { "id": 14, "codigo": "moluscos",       "icono": "img/alergenos/moluscos.svg",       "nombre": { "es": "Moluscos",                     "en": "Molluscs",                   "fr": "Mollusques",                   "de": "Weichtiere" } }
+]

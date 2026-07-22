@@ -1,0 +1,25 @@
+<div class="confirmacion">
+  <div class="confirmacion__check">✓</div>
+  <h1 class="confirmacion__titulo">{{ idiomas.txt().pedidoRecibido }}</h1>
+
+  <p class="confirmacion__numero">
+    {{ idiomas.txt().numeroPedido }} <strong>{{ numeroCorto() }}</strong>
+  </p>
+
+  @if (confirmado(); as c) {
+    <div class="confirmacion__datos">
+      <div>
+        <span>{{ idiomas.txt().total }}</span>
+        <strong>{{ c.pedido.total.toFixed(2) }} €</strong>
+      </div>
+      <div>
+        <span>{{ idiomas.txt().pagaras }}</span>
+        <strong>{{ formaPagoTexto(c.pedido.formaPago) }}</strong>
+      </div>
+    </div>
+  }
+
+  <p class="confirmacion__gracias">{{ idiomas.txt().graciasPedido }}</p>
+
+  <a class="btn btn--primario" routerLink="/carta">{{ idiomas.txt().volverCarta }}</a>
+</div>
