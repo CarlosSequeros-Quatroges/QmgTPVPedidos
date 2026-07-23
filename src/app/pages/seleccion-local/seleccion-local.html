@@ -2,28 +2,17 @@
   <p class="estado-carga">{{ idiomas.txt().cargandoLocales }}</p>
 } @else if (local.error()) {
   <p class="estado-carga">{{ local.error() }}</p>
-} @else if (!local.cargas().length) {
+} @else if (!local.locales().length) {
   <p class="estado-carga">{{ idiomas.txt().sinLocales }}</p>
 } @else {
   <h1 class="titulo">{{ idiomas.txt().eligeLocal }}</h1>
 
   <div class="locales">
-    @for (carga of local.cargas(); track carga.codtpv + '-' + carga.codmenu) {
-      <button type="button" class="local-card" (click)="elegir(carga)">
-        <img
-          class="local-card__img"
-          [src]="carga.imagen"
-          [alt]="carga.nombre | loc: idiomas.idioma()"
-        />
+    @for (l of local.locales(); track l.codtpv) {
+      <button type="button" class="local-card" (click)="elegir(l)">
+        <img class="local-card__img" [src]="imagen(l.codtpv)" [alt]="l.nombre" />
         <div class="local-card__cuerpo">
-          <span class="local-card__nombre">
-            {{ carga.nombre | loc: idiomas.idioma() }}
-          </span>
-          @if (carga.descripcion) {
-            <span class="local-card__desc">
-              {{ carga.descripcion | loc: idiomas.idioma() }}
-            </span>
-          }
+          <span class="local-card__nombre">{{ l.nombre }}</span>
           <span class="local-card__cta">{{ idiomas.txt().verCarta }} →</span>
         </div>
       </button>

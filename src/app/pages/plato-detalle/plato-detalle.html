@@ -2,9 +2,9 @@
   <p class="estado">{{ idiomas.txt().cargando }}</p>
 } @else if (!plato()) {
   <p class="estado">{{ idiomas.txt().platoNoEncontrado }}</p>
-  <a class="volver" routerLink="/carta">← {{ idiomas.txt().volverCarta }}</a>
+  <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
-  <a class="volver" [routerLink]="['/familia', plato()!.familia.id]">
+  <a class="volver" [routerLink]="empresa.ruta('familia', plato()!.familia.id)">
     ← {{ plato()!.familia.nombre | loc: idiomas.idioma() }}
   </a>
 

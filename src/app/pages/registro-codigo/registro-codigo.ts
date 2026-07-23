@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { ClienteService } from '../../services/cliente.service';
 import { IdiomaService } from '../../services/idioma.service';
+import { EmpresaService } from '../../services/empresa.service';
 
 @Component({
   selector: 'app-registro-codigo',
@@ -13,6 +14,7 @@ import { IdiomaService } from '../../services/idioma.service';
 export class RegistroCodigo {
   protected readonly cliente = inject(ClienteService);
   protected readonly idiomas = inject(IdiomaService);
+  protected readonly empresa = inject(EmpresaService);
 
   protected readonly entrada = signal(this.cliente.codigo() ?? '');
 

@@ -7,11 +7,11 @@ import { LocalService } from './services/local.service';
 import { HorarioService } from './services/horario.service';
 import { CestaService } from './services/cesta.service';
 import { ClienteService } from './services/cliente.service';
-import { LocPipe } from './pipes/loc.pipe';
+import { EmpresaService } from './services/empresa.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, LocPipe],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -23,10 +23,11 @@ export class App {
   protected readonly horario = inject(HorarioService);
   protected readonly cesta = inject(CestaService);
   protected readonly cliente = inject(ClienteService);
+  protected readonly empresa = inject(EmpresaService);
 
   /** Vuelve a la selección de local (limpiando la actual para poder cambiar). */
   cambiarLocal(): void {
     this.local.limpiar();
-    this.router.navigateByUrl('/');
+    this.router.navigate(this.empresa.ruta());
   }
 }

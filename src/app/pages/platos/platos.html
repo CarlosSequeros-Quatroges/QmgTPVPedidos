@@ -2,15 +2,15 @@
   <p class="estado">{{ idiomas.txt().cargando }}</p>
 } @else if (!familia()) {
   <p class="estado">{{ idiomas.txt().familiaNoEncontrada }}</p>
-  <a class="volver" routerLink="/carta">← {{ idiomas.txt().volverCarta }}</a>
+  <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
-  <a class="volver" routerLink="/carta">← {{ idiomas.txt().volverCarta }}</a>
+  <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
   <h1 class="titulo">{{ familia()!.nombre | loc: idiomas.idioma() }}</h1>
 
   <ul class="platos">
     @for (plato of platos(); track plato.id) {
       <li class="plato">
-        <a class="plato__link" [routerLink]="['/plato', plato.id]">
+        <a class="plato__link" [routerLink]="empresa.ruta('plato', plato.id)">
           <img
             class="plato__img"
             [src]="plato.imagen"

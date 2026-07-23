@@ -2,13 +2,12 @@ import { Observable } from 'rxjs';
 
 import { Alergeno, Familia, Plato } from '../models/carta.models';
 import { Extra } from '../models/extra.models';
-import { Carga, Restaurante } from '../models/local.models';
+import { Local } from '../models/local.models';
 import { ValidacionCargo } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
-/** Carta completa de un local: restaurante (nombre + horario) + contenido. */
+/** Carta de productos de un `codmenu` (familias, platos, alérgenos y extras). */
 export interface CartaLocal {
-  restaurante: Restaurante;
   familias: Familia[];
   platos: Plato[];
   alergenos: Alergeno[];
@@ -16,17 +15,19 @@ export interface CartaLocal {
 }
 
 /**
- * Contrato de la API de pedidos. Es una clase abstracta para usarla como token
- * de inyección: en desarrollo se provee `MockPedidosApi`; para producción bastará
- * con proveer una `HttpPedidosApi` contra la API real cambiando una sola línea
- * en `app.config.ts`. El resto de la app depende solo de esta abstracción.
+ * Contrato de la API de pedidos. Clase abstracta para usarla como token de
+ * inyección: se provee `HttpPedidosApi` (API real) o `MockPedidosApi` (datos
+ * simulados) sin que el resto de la app se entere.
+ *
+ * El código de empresa (`codemp`) no se pasa en estos métodos: lo añade el
+ * interceptor a partir del que viene en la ruta.
  */
 export abstract class PedidosApi {
-  /** Puntos de venta disponibles (restaurantes/bares del hotel). */
-  abstract getCargas(): Observable<Carga[]>;
+  /** Locales (puntos de venta) disponibles. */
+  abstract getLocales(): Observable<Local[]>;
 
-  /** Carta de un local, identificado por el par codtpv + codmenu. */
-  abstract getCarta(codtpv: string, codmenu: string): Observable<CartaLocal>;
+  /** Carta de productos de un menú. Varios locales pueden compartir `codmenu`. */
+  abstract getCarta(codmenu: number): Observable<CartaLocal>;
 
   /** ¿Se puede cargar `importe` a la cuenta de habitación de `codigo`? */
   abstract validarCargoHabitacion(

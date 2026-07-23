@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CestaService } from '../../services/cesta.service';
 import { IdiomaService } from '../../services/idioma.service';
 import { HorarioService } from '../../services/horario.service';
+import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
 
@@ -17,11 +18,12 @@ export class Cesta {
   protected readonly cesta = inject(CestaService);
   protected readonly idiomas = inject(IdiomaService);
   protected readonly horario = inject(HorarioService);
+  protected readonly empresa = inject(EmpresaService);
   private readonly router = inject(Router);
 
   irACheckout(): void {
     if (this.horario.pedidosAbiertos() && !this.cesta.vacia()) {
-      this.router.navigateByUrl('/checkout');
+      this.router.navigate(this.empresa.ruta('checkout'));
     }
   }
 }

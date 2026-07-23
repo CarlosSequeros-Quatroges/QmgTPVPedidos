@@ -7,6 +7,7 @@ import { IdiomaService } from '../../services/idioma.service';
 import { HorarioService } from '../../services/horario.service';
 import { ClienteService } from '../../services/cliente.service';
 import { LocalService } from '../../services/local.service';
+import { EmpresaService } from '../../services/empresa.service';
 import { PedidoService } from '../../services/pedido.service';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
 import { FormaPago, Pedido } from '../../models/pedido.models';
@@ -24,6 +25,7 @@ export class Checkout {
   protected readonly horario = inject(HorarioService);
   protected readonly cliente = inject(ClienteService);
   private readonly local = inject(LocalService);
+  protected readonly empresa = inject(EmpresaService);
   private readonly api = inject(PedidosApi);
   private readonly pedidos = inject(PedidoService);
   private readonly router = inject(Router);
@@ -58,12 +60,12 @@ export class Checkout {
 
   confirmar(): void {
     const forma = this.formaPago();
-    const carga = this.local.cargaActiva();
-    if (!forma || !carga || !this.puedeConfirmar() || this.enviando()) return;
+    const activo = this.local.localActivo();
+    if (!forma || !activo || !this.puedeConfirmar() || this.enviando()) return;
 
     const pedido: Pedido = {
-      codtpv: carga.codtpv,
-      codmenu: carga.codmenu,
+      codtpv: activo.codtpv,
+      codmenu: activo.codmenu,
       lineas: this.cesta.lineas(),
       total: this.cesta.total(),
       formaPago: forma,
@@ -78,7 +80,7 @@ export class Checkout {
       next: (confirmado) => {
         this.pedidos.guardar(confirmado);
         this.cesta.vaciar();
-        this.router.navigateByUrl(`/confirmacion/${confirmado.id}`);
+        this.router.navigate(this.empresa.ruta('confirmacion', confirmado.id));
       },
       error: () => this.enviando.set(false),
     });

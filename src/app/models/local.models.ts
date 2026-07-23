@@ -1,51 +1,40 @@
-import { TextoLocalizado } from './carta.models';
+/** Servicio que se presta en una franja: Desayuno, Almuerzo o Cena. */
+export type TipoServicio = 'D' | 'A' | 'C';
 
 /**
- * Franja horaria de pedidos "HH:mm"–"HH:mm".
- * Si `hasta` <= `desde` se interpreta que cruza la medianoche.
+ * Franja horaria de pedidos, en formato "HH:mm".
+ * Si `hasta` <= `desde`, la franja salta al día siguiente (cruza medianoche).
  */
 export interface FranjaHoraria {
   desde: string;
   hasta: string;
+  tipo: TipoServicio;
 }
 
 /**
- * Horario de pedidos por día de la semana (0=domingo … 6=sábado, según Date.getDay()).
- * Cada día tiene 0..n franjas. Un día sin entrada = cerrado ese día.
+ * Horario de pedidos por día de la semana, tal cual lo envía la API:
+ * clave 0 = lunes … 6 = domingo. Un día sin franjas = cerrado ese día.
  */
 export interface HorarioPedidos {
   dias: Record<number, FranjaHoraria[]>;
-  /** Informativo; el mock evalúa con la hora local del dispositivo. */
-  zonaHoraria?: string;
 }
 
 /**
- * "Carga" = punto de venta (restaurante/bar del hotel).
- * Se identifica por el par codtpv + codmenu, que se usan para recuperar la
- * carta y para enviar el pedido al TPV/menú correctos.
+ * Local (punto de venta) devuelto por `getLocales`.
+ * `codtpv` es la identidad única del local; `codmenu` indica qué carta de
+ * productos usa (varios locales pueden compartir el mismo `codmenu`).
  */
-export interface Carga {
+export interface Local {
   codtpv: string;
-  codmenu: string;
-  nombre: TextoLocalizado;
-  descripcion?: TextoLocalizado;
-  /** Ruta relativa a la imagen del local. */
-  imagen: string;
+  nombre: string;
+  codmenu: number;
   horario: HorarioPedidos;
 }
 
-/** Datos del restaurante que acompañan a la carta (nombre + horario de pedidos). */
-export interface Restaurante {
-  codtpv: string;
-  codmenu: string;
-  nombre: TextoLocalizado;
-  horario: HorarioPedidos;
-}
-
-/** Clave estable de un local. */
-export function claveCarga(c: {
-  codtpv: string;
-  codmenu: string;
-}): string {
-  return `${c.codtpv}-${c.codmenu}`;
+/**
+ * Ruta de la imagen del local. No viene de la API: es un recurso público
+ * servido junto a la aplicación, nombrado por `codtpv`.
+ */
+export function imagenLocal(codtpv: string): string {
+  return `img/locales/${codtpv}.svg`;
 }

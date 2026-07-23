@@ -10,7 +10,7 @@
 
   <div class="familias">
     @for (familia of carta.familias(); track familia.id) {
-      <a class="familia" [routerLink]="['/familia', familia.id]">
+      <a class="familia" [routerLink]="empresa.ruta('familia', familia.id)">
         <img
           class="familia__img"
           [src]="familia.imagen"

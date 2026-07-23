@@ -4,21 +4,27 @@ import { LocalService } from './local.service';
 import { LineaCesta } from '../models/cesta.models';
 import { PlatoResuelto } from '../models/carta.models';
 import { ExtraSeleccionado } from '../models/extra.models';
-import { claveCarga } from '../models/local.models';
 
-const PREFIJO = 'pedidos.cesta.';
+const KEY = 'pedidos.cesta';
+
+/** Lo que se persiste: la cesta y el local al que pertenece. */
+interface CestaGuardada {
+  codtpv: string | null;
+  lineas: LineaCesta[];
+}
 
 /**
- * Cesta de la compra, persistida en localStorage **por local** (clave
- * codtpv-codmenu). Al cambiar de local, carga la cesta de ese local.
+ * Cesta **única**: hay una sola cesta en el dispositivo. Si el cliente cambia
+ * de local, se vacía. Se guarda junto al `codtpv` al que pertenece para que
+ * recargar la página en el mismo local no la borre.
  */
 @Injectable({ providedIn: 'root' })
 export class CestaService {
   private readonly local = inject(LocalService);
 
   private readonly _lineas = signal<LineaCesta[]>([]);
-  /** Clave del local cuya cesta está cargada ahora mismo. */
-  private claveActual: string | null = null;
+  /** Local al que pertenece la cesta cargada. */
+  private codtpvCesta: string | null = null;
 
   readonly lineas = this._lineas.asReadonly();
   readonly total = computed(() =>
@@ -30,13 +36,17 @@ export class CestaService {
   readonly vacia = computed(() => this._lineas().length === 0);
 
   constructor() {
-    // Cargar la cesta del local activo cuando cambie la selección.
+    const guardada = this.leer();
+    this.codtpvCesta = guardada?.codtpv ?? null;
+    this._lineas.set(guardada?.lineas ?? []);
+
+    // Al cambiar de local, la cesta se vacía.
     effect(() => {
-      const carga = this.local.cargaActiva();
-      const clave = carga ? claveCarga(carga) : null;
-      if (clave !== this.claveActual) {
-        this.claveActual = clave;
-        this._lineas.set(clave ? this.leer(clave) : []);
+      const activo = this.local.localActivo()?.codtpv ?? null;
+      if (activo && activo !== this.codtpvCesta) {
+        this.codtpvCesta = activo;
+        this._lineas.set([]);
+        this.persistir();
       }
     });
   }
@@ -92,23 +102,23 @@ export class CestaService {
   }
 
   private persistir(): void {
-    if (!this.claveActual) return;
     try {
-      localStorage.setItem(
-        PREFIJO + this.claveActual,
-        JSON.stringify(this._lineas()),
-      );
+      const datos: CestaGuardada = {
+        codtpv: this.codtpvCesta,
+        lineas: this._lineas(),
+      };
+      localStorage.setItem(KEY, JSON.stringify(datos));
     } catch {
       /* localStorage puede no estar disponible */
     }
   }
 
-  private leer(clave: string): LineaCesta[] {
+  private leer(): CestaGuardada | null {
     try {
-      const raw = localStorage.getItem(PREFIJO + clave);
-      return raw ? (JSON.parse(raw) as LineaCesta[]) : [];
+      const raw = localStorage.getItem(KEY);
+      return raw ? (JSON.parse(raw) as CestaGuardada) : null;
     } catch {
-      return [];
+      return null;
     }
   }
 }

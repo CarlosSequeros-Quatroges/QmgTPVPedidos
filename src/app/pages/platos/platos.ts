@@ -3,6 +3,7 @@ import { RouterLink } from '@angular/router';
 
 import { CartaService } from '../../services/carta.service';
 import { IdiomaService } from '../../services/idioma.service';
+import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
 
 @Component({
@@ -14,6 +15,7 @@ import { LocPipe } from '../../pipes/loc.pipe';
 export class Platos {
   protected readonly carta = inject(CartaService);
   protected readonly idiomas = inject(IdiomaService);
+  protected readonly empresa = inject(EmpresaService);
 
   /** Id de familia recibido desde la ruta (`/familia/:id`). */
   readonly id = input.required<string>();

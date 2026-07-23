@@ -1,16 +1,16 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 
-import { CartaService } from './carta.service';
+import { LocalService } from './local.service';
 import { estaAbierto, proximaApertura } from '../utils/horario.util';
 
 /**
- * Determina si el local acepta pedidos ahora mismo, según el horario que llega
- * con la carta. Refresca la hora cada 30 s para que la UI abra/cierre sola.
- * Nota: usa la hora local del dispositivo (la API real traerá la zona del hotel).
+ * Determina si el local activo acepta pedidos ahora mismo, según el horario que
+ * llega en `getLocales`. Refresca la hora cada 30 s para que la UI abra/cierre
+ * sola. Usa la hora local del dispositivo.
  */
 @Injectable({ providedIn: 'root' })
 export class HorarioService {
-  private readonly carta = inject(CartaService);
+  private readonly local = inject(LocalService);
   private readonly _ahora = signal(new Date());
 
   constructor() {
@@ -20,12 +20,12 @@ export class HorarioService {
   readonly ahora = this._ahora.asReadonly();
 
   readonly pedidosAbiertos = computed(() => {
-    const r = this.carta.restaurante();
-    return r ? estaAbierto(r.horario, this._ahora()) : false;
+    const l = this.local.localActivo();
+    return l ? estaAbierto(l.horario, this._ahora()) : false;
   });
 
   readonly proximaApertura = computed(() => {
-    const r = this.carta.restaurante();
-    return r ? proximaApertura(r.horario, this._ahora()) : null;
+    const l = this.local.localActivo();
+    return l ? proximaApertura(l.horario, this._ahora()) : null;
   });
 }

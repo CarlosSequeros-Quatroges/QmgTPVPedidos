@@ -5,6 +5,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { App } from './app';
 import { PedidosApi } from './api/pedidos-api';
 import { MockPedidosApi } from './api/mock-pedidos-api';
+import { EmpresaService } from './services/empresa.service';
 
 describe('App', () => {
   beforeEach(async () => {
@@ -24,6 +25,8 @@ describe('App', () => {
   });
 
   it('should render the brand name', () => {
+    // La cabecera solo se pinta con un código de empresa válido en la ruta.
+    TestBed.inject(EmpresaService).fijar('800');
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;

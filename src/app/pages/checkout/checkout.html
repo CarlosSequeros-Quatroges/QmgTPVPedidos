@@ -1,4 +1,4 @@
-<a class="volver" routerLink="/cesta">← {{ idiomas.txt().tuPedido }}</a>
+<a class="volver" [routerLink]="empresa.ruta('cesta')">← {{ idiomas.txt().tuPedido }}</a>
 
 @if (cesta.vacia()) {
   <p class="estado-carga">{{ idiomas.txt().cestaVacia }}</p>
@@ -48,7 +48,7 @@
     <div class="cargo">
       @if (!cliente.tieneCodigo()) {
         <p>{{ idiomas.txt().registraCodigo }}</p>
-        <a class="btn" routerLink="/mi-codigo">{{ idiomas.txt().miCodigo }}</a>
+        <a class="btn" [routerLink]="empresa.ruta('mi-codigo')">{{ idiomas.txt().miCodigo }}</a>
       } @else if (validando()) {
         <p>{{ idiomas.txt().comprobarSaldo }}…</p>
       } @else if (validacion(); as v) {

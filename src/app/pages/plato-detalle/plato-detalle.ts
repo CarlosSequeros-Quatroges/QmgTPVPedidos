@@ -5,6 +5,7 @@ import { CartaService } from '../../services/carta.service';
 import { IdiomaService } from '../../services/idioma.service';
 import { HorarioService } from '../../services/horario.service';
 import { CestaService } from '../../services/cesta.service';
+import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
 import { ExtraSeleccionado } from '../../models/extra.models';
@@ -20,6 +21,7 @@ export class PlatoDetalle {
   protected readonly idiomas = inject(IdiomaService);
   protected readonly horario = inject(HorarioService);
   private readonly cesta = inject(CestaService);
+  protected readonly empresa = inject(EmpresaService);
   private readonly router = inject(Router);
 
   /** Id de plato recibido desde la ruta (`/plato/:id`). */
@@ -89,6 +91,6 @@ export class PlatoDetalle {
         precio: e.precio,
       }));
     this.cesta.agregar(p, extras, this.nota(), this.cantidad());
-    this.router.navigateByUrl('/cesta');
+    this.router.navigate(this.empresa.ruta('cesta'));
   }
 }

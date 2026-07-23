@@ -4,13 +4,14 @@ import { Observable, delay, forkJoin, map, of } from 'rxjs';
 
 import { CartaLocal, PedidosApi } from './pedidos-api';
 import { Alergeno } from '../models/carta.models';
-import { Carga } from '../models/local.models';
+import { Local } from '../models/local.models';
+import { RespuestaLocales } from '../models/respuesta.models';
 import { ValidacionCargo } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
 const DATA = 'data';
 
-/** Estructura del JSON de carta por local (`data/cartas/carta-{codtpv}-{codmenu}.json`). */
+/** Estructura del JSON de carta por menú (`data/cartas/carta-{codmenu}.json`). */
 type CartaArchivo = Omit<CartaLocal, 'alergenos'>;
 
 /** Cuenta de habitación del mock (`data/cuentas.json`). */
@@ -21,23 +22,23 @@ interface CuentaHabitacion {
 }
 
 /**
- * Implementación simulada de {@link PedidosApi} que lee JSON estáticos de
- * `public/data`. Añade una pequeña latencia para imitar la red real.
- * Para pasar a la API real, se crea `HttpPedidosApi` y se cambia el provider.
+ * Implementación simulada de {@link PedidosApi} sobre JSON estáticos de
+ * `public/data`. Se usa para los endpoints que todavía no están disponibles
+ * en la API real, y para desarrollo sin backend.
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MockPedidosApi extends PedidosApi {
   private readonly http = inject(HttpClient);
 
-  getCargas(): Observable<Carga[]> {
-    return this.http.get<Carga[]>(`${DATA}/cargas.json`).pipe(delay(200));
+  getLocales(): Observable<Local[]> {
+    return this.http
+      .get<RespuestaLocales>(`${DATA}/locales.json`)
+      .pipe(delay(200), map((r) => r.locales));
   }
 
-  getCarta(codtpv: string, codmenu: string): Observable<CartaLocal> {
+  getCarta(codmenu: number): Observable<CartaLocal> {
     return forkJoin({
-      carta: this.http.get<CartaArchivo>(
-        `${DATA}/cartas/carta-${codtpv}-${codmenu}.json`,
-      ),
+      carta: this.http.get<CartaArchivo>(`${DATA}/cartas/carta-${codmenu}.json`),
       alergenos: this.http.get<Alergeno[]>(`${DATA}/alergenos.json`),
     }).pipe(
       delay(250),
@@ -53,9 +54,7 @@ export class MockPedidosApi extends PedidosApi {
       delay(300),
       map((cuentas): ValidacionCargo => {
         const cuenta = cuentas.find((c) => c.codigo === codigo.trim());
-        if (!cuenta) {
-          return { permitido: false, motivo: 'codigo_invalido' };
-        }
+        if (!cuenta) return { permitido: false, motivo: 'codigo_invalido' };
         if (cuenta.saldo < importe) {
           return {
             permitido: false,
@@ -63,11 +62,7 @@ export class MockPedidosApi extends PedidosApi {
             motivo: 'sin_saldo',
           };
         }
-        return {
-          permitido: true,
-          saldoDisponible: cuenta.saldo,
-          motivo: 'ok',
-        };
+        return { permitido: true, saldoDisponible: cuenta.saldo, motivo: 'ok' };
       }),
     );
   }

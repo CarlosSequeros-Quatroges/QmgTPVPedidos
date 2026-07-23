@@ -2,86 +2,76 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, of, shareReplay, tap } from 'rxjs';
 
 import { PedidosApi } from '../api/pedidos-api';
-import { Carga } from '../models/local.models';
+import { Local } from '../models/local.models';
 
-const KEY = 'pedidos.carga';
-
-interface Seleccion {
-  codtpv: string;
-  codmenu: string;
-}
+const KEY = 'pedidos.local';
 
 /**
- * Gestiona los locales (cargas) disponibles y cuál está seleccionado.
- * La selección se identifica por el par codtpv+codmenu y se persiste en
- * localStorage para recuperar el local al volver.
+ * Locales disponibles y cuál está seleccionado.
+ * La identidad del local es `codtpv` (único); `codmenu` solo indica qué carta
+ * de productos usa. La selección se persiste para recuperarla al volver.
  */
 @Injectable({ providedIn: 'root' })
 export class LocalService {
   private readonly api = inject(PedidosApi);
 
-  private readonly _cargas = signal<Carga[]>([]);
-  private readonly _seleccion = signal<Seleccion | null>(this.leer());
+  private readonly _locales = signal<Local[]>([]);
+  private readonly _codtpv = signal<string | null>(this.leer());
   private readonly _cargando = signal(true);
   private readonly _error = signal<string | null>(null);
 
-  private cargas$?: Observable<Carga[]>;
+  private locales$?: Observable<Local[]>;
 
-  readonly cargas = this._cargas.asReadonly();
+  readonly locales = this._locales.asReadonly();
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
-  readonly seleccion = this._seleccion.asReadonly();
+  readonly codtpv = this._codtpv.asReadonly();
 
-  /** Local seleccionado resuelto al objeto Carga (si existe entre las cargas). */
-  readonly cargaActiva = computed(() => {
-    const s = this._seleccion();
-    if (!s) return undefined;
-    return this._cargas().find(
-      (c) => c.codtpv === s.codtpv && c.codmenu === s.codmenu,
-    );
+  /** Local seleccionado, resuelto contra la lista de locales. */
+  readonly localActivo = computed(() => {
+    const cod = this._codtpv();
+    return cod ? this._locales().find((l) => l.codtpv === cod) : undefined;
   });
-
-  readonly haySeleccion = computed(() => !!this.cargaActiva());
 
   /**
    * Carga la lista de locales una sola vez (memoizada). Si solo hay uno, lo
-   * autoselecciona. Úsalo desde el guard para decidir el flujo de arranque.
+   * autoselecciona. Se usa desde el guard para decidir el flujo de arranque.
    */
-  asegurarCargas(): Observable<Carga[]> {
-    if (this._cargas().length) return of(this._cargas());
-    if (!this.cargas$) {
-      this.cargas$ = this.api.getCargas().pipe(
+  asegurarLocales(): Observable<Local[]> {
+    if (this._locales().length) return of(this._locales());
+    if (!this.locales$) {
+      this.locales$ = this.api.getLocales().pipe(
         tap({
-          next: (cargas) => {
-            this._cargas.set(cargas);
+          next: (locales) => {
+            this._locales.set(locales);
             this._cargando.set(false);
-            if (cargas.length === 1 && !this._seleccion()) {
-              this.seleccionar(cargas[0]);
+            if (locales.length === 1 && !this._codtpv()) {
+              this.seleccionar(locales[0]);
             }
           },
-          error: () => {
+          error: (err) => {
             this._error.set('No se pudieron cargar los locales.');
             this._cargando.set(false);
+            console.error('Error cargando locales', err);
           },
         }),
         shareReplay(1),
       );
     }
-    return this.cargas$;
+    return this.locales$;
   }
 
-  seleccionar(carga: Carga): void {
-    const sel: Seleccion = { codtpv: carga.codtpv, codmenu: carga.codmenu };
-    this._seleccion.set(sel);
+  seleccionar(local: Local): void {
+    this._codtpv.set(local.codtpv);
     try {
-      localStorage.setItem(KEY, JSON.stringify(sel));
+      localStorage.setItem(KEY, local.codtpv);
     } catch {
       /* localStorage puede no estar disponible */
     }
   }
 
   limpiar(): void {
-    this._seleccion.set(null);
+    this._codtpv.set(null);
     try {
       localStorage.removeItem(KEY);
     } catch {
@@ -89,12 +79,9 @@ export class LocalService {
     }
   }
 
-  private leer(): Seleccion | null {
+  private leer(): string | null {
     try {
-      const raw = localStorage.getItem(KEY);
-      if (!raw) return null;
-      const s = JSON.parse(raw) as Seleccion;
-      return s?.codtpv && s?.codmenu ? s : null;
+      return localStorage.getItem(KEY);
     } catch {
       return null;
     }
