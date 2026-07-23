@@ -1,29 +1,61 @@
 /**
- * Modelos de dominio de la carta.
- * Reflejan la estructura de los JSON servidos por la API (familias, platos, alergenos).
+ * Modelos de la carta. Reflejan lo que devuelve `getCarta`, más una versión
+ * normalizada para la app (precios numéricos, alérgenos como lista de códigos).
  */
-import { Extra } from './extra.models';
 
-/** Idiomas soportados. */
+/** Idiomas soportados por la interfaz. */
 export type Idioma = 'es' | 'en' | 'fr' | 'de';
 
-/** Texto traducido a los idiomas soportados. */
+/** Texto traducido a los idiomas soportados (interfaz y alérgenos). */
 export type TextoLocalizado = Record<Idioma, string>;
 
-/** Categoría de platos (Entrantes, Pescados, …). */
+/** Familia tal cual llega de la API. Los productos enlazan por `pos`. */
 export interface Familia {
-  id: number;
-  nombre: TextoLocalizado;
-  orden: number;
-  /** Ruta relativa a la imagen de la familia. */
-  imagen: string;
+  codigo: number;
+  descripcion: string;
+  pos: number;
 }
 
-/**
- * Alérgeno tal cual llega de la API (de la base de datos).
- * El `codigo` es el que se asocia a los platos; la `descripcion` viene en un
- * solo idioma, por eso la app aporta las traducciones.
- */
+/** Producto tal cual llega de la API (campos en texto). */
+export interface ProductoApi {
+  /** Coincide con `Familia.pos`, no con `Familia.codigo`. */
+  familia: number;
+  /** Código del producto (ojo: aquí `codmenu` es el producto, no el menú). */
+  codmenu: number;
+  tmenu: string;
+  descripcion: string;
+  /** Precio como texto, p. ej. "4.00". */
+  euros: string;
+  /** Códigos de alérgeno entre pipes, p. ej. "|1|3|7|". */
+  alergenos: string;
+  orden: number;
+  pensiones: string;
+  codfam: string;
+  /** Subfamilia: determinará qué extras admite el producto. */
+  codsub: string;
+  /** "S" si el producto puede usarse como extra de otro. */
+  es_extra: string;
+  /** "S" si se muestra como producto en su familia. */
+  ver_extra: string;
+}
+
+/** Producto normalizado para uso interno. */
+export interface Producto {
+  codigo: number;
+  /** `pos` de la familia a la que pertenece. */
+  familiaPos: number;
+  nombre: string;
+  precio: number;
+  /** Códigos de alérgeno. */
+  alergenos: number[];
+  orden: number;
+  codsub: string;
+  esExtra: boolean;
+  /** Se muestra en la carta al huésped. */
+  visible: boolean;
+}
+
+/** Alérgeno tal cual llega de la API (descripción en un solo idioma). */
 export interface Alergeno {
   codigo: number;
   descripcion: string;
@@ -37,34 +69,37 @@ export interface AlergenoResuelto {
   icono: string;
 }
 
-/** Plato tal cual llega del JSON: referencia familia y alérgenos por id. */
-export interface Plato {
-  id: number;
-  familiaId: number;
-  nombre: TextoLocalizado;
-  descripcion: TextoLocalizado;
-  precio: number;
-  imagen: string;
-  /** Códigos de los alérgenos presentes en el plato (los de la base de datos). */
-  alergenos: number[];
-  /** Ids de los extras aplicables al plato (añadir/quitar). */
-  extras?: number[];
-  disponible: boolean;
-}
-
-/**
- * Plato ya cruzado en memoria: familia, alérgenos y extras resueltos a objetos.
- * Es lo que consumen los componentes de presentación.
- */
-export interface PlatoResuelto
-  extends Omit<Plato, 'familiaId' | 'alergenos' | 'extras'> {
+/** Producto con su familia y sus alérgenos ya resueltos. */
+export interface ProductoResuelto extends Omit<Producto, 'alergenos'> {
   familia: Familia;
   alergenos: AlergenoResuelto[];
-  extras: Extra[];
 }
 
-/** Respuesta del endpoint ligero de versión de contenido. */
-export interface Version {
-  version: number;
-  updated_at: string;
+/** Convierte el precio en texto de la API a número. */
+export function aPrecio(euros: string): number {
+  const n = Number.parseFloat((euros ?? '').replace(',', '.'));
+  return Number.isFinite(n) ? n : 0;
+}
+
+/** Convierte "|1|3|7|" en [1, 3, 7]. */
+export function aCodigosAlergeno(alergenos: string): number[] {
+  return (alergenos ?? '')
+    .split('|')
+    .map((s) => Number.parseInt(s, 10))
+    .filter((n) => Number.isFinite(n));
+}
+
+/** Normaliza un producto de la API al modelo interno. */
+export function normalizarProducto(p: ProductoApi): Producto {
+  return {
+    codigo: p.codmenu,
+    familiaPos: Number(p.familia),
+    nombre: p.descripcion,
+    precio: aPrecio(p.euros),
+    alergenos: aCodigosAlergeno(p.alergenos),
+    orden: p.orden ?? 0,
+    codsub: p.codsub ?? '',
+    esExtra: p.es_extra === 'S',
+    visible: p.ver_extra === 'S',
+  };
 }

@@ -1,33 +1,25 @@
 @if (carta.cargando()) {
   <p class="estado">{{ idiomas.txt().cargando }}</p>
-} @else if (!plato()) {
+} @else if (!producto()) {
   <p class="estado">{{ idiomas.txt().platoNoEncontrado }}</p>
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
-  <a class="volver" [routerLink]="empresa.ruta('familia', plato()!.familia.id)">
-    ← {{ plato()!.familia.nombre | loc: idiomas.idioma() }}
+  <a class="volver" [routerLink]="empresa.ruta('familia', producto()!.familia.pos)">
+    ← {{ producto()!.familia.descripcion }}
   </a>
 
   <article class="detalle">
-    <img
-      class="detalle__img"
-      [src]="plato()!.imagen"
-      [alt]="plato()!.nombre | loc: idiomas.idioma()"
-    />
-
     <div class="detalle__cuerpo">
       <div class="detalle__cabecera">
-        <h1 class="detalle__nombre">{{ plato()!.nombre | loc: idiomas.idioma() }}</h1>
-        <span class="detalle__precio">{{ plato()!.precio.toFixed(2) }} €</span>
+        <h1 class="detalle__nombre">{{ producto()!.nombre }}</h1>
+        <span class="detalle__precio">{{ producto()!.precio.toFixed(2) }} €</span>
       </div>
-
-      <p class="detalle__desc">{{ plato()!.descripcion | loc: idiomas.idioma() }}</p>
 
       <section class="alergenos">
         <h2 class="bloque-titulo">{{ idiomas.txt().alergenos }}</h2>
-        @if (plato()!.alergenos.length) {
+        @if (producto()!.alergenos.length) {
           <ul class="alergenos__lista">
-            @for (a of plato()!.alergenos; track a.codigo) {
+            @for (a of producto()!.alergenos; track a.codigo) {
               <li class="alergeno">
                 <img class="alergeno__icono" [src]="a.icono" [alt]="a.nombre | loc: idiomas.idioma()" />
                 <span>{{ a.nombre | loc: idiomas.idioma() }}</span>
@@ -40,39 +32,6 @@
       </section>
 
       @if (horario.pedidosAbiertos()) {
-        @if (extrasAnadir().length || extrasQuitar().length) {
-          <section class="extras">
-            <h2 class="bloque-titulo">{{ idiomas.txt().extras }}</h2>
-
-            @if (extrasAnadir().length) {
-              <p class="extras__grupo">{{ idiomas.txt().anadir }}</p>
-              <div class="extras__lista">
-                @for (e of extrasAnadir(); track e.id) {
-                  <label class="extra" [class.extra--activo]="estaSeleccionado(e.id)">
-                    <input type="checkbox" [checked]="estaSeleccionado(e.id)" (change)="toggleExtra(e.id)" />
-                    <span>{{ e.nombre | loc: idiomas.idioma() }}</span>
-                    @if (e.precio > 0) {
-                      <span class="extra__precio">+{{ e.precio.toFixed(2) }} €</span>
-                    }
-                  </label>
-                }
-              </div>
-            }
-
-            @if (extrasQuitar().length) {
-              <p class="extras__grupo">{{ idiomas.txt().quitar }}</p>
-              <div class="extras__lista">
-                @for (e of extrasQuitar(); track e.id) {
-                  <label class="extra" [class.extra--activo]="estaSeleccionado(e.id)">
-                    <input type="checkbox" [checked]="estaSeleccionado(e.id)" (change)="toggleExtra(e.id)" />
-                    <span>{{ e.nombre | loc: idiomas.idioma() }}</span>
-                  </label>
-                }
-              </div>
-            }
-          </section>
-        }
-
         <section class="nota">
           <h2 class="bloque-titulo">{{ idiomas.txt().notaCocina }}</h2>
           <textarea

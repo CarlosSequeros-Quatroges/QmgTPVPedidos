@@ -1,16 +1,14 @@
 import { Observable } from 'rxjs';
 
-import { Alergeno, Familia, Plato } from '../models/carta.models';
-import { Extra } from '../models/extra.models';
+import { Alergeno, Familia, ProductoApi } from '../models/carta.models';
 import { Local } from '../models/local.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
-/** Carta de productos de un `codmenu` (familias, platos y extras). */
+/** Carta de un local: familias y productos, tal cual los devuelve la API. */
 export interface CartaLocal {
   familias: Familia[];
-  platos: Plato[];
-  extras: Extra[];
+  productos: ProductoApi[];
 }
 
 /**
@@ -25,12 +23,12 @@ export abstract class PedidosApi {
   /** Locales (puntos de venta) disponibles. */
   abstract getLocales(): Observable<Local[]>;
 
-  /** Carta de productos de un menú. Varios locales pueden compartir `codmenu`. */
-  abstract getCarta(codmenu: number): Observable<CartaLocal>;
+  /** Carta del local: familias y productos del menú. */
+  abstract getCarta(codtpv: string, codmenu: number): Observable<CartaLocal>;
 
   /**
    * Catálogo de alérgenos de la empresa (código + descripción en un idioma).
-   * Los códigos son los que se asocian a los platos.
+   * Los códigos son los que se asocian a los productos.
    */
   abstract getAlergenos(): Observable<Alergeno[]>;
 

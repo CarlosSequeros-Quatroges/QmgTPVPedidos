@@ -1,5 +1,5 @@
 import { Local } from './local.models';
-import { Alergeno } from './carta.models';
+import { Alergeno, Familia, ProductoApi } from './carta.models';
 
 /**
  * Envoltorio común de las respuestas de la API.
@@ -20,4 +20,10 @@ export interface RespuestaLocales extends RespuestaApi {
 /** Respuesta del endpoint de alérgenos. */
 export interface RespuestaAlergenos extends RespuestaApi {
   alergenos: Alergeno[];
+}
+
+/** Respuesta de `getCarta`. */
+export interface RespuestaCarta extends RespuestaApi {
+  familias: Familia[];
+  productos: ProductoApi[];
 }

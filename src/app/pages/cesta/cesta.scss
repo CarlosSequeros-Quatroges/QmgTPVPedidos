@@ -18,27 +18,13 @@
 }
 
 .linea {
-  display: grid;
-  grid-template-columns: 90px 1fr;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
   background: var(--color-tarjeta);
   border-radius: var(--radio);
   box-shadow: var(--sombra);
-  overflow: hidden;
-
-  &__img {
-    width: 90px;
-    height: 100%;
-    min-height: 90px;
-    object-fit: cover;
-  }
-
-  &__cuerpo {
-    padding: 0.85rem 1rem 0.85rem 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-  }
+  padding: 0.9rem 1.1rem;
 
   &__cabecera {
     display: flex;

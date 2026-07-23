@@ -17,16 +17,16 @@ export class Platos {
   protected readonly idiomas = inject(IdiomaService);
   protected readonly empresa = inject(EmpresaService);
 
-  /** Id de familia recibido desde la ruta (`/familia/:id`). */
+  /** `pos` de la familia recibida desde la ruta (`/familia/:id`). */
   readonly id = input.required<string>();
 
-  private readonly familiaId = computed(() => Number(this.id()));
+  private readonly familiaPos = computed(() => Number(this.id()));
 
   protected readonly familia = computed(() =>
-    this.carta.familia(this.familiaId()),
+    this.carta.familia(this.familiaPos()),
   );
 
-  protected readonly platos = computed(() =>
-    this.carta.platosDeFamilia(this.familiaId()),
+  protected readonly productos = computed(() =>
+    this.carta.productosDeFamilia(this.familiaPos()),
   );
 }

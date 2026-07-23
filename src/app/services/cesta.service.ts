@@ -2,7 +2,7 @@ import { Injectable, computed, effect, inject, signal } from '@angular/core';
 
 import { LocalService } from './local.service';
 import { LineaCesta } from '../models/cesta.models';
-import { PlatoResuelto } from '../models/carta.models';
+import { ProductoResuelto } from '../models/carta.models';
 import { ExtraSeleccionado } from '../models/extra.models';
 
 const KEY = 'pedidos.cesta';
@@ -53,19 +53,18 @@ export class CestaService {
 
   /** Añade una línea nueva (no fusiona: la nota suele hacerlas únicas). */
   agregar(
-    plato: PlatoResuelto,
+    producto: ProductoResuelto,
     extras: ExtraSeleccionado[],
     nota: string,
     cantidad: number,
   ): void {
     const precioUnitario =
-      plato.precio + extras.reduce((s, e) => s + e.precio, 0);
+      producto.precio + extras.reduce((s, e) => s + e.precio, 0);
     const linea: LineaCesta = {
       id: crypto.randomUUID(),
-      platoId: plato.id,
-      nombre: plato.nombre,
-      precioBase: plato.precio,
-      imagen: plato.imagen,
+      codProducto: producto.codigo,
+      nombre: producto.nombre,
+      precioBase: producto.precio,
       extras,
       nota: nota.trim(),
       cantidad,

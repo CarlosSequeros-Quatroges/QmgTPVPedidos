@@ -1,22 +1,22 @@
-import { TextoLocalizado } from './carta.models';
 import { ExtraSeleccionado } from './extra.models';
 
 /**
- * Línea de la cesta. Guarda un snapshot de nombre/precio/imagen del plato para
- * que se pinte igual aunque después cambie la carta.
+ * Línea de la cesta. Guarda un snapshot del nombre y el precio del producto
+ * para que se pinte igual aunque después cambie la carta.
  */
 export interface LineaCesta {
   /** Identificador local único de la línea (crypto.randomUUID). */
   id: string;
-  platoId: number;
-  nombre: TextoLocalizado;
+  /** Código del producto (el `codmenu` de la API). */
+  codProducto: number;
+  nombre: string;
   precioBase: number;
-  imagen: string;
+  /** Extras añadidos (pendiente de `getSubFamilias`). */
   extras: ExtraSeleccionado[];
   /** Nota de texto para cocina. */
   nota: string;
   cantidad: number;
-  /** precioBase + suma de extras "añadir". */
+  /** precioBase + suma de extras. */
   precioUnitario: number;
   /** precioUnitario * cantidad. */
   subtotal: number;

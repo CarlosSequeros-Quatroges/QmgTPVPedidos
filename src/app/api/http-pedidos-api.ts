@@ -10,6 +10,7 @@ import { Local } from '../models/local.models';
 import {
   RespuestaAlergenos,
   RespuestaApi,
+  RespuestaCarta,
   RespuestaLocales,
 } from '../models/respuesta.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
@@ -43,10 +44,17 @@ export class HttpPedidosApi extends PedidosApi {
       .pipe(map((r) => comprobar(r).locales ?? []));
   }
 
-  // --- Pendientes de API real: por ahora, datos simulados ---
-
-  getCarta(codmenu: number): Observable<CartaLocal> {
-    return this.mock.getCarta(codmenu);
+  getCarta(codtpv: string, codmenu: number): Observable<CartaLocal> {
+    return this.http
+      .get<RespuestaCarta>(`${API_BASE}/getCarta`, {
+        params: { codtpv, codmenu },
+      })
+      .pipe(
+        map((r) => {
+          const c = comprobar(r);
+          return { familias: c.familias ?? [], productos: c.productos ?? [] };
+        }),
+      );
   }
 
   getAlergenos(): Observable<Alergeno[]> {
@@ -54,6 +62,8 @@ export class HttpPedidosApi extends PedidosApi {
       .get<RespuestaAlergenos>(`${API_BASE}/getAlergenos`)
       .pipe(map((r) => comprobar(r).alergenos ?? []));
   }
+
+  // --- Pendientes de API real: por ahora, datos simulados ---
 
   validarCliente(codigo: string): Observable<ValidacionCliente> {
     return this.mock.validarCliente(codigo);

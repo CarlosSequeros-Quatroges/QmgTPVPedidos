@@ -5,29 +5,18 @@
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
-  <h1 class="titulo">{{ familia()!.nombre | loc: idiomas.idioma() }}</h1>
+  <h1 class="titulo">{{ familia()!.descripcion }}</h1>
 
   <ul class="platos">
-    @for (plato of platos(); track plato.id) {
+    @for (producto of productos(); track producto.codigo) {
       <li class="plato">
-        <a class="plato__link" [routerLink]="empresa.ruta('plato', plato.id)">
-          <img
-            class="plato__img"
-            [src]="plato.imagen"
-            [alt]="plato.nombre | loc: idiomas.idioma()"
-          />
+        <a class="plato__link" [routerLink]="empresa.ruta('plato', producto.codigo)">
           <div class="plato__cuerpo">
-            <div class="plato__cabecera">
-              <span class="plato__nombre">
-                {{ plato.nombre | loc: idiomas.idioma() }}
-              </span>
-              <span class="plato__precio">{{ plato.precio.toFixed(2) }} €</span>
-            </div>
-            <p class="plato__desc">{{ plato.descripcion | loc: idiomas.idioma() }}</p>
+            <span class="plato__nombre">{{ producto.nombre }}</span>
 
-            @if (plato.alergenos.length) {
+            @if (producto.alergenos.length) {
               <div class="plato__alergenos">
-                @for (a of plato.alergenos; track a.codigo) {
+                @for (a of producto.alergenos; track a.codigo) {
                   <img
                     class="chip-alergeno"
                     [src]="a.icono"
@@ -38,6 +27,7 @@
               </div>
             }
           </div>
+          <span class="plato__precio">{{ producto.precio.toFixed(2) }} €</span>
         </a>
       </li>
     }

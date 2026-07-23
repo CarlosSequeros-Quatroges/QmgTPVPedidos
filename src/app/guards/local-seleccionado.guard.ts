@@ -24,7 +24,7 @@ export const localSeleccionadoGuard: CanActivateFn = () => {
       if (!activo) {
         return router.createUrlTree(empresa.ruta());
       }
-      carta.cargarCarta(activo.codmenu).subscribe({
+      carta.cargarCarta(activo.codtpv, activo.codmenu).subscribe({
         error: () => {
           /* el estado de error se muestra vía CartaService.error() */
         },
