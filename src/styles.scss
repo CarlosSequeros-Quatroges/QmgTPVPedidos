@@ -43,6 +43,23 @@ img {
 
 /* --- Utilidades compartidas --- */
 
+/**
+ * Texto solo para lectores de pantalla: invisible en pantalla pero presente
+ * en el DOM, de modo que aporta nombre accesible real (mejor que aria-label).
+ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;

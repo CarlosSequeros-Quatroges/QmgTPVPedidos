@@ -30,12 +30,12 @@
             class="idiomas__btn"
             [class.idiomas__btn--activo]="idiomas.idioma() === op.codigo"
             [attr.aria-pressed]="idiomas.idioma() === op.codigo"
-            [attr.aria-label]="op.nombre"
             [title]="op.nombre"
             (click)="idiomas.cambiar(op.codigo)"
           >
-            <!-- La bandera es decorativa: el nombre accesible lo da el botón. -->
+            <!-- La bandera es decorativa; el nombre accesible lo da el texto. -->
             <img class="idiomas__bandera" [src]="op.bandera" alt="" />
+            <span class="visually-hidden">{{ op.nombre }}</span>
           </button>
         }
       </div>
@@ -54,22 +54,20 @@
         [routerLink]="empresa.ruta('mi-codigo')"
         class="icono-btn"
         [class.icono-btn--activo]="cliente.tieneCodigo()"
-        [attr.aria-label]="idiomas.txt().miCodigo"
         [title]="idiomas.txt().miCodigo"
-      ><span aria-hidden="true">🔑</span></a>
+      >
+        <span aria-hidden="true">🔑</span>
+        <span class="visually-hidden">{{ idiomas.txt().miCodigo }}</span>
+      </a>
 
       @if (local.localActivo()) {
         <a
           [routerLink]="empresa.ruta('cesta')"
           class="cesta-btn"
-          [attr.aria-label]="
-            cesta.numArticulos()
-              ? idiomas.txt().tuPedido + ' (' + cesta.numArticulos() + ')'
-              : idiomas.txt().tuPedido
-          "
           [title]="idiomas.txt().tuPedido"
         >
           <span aria-hidden="true">🛒</span>
+          <span class="visually-hidden">{{ idiomas.txt().tuPedido }}</span>
           @if (cesta.numArticulos() > 0) {
             <span class="cesta-btn__badge">{{ cesta.numArticulos() }}</span>
           }
