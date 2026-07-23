@@ -35,7 +35,10 @@ export interface ProductoApi {
   codsub: string;
   /** "S" si el producto puede usarse como extra de otro. */
   es_extra: string;
-  /** "S" si se muestra como producto en su familia. */
+  /**
+   * Solo aplica a los extras: "S" si, además de servir como extra, se muestra
+   * como producto en su familia.
+   */
   ver_extra: string;
 }
 
@@ -51,7 +54,10 @@ export interface Producto {
   orden: number;
   codsub: string;
   esExtra: boolean;
-  /** Se muestra en la carta al huésped. */
+  /**
+   * Se muestra en la carta al huésped: los productos normales siempre, y los
+   * extras solo si además se venden sueltos (`ver_extra = "S"`).
+   */
   visible: boolean;
 }
 
@@ -91,6 +97,7 @@ export function aCodigosAlergeno(alergenos: string): number[] {
 
 /** Normaliza un producto de la API al modelo interno. */
 export function normalizarProducto(p: ProductoApi): Producto {
+  const esExtra = p.es_extra === 'S';
   return {
     codigo: p.codmenu,
     familiaPos: Number(p.familia),
@@ -99,7 +106,8 @@ export function normalizarProducto(p: ProductoApi): Producto {
     alergenos: aCodigosAlergeno(p.alergenos),
     orden: p.orden ?? 0,
     codsub: p.codsub ?? '',
-    esExtra: p.es_extra === 'S',
-    visible: p.ver_extra === 'S',
+    esExtra,
+    // Los normales se muestran siempre; los extras, solo si se venden sueltos.
+    visible: !esExtra || p.ver_extra === 'S',
   };
 }
