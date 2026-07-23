@@ -30,32 +30,46 @@
             class="idiomas__btn"
             [class.idiomas__btn--activo]="idiomas.idioma() === op.codigo"
             [attr.aria-pressed]="idiomas.idioma() === op.codigo"
+            [attr.aria-label]="op.nombre"
             [title]="op.nombre"
             (click)="idiomas.cambiar(op.codigo)"
           >
-            <img class="idiomas__bandera" [src]="op.bandera" [alt]="op.nombre" />
+            <!-- La bandera es decorativa: el nombre accesible lo da el botón. -->
+            <img class="idiomas__bandera" [src]="op.bandera" alt="" />
           </button>
         }
       </div>
 
       <span
         class="conexion"
+        role="status"
         [class.conexion--offline]="!conectividad.enLinea()"
+        [attr.aria-label]="conectividad.enLinea() ? idiomas.txt().enLinea : idiomas.txt().sinConexion"
         [title]="conectividad.enLinea() ? idiomas.txt().enLinea : idiomas.txt().sinConexion"
       >
-        <span class="conexion__punto"></span>
+        <span class="conexion__punto" aria-hidden="true"></span>
       </span>
 
       <a
         [routerLink]="empresa.ruta('mi-codigo')"
         class="icono-btn"
         [class.icono-btn--activo]="cliente.tieneCodigo()"
+        [attr.aria-label]="idiomas.txt().miCodigo"
         [title]="idiomas.txt().miCodigo"
-      >🔑</a>
+      ><span aria-hidden="true">🔑</span></a>
 
       @if (local.localActivo()) {
-        <a [routerLink]="empresa.ruta('cesta')" class="cesta-btn" [title]="idiomas.txt().tuPedido">
-          🛒
+        <a
+          [routerLink]="empresa.ruta('cesta')"
+          class="cesta-btn"
+          [attr.aria-label]="
+            cesta.numArticulos()
+              ? idiomas.txt().tuPedido + ' (' + cesta.numArticulos() + ')'
+              : idiomas.txt().tuPedido
+          "
+          [title]="idiomas.txt().tuPedido"
+        >
+          <span aria-hidden="true">🛒</span>
           @if (cesta.numArticulos() > 0) {
             <span class="cesta-btn__badge">{{ cesta.numArticulos() }}</span>
           }
