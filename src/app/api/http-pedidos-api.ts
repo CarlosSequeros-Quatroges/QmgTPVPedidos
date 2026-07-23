@@ -5,8 +5,13 @@ import { Observable, map } from 'rxjs';
 import { API_BASE } from './api.config';
 import { CartaLocal, PedidosApi } from './pedidos-api';
 import { MockPedidosApi } from './mock-pedidos-api';
+import { Alergeno } from '../models/carta.models';
 import { Local } from '../models/local.models';
-import { RespuestaApi, RespuestaLocales } from '../models/respuesta.models';
+import {
+  RespuestaAlergenos,
+  RespuestaApi,
+  RespuestaLocales,
+} from '../models/respuesta.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
@@ -42,6 +47,12 @@ export class HttpPedidosApi extends PedidosApi {
 
   getCarta(codmenu: number): Observable<CartaLocal> {
     return this.mock.getCarta(codmenu);
+  }
+
+  getAlergenos(): Observable<Alergeno[]> {
+    return this.http
+      .get<RespuestaAlergenos>(`${API_BASE}/getAlergenos`)
+      .pipe(map((r) => comprobar(r).alergenos ?? []));
   }
 
   validarCliente(codigo: string): Observable<ValidacionCliente> {

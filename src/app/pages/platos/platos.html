@@ -27,7 +27,7 @@
 
             @if (plato.alergenos.length) {
               <div class="plato__alergenos">
-                @for (a of plato.alergenos; track a.id) {
+                @for (a of plato.alergenos; track a.codigo) {
                   <img
                     class="chip-alergeno"
                     [src]="a.icono"

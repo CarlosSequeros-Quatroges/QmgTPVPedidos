@@ -2,7 +2,7 @@
   <header class="app-header">
     <a [routerLink]="empresa.ruta('carta')" class="brand">
       <span class="brand__mark">🍽️</span>
-      <span class="brand__name">Mirador Atlántico</span>
+      <span class="brand__name">Hoteles Quatroges</span>
       <span class="brand__sub">{{ idiomas.txt().subtitulo }}</span>
     </a>
 
@@ -44,7 +44,9 @@
         class="conexion"
         role="status"
         [class.conexion--offline]="!conectividad.enLinea()"
-        [attr.aria-label]="conectividad.enLinea() ? idiomas.txt().enLinea : idiomas.txt().sinConexion"
+        [attr.aria-label]="
+          conectividad.enLinea() ? idiomas.txt().enLinea : idiomas.txt().sinConexion
+        "
         [title]="conectividad.enLinea() ? idiomas.txt().enLinea : idiomas.txt().sinConexion"
       >
         <span class="conexion__punto" aria-hidden="true"></span>
@@ -68,11 +70,7 @@
       </a>
 
       @if (local.localActivo()) {
-        <a
-          [routerLink]="empresa.ruta('cesta')"
-          class="cesta-btn"
-          [title]="idiomas.txt().tuPedido"
-        >
+        <a [routerLink]="empresa.ruta('cesta')" class="cesta-btn" [title]="idiomas.txt().tuPedido">
           <span aria-hidden="true">🛒</span>
           <span class="visually-hidden">{{ idiomas.txt().tuPedido }}</span>
           @if (cesta.numArticulos() > 0) {

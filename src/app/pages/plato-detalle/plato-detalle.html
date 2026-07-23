@@ -27,7 +27,7 @@
         <h2 class="bloque-titulo">{{ idiomas.txt().alergenos }}</h2>
         @if (plato()!.alergenos.length) {
           <ul class="alergenos__lista">
-            @for (a of plato()!.alergenos; track a.id) {
+            @for (a of plato()!.alergenos; track a.codigo) {
               <li class="alergeno">
                 <img class="alergeno__icono" [src]="a.icono" [alt]="a.nombre | loc: idiomas.idioma()" />
                 <span>{{ a.nombre | loc: idiomas.idioma() }}</span>

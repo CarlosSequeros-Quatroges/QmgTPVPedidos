@@ -12,7 +12,7 @@ import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 const DATA = 'data';
 
 /** Estructura del JSON de carta por menú (`data/cartas/carta-{codmenu}.json`). */
-type CartaArchivo = Omit<CartaLocal, 'alergenos'>;
+type CartaArchivo = CartaLocal;
 
 /** Cuenta de habitación del mock (`data/cuentas.json`). */
 interface CuentaHabitacion {
@@ -38,13 +38,23 @@ export class MockPedidosApi extends PedidosApi {
   }
 
   getCarta(codmenu: number): Observable<CartaLocal> {
-    return forkJoin({
-      carta: this.http.get<CartaArchivo>(`${DATA}/cartas/carta-${codmenu}.json`),
-      alergenos: this.http.get<Alergeno[]>(`${DATA}/alergenos.json`),
-    }).pipe(
-      delay(250),
-      map(({ carta, alergenos }) => ({ ...carta, alergenos })),
-    );
+    return this.http
+      .get<CartaArchivo>(`${DATA}/cartas/carta-${codmenu}.json`)
+      .pipe(delay(250));
+  }
+
+  getAlergenos(): Observable<Alergeno[]> {
+    // Simula el catálogo de la empresa a partir de la tabla local de textos.
+    return this.http
+      .get<{ codigo: number; nombre: { es: string } }[]>(
+        `${DATA}/alergenos.json`,
+      )
+      .pipe(
+        delay(150),
+        map((filas) =>
+          filas.map((f) => ({ codigo: f.codigo, descripcion: f.nombre.es })),
+        ),
+      );
   }
 
   validarCliente(codigo: string): Observable<ValidacionCliente> {

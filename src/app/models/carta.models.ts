@@ -19,13 +19,21 @@ export interface Familia {
   imagen: string;
 }
 
-/** Alérgeno de declaración obligatoria (los 14 de la UE). */
+/**
+ * Alérgeno tal cual llega de la API (de la base de datos).
+ * El `codigo` es el que se asocia a los platos; la `descripcion` viene en un
+ * solo idioma, por eso la app aporta las traducciones.
+ */
 export interface Alergeno {
-  id: number;
-  /** Código estable en minúsculas, p. ej. "gluten". */
-  codigo: string;
+  codigo: number;
+  descripcion: string;
+}
+
+/** Alérgeno listo para mostrar: nombre traducido e icono resuelto. */
+export interface AlergenoResuelto {
+  codigo: number;
   nombre: TextoLocalizado;
-  /** Ruta relativa al icono del alérgeno. */
+  /** Ruta relativa al icono (`img/alergenos/aler{codigo}.svg`). */
   icono: string;
 }
 
@@ -37,7 +45,7 @@ export interface Plato {
   descripcion: TextoLocalizado;
   precio: number;
   imagen: string;
-  /** Ids de los alérgenos presentes en el plato. */
+  /** Códigos de los alérgenos presentes en el plato (los de la base de datos). */
   alergenos: number[];
   /** Ids de los extras aplicables al plato (añadir/quitar). */
   extras?: number[];
@@ -51,7 +59,7 @@ export interface Plato {
 export interface PlatoResuelto
   extends Omit<Plato, 'familiaId' | 'alergenos' | 'extras'> {
   familia: Familia;
-  alergenos: Alergeno[];
+  alergenos: AlergenoResuelto[];
   extras: Extra[];
 }
 

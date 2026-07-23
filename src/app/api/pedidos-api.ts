@@ -6,11 +6,10 @@ import { Local } from '../models/local.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
-/** Carta de productos de un `codmenu` (familias, platos, alérgenos y extras). */
+/** Carta de productos de un `codmenu` (familias, platos y extras). */
 export interface CartaLocal {
   familias: Familia[];
   platos: Plato[];
-  alergenos: Alergeno[];
   extras: Extra[];
 }
 
@@ -28,6 +27,12 @@ export abstract class PedidosApi {
 
   /** Carta de productos de un menú. Varios locales pueden compartir `codmenu`. */
   abstract getCarta(codmenu: number): Observable<CartaLocal>;
+
+  /**
+   * Catálogo de alérgenos de la empresa (código + descripción en un idioma).
+   * Los códigos son los que se asocian a los platos.
+   */
+  abstract getAlergenos(): Observable<Alergeno[]>;
 
   /**
    * Valida el código de cliente que el huésped recibe en recepción y devuelve

@@ -1,9 +1,16 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, catchError, of, tap, throwError } from 'rxjs';
+import { Observable, catchError, forkJoin, of, tap, throwError } from 'rxjs';
 
-import { CartaLocal, PedidosApi } from '../api/pedidos-api';
-import { Alergeno, Familia, Plato, PlatoResuelto } from '../models/carta.models';
+import { PedidosApi } from '../api/pedidos-api';
+import {
+  Alergeno,
+  AlergenoResuelto,
+  Familia,
+  Plato,
+  PlatoResuelto,
+} from '../models/carta.models';
 import { Extra } from '../models/extra.models';
+import { AlergenosService } from './alergenos.service';
 
 /**
  * Carta de productos de un `codmenu`. Cruza en memoria platos con su familia,
@@ -14,6 +21,7 @@ import { Extra } from '../models/extra.models';
 @Injectable({ providedIn: 'root' })
 export class CartaService {
   private readonly api = inject(PedidosApi);
+  private readonly alergenosSvc = inject(AlergenosService);
 
   private readonly _familias = signal<Familia[]>([]);
   private readonly _platos = signal<Plato[]>([]);
@@ -36,8 +44,14 @@ export class CartaService {
   private readonly familiasPorId = computed(
     () => new Map(this._familias().map((f) => [f.id, f])),
   );
-  private readonly alergenosPorId = computed(
-    () => new Map(this._alergenos().map((a) => [a.id, a])),
+  /** Alérgenos resueltos (traducidos + icono) indexados por su código de BD. */
+  private readonly alergenosPorCodigo = computed(
+    () =>
+      new Map(
+        this._alergenos().map(
+          (a) => [a.codigo, this.alergenosSvc.resolver(a)] as const,
+        ),
+      ),
   );
   private readonly extrasPorId = computed(
     () => new Map(this._extras().map((e) => [e.id, e])),
@@ -46,7 +60,7 @@ export class CartaService {
   /** Platos disponibles con familia, alérgenos y extras resueltos. */
   readonly platos = computed<PlatoResuelto[]>(() => {
     const familias = this.familiasPorId();
-    const alergenos = this.alergenosPorId();
+    const alergenos = this.alergenosPorCodigo();
     const extras = this.extrasPorId();
     return this._platos()
       .filter((p) => p.disponible)
@@ -54,19 +68,30 @@ export class CartaService {
       .filter((p): p is PlatoResuelto => p !== null);
   });
 
-  /** Carga la carta del menú indicado. Reutiliza si ya está cargada. */
-  cargarCarta(codmenu: number): Observable<CartaLocal | null> {
+  /**
+   * Carga la carta del menú indicado (y, la primera vez, el catálogo de
+   * alérgenos de la empresa). Reutiliza si ya está cargada.
+   */
+  cargarCarta(codmenu: number): Observable<unknown> {
     if (this.menuCargado === codmenu && !this._error()) {
       return of(null);
     }
     this._cargando.set(true);
     this._error.set(null);
-    return this.api.getCarta(codmenu).pipe(
-      tap((c) => {
-        this._familias.set(c.familias);
-        this._platos.set(c.platos);
-        this._alergenos.set(c.alergenos);
-        this._extras.set(c.extras);
+    return forkJoin({
+      carta: this.api.getCarta(codmenu),
+      // Los alérgenos son de empresa: se piden una sola vez.
+      alergenos: this._alergenos().length
+        ? of(this._alergenos())
+        : this.api.getAlergenos(),
+      // Tabla local de traducciones e iconos (también una sola vez).
+      tabla: this.alergenosSvc.asegurarTabla(),
+    }).pipe(
+      tap(({ carta, alergenos }) => {
+        this._familias.set(carta.familias);
+        this._platos.set(carta.platos);
+        this._extras.set(carta.extras);
+        this._alergenos.set(alergenos);
         this.menuCargado = codmenu;
         this._cargando.set(false);
       }),
@@ -94,18 +119,18 @@ export class CartaService {
   private resolver(
     plato: Plato,
     familias: Map<number, Familia>,
-    alergenos: Map<number, Alergeno>,
+    alergenos: Map<number, AlergenoResuelto>,
     extras: Map<number, Extra>,
   ): PlatoResuelto | null {
     const familia = familias.get(plato.familiaId);
     if (!familia) return null;
-    const { familiaId, alergenos: ids, extras: extraIds, ...resto } = plato;
+    const { familiaId, alergenos: codigos, extras: extraIds, ...resto } = plato;
     return {
       ...resto,
       familia,
-      alergenos: (ids ?? [])
-        .map((i) => alergenos.get(i))
-        .filter((a): a is Alergeno => a !== undefined),
+      alergenos: (codigos ?? [])
+        .map((c) => alergenos.get(c))
+        .filter((a): a is AlergenoResuelto => a !== undefined),
       extras: (extraIds ?? [])
         .map((i) => extras.get(i))
         .filter((e): e is Extra => e !== undefined),
