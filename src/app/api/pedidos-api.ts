@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Alergeno, Familia, Plato } from '../models/carta.models';
 import { Extra } from '../models/extra.models';
 import { Local } from '../models/local.models';
-import { ValidacionCargo } from '../models/cliente.models';
+import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
 /** Carta de productos de un `codmenu` (familias, platos, alérgenos y extras). */
@@ -28,6 +28,12 @@ export abstract class PedidosApi {
 
   /** Carta de productos de un menú. Varios locales pueden compartir `codmenu`. */
   abstract getCarta(codmenu: number): Observable<CartaLocal>;
+
+  /**
+   * Valida el código de cliente que el huésped recibe en recepción y devuelve
+   * sus datos, incluida la **habitación** asociada.
+   */
+  abstract validarCliente(codigo: string): Observable<ValidacionCliente>;
 
   /** ¿Se puede cargar `importe` a la cuenta de habitación de `codigo`? */
   abstract validarCargoHabitacion(

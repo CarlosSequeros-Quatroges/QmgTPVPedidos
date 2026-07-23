@@ -7,7 +7,7 @@ import { CartaLocal, PedidosApi } from './pedidos-api';
 import { MockPedidosApi } from './mock-pedidos-api';
 import { Local } from '../models/local.models';
 import { RespuestaApi, RespuestaLocales } from '../models/respuesta.models';
-import { ValidacionCargo } from '../models/cliente.models';
+import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
 /** Lanza un error si la respuesta no viene con errnum 0. */
@@ -42,6 +42,10 @@ export class HttpPedidosApi extends PedidosApi {
 
   getCarta(codmenu: number): Observable<CartaLocal> {
     return this.mock.getCarta(codmenu);
+  }
+
+  validarCliente(codigo: string): Observable<ValidacionCliente> {
+    return this.mock.validarCliente(codigo);
   }
 
   validarCargoHabitacion(

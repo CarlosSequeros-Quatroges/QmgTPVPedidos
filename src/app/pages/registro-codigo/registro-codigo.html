@@ -13,16 +13,25 @@
     autocapitalize="characters"
   />
 
+  @if (error()) {
+    <p class="tarjeta__error">✕ {{ idiomas.txt().codigoInvalido }}</p>
+  }
+
   <button
     type="button"
     class="btn btn--primario btn--bloque"
-    [disabled]="!entrada().trim()"
+    [disabled]="!entrada().trim() || validando()"
     (click)="guardar()"
-  >{{ idiomas.txt().guardar }}</button>
+  >
+    {{ validando() ? idiomas.txt().validando : idiomas.txt().guardar }}
+  </button>
 
   @if (cliente.tieneCodigo()) {
     <div class="tarjeta__activo">
-      <span>✓ {{ idiomas.txt().codigoActivo }}: <strong>{{ cliente.codigo() }}</strong></span>
+      <div>
+        <strong>✓ {{ idiomas.txt().habitacion }} {{ cliente.habitacion() }}</strong>
+        <span class="tarjeta__codigo">{{ cliente.codigo() }}</span>
+      </div>
       <button type="button" class="enlace-borrar" (click)="borrar()">
         {{ idiomas.txt().borrar }}
       </button>

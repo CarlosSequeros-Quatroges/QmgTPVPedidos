@@ -17,17 +17,34 @@ export class RegistroCodigo {
   protected readonly empresa = inject(EmpresaService);
 
   protected readonly entrada = signal(this.cliente.codigo() ?? '');
+  protected readonly validando = signal(false);
+  protected readonly error = signal(false);
 
   setEntrada(valor: string): void {
     this.entrada.set(valor);
+    this.error.set(false);
   }
 
+  /** Valida el código contra la API; si es correcto guarda código y habitación. */
   guardar(): void {
-    this.cliente.registrar(this.entrada());
+    if (this.validando() || !this.entrada().trim()) return;
+    this.validando.set(true);
+    this.error.set(false);
+    this.cliente.registrar(this.entrada()).subscribe({
+      next: (v) => {
+        this.validando.set(false);
+        this.error.set(!v.valido);
+      },
+      error: () => {
+        this.validando.set(false);
+        this.error.set(true);
+      },
+    });
   }
 
   borrar(): void {
     this.cliente.borrar();
     this.entrada.set('');
+    this.error.set(false);
   }
 }

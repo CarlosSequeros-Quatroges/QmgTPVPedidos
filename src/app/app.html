@@ -52,12 +52,19 @@
 
       <a
         [routerLink]="empresa.ruta('mi-codigo')"
-        class="icono-btn"
-        [class.icono-btn--activo]="cliente.tieneCodigo()"
+        class="cliente"
+        [class.cliente--registrado]="cliente.tieneCodigo()"
         [title]="idiomas.txt().miCodigo"
       >
-        <span aria-hidden="true">🔑</span>
-        <span class="visually-hidden">{{ idiomas.txt().miCodigo }}</span>
+        @if (cliente.tieneCodigo()) {
+          <span class="cliente__icono" aria-hidden="true">✓</span>
+          <span class="cliente__texto">
+            {{ idiomas.txt().habitacion }} {{ cliente.habitacion() }}
+          </span>
+        } @else {
+          <span class="cliente__icono" aria-hidden="true">?</span>
+          <span class="cliente__texto">{{ idiomas.txt().clienteNoRegistrado }}</span>
+        }
       </a>
 
       @if (local.localActivo()) {

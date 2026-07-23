@@ -84,6 +84,9 @@ interface TextosUI {
   borrar: string;
   codigoActivo: string;
   sinCodigo: string;
+  clienteNoRegistrado: string;
+  habitacion: string;
+  validando: string;
 }
 
 const OPCIONES: OpcionIdioma[] = [
@@ -160,6 +163,9 @@ const UI: Record<Idioma, TextosUI> = {
     borrar: 'Borrar código',
     codigoActivo: 'Código registrado',
     sinCodigo: 'Sin código',
+    clienteNoRegistrado: 'Cliente no registrado',
+    habitacion: 'Habitación',
+    validando: 'Validando…',
   },
   en: {
     subtitulo: 'Orders',
@@ -226,6 +232,9 @@ const UI: Record<Idioma, TextosUI> = {
     borrar: 'Remove code',
     codigoActivo: 'Code registered',
     sinCodigo: 'No code',
+    clienteNoRegistrado: 'Guest not registered',
+    habitacion: 'Room',
+    validando: 'Checking…',
   },
   fr: {
     subtitulo: 'Commandes',
@@ -294,6 +303,9 @@ const UI: Record<Idioma, TextosUI> = {
     borrar: 'Effacer le code',
     codigoActivo: 'Code enregistré',
     sinCodigo: 'Sans code',
+    clienteNoRegistrado: 'Client non enregistré',
+    habitacion: 'Chambre',
+    validando: 'Vérification…',
   },
   de: {
     subtitulo: 'Bestellungen',
@@ -362,6 +374,9 @@ const UI: Record<Idioma, TextosUI> = {
     borrar: 'Code löschen',
     codigoActivo: 'Code registriert',
     sinCodigo: 'Kein Code',
+    clienteNoRegistrado: 'Gast nicht registriert',
+    habitacion: 'Zimmer',
+    validando: 'Wird geprüft…',
   },
 };
 

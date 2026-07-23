@@ -6,7 +6,7 @@ import { CartaLocal, PedidosApi } from './pedidos-api';
 import { Alergeno } from '../models/carta.models';
 import { Local } from '../models/local.models';
 import { RespuestaLocales } from '../models/respuesta.models';
-import { ValidacionCargo } from '../models/cliente.models';
+import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
 const DATA = 'data';
@@ -17,6 +17,7 @@ type CartaArchivo = Omit<CartaLocal, 'alergenos'>;
 /** Cuenta de habitación del mock (`data/cuentas.json`). */
 interface CuentaHabitacion {
   codigo: string;
+  habitacion: string;
   saldo: number;
   huesped?: string;
 }
@@ -43,6 +44,25 @@ export class MockPedidosApi extends PedidosApi {
     }).pipe(
       delay(250),
       map(({ carta, alergenos }) => ({ ...carta, alergenos })),
+    );
+  }
+
+  validarCliente(codigo: string): Observable<ValidacionCliente> {
+    return this.http.get<CuentaHabitacion[]>(`${DATA}/cuentas.json`).pipe(
+      delay(300),
+      map((cuentas): ValidacionCliente => {
+        const cuenta = cuentas.find((c) => c.codigo === codigo.trim().toUpperCase());
+        if (!cuenta) return { valido: false, motivo: 'codigo_invalido' };
+        return {
+          valido: true,
+          motivo: 'ok',
+          cliente: {
+            codigo: cuenta.codigo,
+            habitacion: cuenta.habitacion,
+            nombre: cuenta.huesped,
+          },
+        };
+      }),
     );
   }
 
