@@ -11,6 +11,12 @@ export interface CartaLocal {
   productos: ProductoApi[];
 }
 
+/** Respuesta de `getLocales`: locales + idiomas de trabajo de la empresa. */
+export interface LocalesEmpresa {
+  locales: Local[];
+  idiomas: string[];
+}
+
 /**
  * Contrato de la API de pedidos. Clase abstracta para usarla como token de
  * inyección: se provee `HttpPedidosApi` (API real) o `MockPedidosApi` (datos
@@ -20,8 +26,8 @@ export interface CartaLocal {
  * interceptor a partir del que viene en la ruta.
  */
 export abstract class PedidosApi {
-  /** Locales (puntos de venta) disponibles. */
-  abstract getLocales(): Observable<Local[]>;
+  /** Locales (puntos de venta) e idiomas de trabajo de la empresa. */
+  abstract getLocales(): Observable<LocalesEmpresa>;
 
   /** Carta del local: familias y productos del menú. */
   abstract getCarta(codtpv: string, codmenu: number): Observable<CartaLocal>;

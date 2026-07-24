@@ -1,8 +1,9 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { Observable, of, shareReplay, tap } from 'rxjs';
+import { Observable, map, of, shareReplay, tap } from 'rxjs';
 
 import { PedidosApi } from '../api/pedidos-api';
 import { Local } from '../models/local.models';
+import { IdiomaService } from './idioma.service';
 
 const KEY = 'pedidos.local';
 
@@ -14,6 +15,7 @@ const KEY = 'pedidos.local';
 @Injectable({ providedIn: 'root' })
 export class LocalService {
   private readonly api = inject(PedidosApi);
+  private readonly idiomas = inject(IdiomaService);
 
   private readonly _locales = signal<Local[]>([]);
   private readonly _codtpv = signal<string | null>(this.leer());
@@ -42,8 +44,9 @@ export class LocalService {
     if (!this.locales$) {
       this.locales$ = this.api.getLocales().pipe(
         tap({
-          next: (locales) => {
+          next: ({ locales, idiomas }) => {
             this._locales.set(locales);
+            this.idiomas.configurar(idiomas);
             this._cargando.set(false);
             if (locales.length === 1 && !this._codtpv()) {
               this.seleccionar(locales[0]);
@@ -55,6 +58,7 @@ export class LocalService {
             console.error('Error cargando locales', err);
           },
         }),
+        map((r) => r.locales),
         shareReplay(1),
       );
     }

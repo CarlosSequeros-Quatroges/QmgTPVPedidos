@@ -24,7 +24,7 @@
 
     <div class="acciones">
       <div class="idiomas" role="group" aria-label="Idioma">
-        @for (op of idiomas.opciones; track op.codigo) {
+        @for (op of idiomas.opciones(); track op.codigo) {
           <button
             type="button"
             class="idiomas__btn"

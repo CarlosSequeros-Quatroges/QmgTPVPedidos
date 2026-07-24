@@ -89,12 +89,16 @@ interface TextosUI {
   validando: string;
 }
 
-const OPCIONES: OpcionIdioma[] = [
-  { codigo: 'es', nombre: 'Español', bandera: 'img/banderas/es.svg' },
-  { codigo: 'en', nombre: 'English', bandera: 'img/banderas/en.svg' },
-  { codigo: 'fr', nombre: 'Français', bandera: 'img/banderas/fr.svg' },
-  { codigo: 'de', nombre: 'Deutsch', bandera: 'img/banderas/de.svg' },
-];
+/** Idiomas para los que la app tiene interfaz y traducciones de alérgenos. */
+const IDIOMAS_SOPORTADOS = ['es', 'en', 'fr', 'de'] as const;
+
+/** Nombre nativo de cada idioma soportado (para el selector). */
+const NOMBRES: Record<Idioma, string> = {
+  es: 'Español',
+  en: 'English',
+  fr: 'Français',
+  de: 'Deutsch',
+};
 
 const UI: Record<Idioma, TextosUI> = {
   es: {
@@ -383,21 +387,49 @@ const UI: Record<Idioma, TextosUI> = {
 const STORAGE_KEY = 'pedidos.idioma';
 
 /**
- * Gestiona el idioma activo.
- * El idioma se guarda en `localStorage` y se expone como signal, de modo que
- * al cambiarlo toda la interfaz y el contenido reaccionan en caliente.
+ * Gestiona el idioma activo y los idiomas disponibles.
+ *
+ * Los idiomas disponibles los declara la empresa (`getLocales.idiomas`) y se
+ * filtran a los que la app tiene traducidos, respetando el orden recibido. El
+ * idioma activo se persiste; al cambiarlo, interfaz y contenido reaccionan en
+ * caliente. La bandera de cada idioma es `img/banderas/{codigo}.svg`.
  */
 @Injectable({ providedIn: 'root' })
 export class IdiomaService {
-  readonly opciones = OPCIONES;
-
+  /** Idiomas de la empresa (subconjunto soportado), en el orden de la API. */
+  private readonly _idiomas = signal<Idioma[]>([...IDIOMAS_SOPORTADOS]);
   private readonly _idioma = signal<Idioma>(this.leerInicial());
+
+  /** Opciones del selector: código, nombre nativo y bandera. */
+  readonly opciones = computed<OpcionIdioma[]>(() =>
+    this._idiomas().map((c) => ({
+      codigo: c,
+      nombre: NOMBRES[c],
+      bandera: `img/banderas/${c}.svg`,
+    })),
+  );
 
   /** Idioma activo. */
   readonly idioma = this._idioma.asReadonly();
 
   /** Textos de interfaz para el idioma activo. */
   readonly txt = computed(() => UI[this._idioma()]);
+
+  /**
+   * Configura los idiomas disponibles a partir de los que declara la empresa.
+   * Se quedan los que la app tiene traducidos, en el orden recibido. Si el
+   * idioma activo deja de estar disponible, se pasa al primero.
+   */
+  configurar(idiomas: string[]): void {
+    const disponibles = idiomas.filter((c): c is Idioma =>
+      (IDIOMAS_SOPORTADOS as readonly string[]).includes(c),
+    );
+    if (!disponibles.length) return;
+    this._idiomas.set(disponibles);
+    if (!disponibles.includes(this._idioma())) {
+      this.cambiar(disponibles[0]);
+    }
+  }
 
   cambiar(idioma: Idioma): void {
     this._idioma.set(idioma);
@@ -414,7 +446,7 @@ export class IdiomaService {
   private leerInicial(): Idioma {
     try {
       const guardado = localStorage.getItem(STORAGE_KEY);
-      if (guardado && OPCIONES.some((o) => o.codigo === guardado)) {
+      if (guardado && (IDIOMAS_SOPORTADOS as readonly string[]).includes(guardado)) {
         return guardado as Idioma;
       }
     } catch {

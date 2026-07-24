@@ -15,6 +15,8 @@ export interface RespuestaApi {
 /** Respuesta de `getLocales`. */
 export interface RespuestaLocales extends RespuestaApi {
   locales: Local[];
+  /** Idiomas de trabajo de la empresa, en orden (códigos ISO 639-1). */
+  idiomas: string[];
 }
 
 /** Respuesta del endpoint de alérgenos. */

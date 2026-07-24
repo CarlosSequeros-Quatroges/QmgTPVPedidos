@@ -3,10 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
 import { API_BASE } from './api.config';
-import { CartaLocal, PedidosApi } from './pedidos-api';
+import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
 import { MockPedidosApi } from './mock-pedidos-api';
 import { Alergeno } from '../models/carta.models';
-import { Local } from '../models/local.models';
 import {
   RespuestaAlergenos,
   RespuestaApi,
@@ -38,10 +37,13 @@ export class HttpPedidosApi extends PedidosApi {
   private readonly http = inject(HttpClient);
   private readonly mock = inject(MockPedidosApi);
 
-  getLocales(): Observable<Local[]> {
-    return this.http
-      .get<RespuestaLocales>(`${API_BASE}/getLocales`)
-      .pipe(map((r) => comprobar(r).locales ?? []));
+  getLocales(): Observable<LocalesEmpresa> {
+    return this.http.get<RespuestaLocales>(`${API_BASE}/getLocales`).pipe(
+      map((r) => {
+        const c = comprobar(r);
+        return { locales: c.locales ?? [], idiomas: c.idiomas ?? [] };
+      }),
+    );
   }
 
   getCarta(codtpv: string, codmenu: number): Observable<CartaLocal> {
