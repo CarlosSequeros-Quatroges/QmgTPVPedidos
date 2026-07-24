@@ -1,13 +1,13 @@
 import { Observable } from 'rxjs';
 
-import { Alergeno, Familia, ProductoApi } from '../models/carta.models';
+import { Alergeno, FamiliaApi, ProductoApi } from '../models/carta.models';
 import { Local } from '../models/local.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
 /** Carta de un local: familias y productos, tal cual los devuelve la API. */
 export interface CartaLocal {
-  familias: Familia[];
+  familias: FamiliaApi[];
   productos: ProductoApi[];
 }
 

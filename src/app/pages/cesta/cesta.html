@@ -9,10 +9,10 @@
   <ul class="lineas">
     @for (linea of cesta.lineas(); track linea.id) {
       <li class="linea">
-        <app-foto-producto class="linea__foto" [src]="linea.imagen" [alt]="linea.nombre" />
+        <app-foto-producto class="linea__foto" [src]="linea.imagen" [alt]="linea.nombres | slot: idiomas.slot()" />
         <div class="linea__contenido">
         <div class="linea__cabecera">
-          <span class="linea__nombre">{{ linea.nombre }}</span>
+          <span class="linea__nombre">{{ linea.nombres | slot: idiomas.slot() }}</span>
           <button
             type="button"
             class="linea__eliminar"

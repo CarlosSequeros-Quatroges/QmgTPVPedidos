@@ -5,11 +5,12 @@ import { CartaService } from '../../services/carta.service';
 import { IdiomaService } from '../../services/idioma.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
+import { SlotPipe } from '../../pipes/slot.pipe';
 import { FotoProducto } from '../../components/foto-producto/foto-producto';
 
 @Component({
   selector: 'app-platos',
-  imports: [RouterLink, LocPipe, FotoProducto],
+  imports: [RouterLink, LocPipe, SlotPipe, FotoProducto],
   templateUrl: './platos.html',
   styleUrl: './platos.scss',
 })
@@ -18,16 +19,16 @@ export class Platos {
   protected readonly idiomas = inject(IdiomaService);
   protected readonly empresa = inject(EmpresaService);
 
-  /** `pos` de la familia recibida desde la ruta (`/familia/:id`). */
+  /** `codfamilia` recibido desde la ruta (`/familia/:id`). */
   readonly id = input.required<string>();
 
-  private readonly familiaPos = computed(() => Number(this.id()));
+  private readonly codfamilia = computed(() => Number(this.id()));
 
   protected readonly familia = computed(() =>
-    this.carta.familia(this.familiaPos()),
+    this.carta.familia(this.codfamilia()),
   );
 
   protected readonly productos = computed(() =>
-    this.carta.productosDeFamilia(this.familiaPos()),
+    this.carta.productosDeFamilia(this.codfamilia()),
   );
 }

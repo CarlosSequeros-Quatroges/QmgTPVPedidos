@@ -6,12 +6,13 @@ import { IdiomaService } from '../../services/idioma.service';
 import { HorarioService } from '../../services/horario.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
+import { SlotPipe } from '../../pipes/slot.pipe';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
 import { FotoProducto } from '../../components/foto-producto/foto-producto';
 
 @Component({
   selector: 'app-cesta',
-  imports: [RouterLink, LocPipe, AvisoHorario, FotoProducto],
+  imports: [RouterLink, LocPipe, SlotPipe, AvisoHorario, FotoProducto],
   templateUrl: './cesta.html',
   styleUrl: './cesta.scss',
 })

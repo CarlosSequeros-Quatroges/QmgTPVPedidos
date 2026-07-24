@@ -398,7 +398,18 @@ const STORAGE_KEY = 'pedidos.idioma';
 export class IdiomaService {
   /** Idiomas de la empresa (subconjunto soportado), en el orden de la API. */
   private readonly _idiomas = signal<Idioma[]>([...IDIOMAS_SOPORTADOS]);
+  /** Orden COMPLETO de idiomas de la empresa (para mapear los slots de texto). */
+  private readonly _idiomasEmpresa = signal<string[]>([...IDIOMAS_SOPORTADOS]);
   private readonly _idioma = signal<Idioma>(this.leerInicial());
+
+  /**
+   * Índice (0-based) del idioma activo dentro de los idiomas de la empresa.
+   * Determina qué slot de texto (`nombre1..4`) mostrar.
+   */
+  readonly slot = computed(() => {
+    const i = this._idiomasEmpresa().indexOf(this._idioma());
+    return i >= 0 ? i : 0;
+  });
 
   /** Opciones del selector: código, nombre nativo y bandera. */
   readonly opciones = computed<OpcionIdioma[]>(() =>
@@ -425,6 +436,8 @@ export class IdiomaService {
       (IDIOMAS_SOPORTADOS as readonly string[]).includes(c),
     );
     if (!disponibles.length) return;
+    // El orden completo mapea los slots de texto; la lista filtrada, el selector.
+    this._idiomasEmpresa.set(idiomas);
     this._idiomas.set(disponibles);
     if (!disponibles.includes(this._idioma())) {
       this.cambiar(disponibles[0]);

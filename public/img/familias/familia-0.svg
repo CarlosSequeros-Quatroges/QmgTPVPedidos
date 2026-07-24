@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <rect width="120" height="120" fill="#c7ccd1"/>
+  <!-- Cámara -->
+  <g fill="#7d848c">
+    <rect x="30" y="48" width="60" height="40" rx="6"/>
+    <rect x="44" y="42" width="16" height="9" rx="2"/>
+  </g>
+  <circle cx="60" cy="68" r="13" fill="#9aa1a9"/>
+  <circle cx="60" cy="68" r="8" fill="#5f666e"/>
+  <circle cx="80" cy="55" r="2.6" fill="#c7ccd1"/>
+  <!-- Señal de prohibido (blanca) -->
+  <g fill="none" stroke="#ffffff" stroke-width="7">
+    <circle cx="60" cy="64" r="33"/>
+    <line x1="36.7" y1="40.7" x2="83.3" y2="87.3"/>
+  </g>
+</svg>

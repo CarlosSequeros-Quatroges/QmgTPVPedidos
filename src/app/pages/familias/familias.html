@@ -9,13 +9,21 @@
   <p class="subtitulo">{{ idiomas.txt().eligeCategoria }}</p>
 
   <div class="familias">
-    @for (familia of carta.familias(); track familia.codigo) {
-      <a class="familia" [routerLink]="empresa.ruta('familia', familia.pos)">
-        <span class="familia__nombre">{{ familia.descripcion }}</span>
-        <span class="familia__conteo">
-          {{ carta.productosDeFamilia(familia.pos).length }}
-          {{ idiomas.txt().platos }}
-        </span>
+    @for (familia of carta.familias(); track familia.codfamilia) {
+      <a class="familia" [routerLink]="empresa.ruta('familia', familia.codfamilia)">
+        <app-foto-producto
+          class="familia__foto"
+          [src]="familia.imagen"
+          [placeholder]="placeholderFamilia"
+          [alt]="familia.nombres | slot: idiomas.slot()"
+        />
+        <div class="familia__pie">
+          <span class="familia__nombre">{{ familia.nombres | slot: idiomas.slot() }}</span>
+          <span class="familia__conteo">
+            {{ carta.productosDeFamilia(familia.codfamilia).length }}
+            {{ idiomas.txt().platos }}
+          </span>
+        </div>
       </a>
     }
   </div>

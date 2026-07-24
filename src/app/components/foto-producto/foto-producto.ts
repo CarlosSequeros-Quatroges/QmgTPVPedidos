@@ -3,9 +3,9 @@ import { Component, input, linkedSignal } from '@angular/core';
 import { IMAGEN_PRODUCTO_GENERICA } from '../../models/carta.models';
 
 /**
- * Muestra la foto de un producto y, si la imagen no existe o falla al cargar,
- * cae al placeholder genérico. Al cambiar el `src` (otro producto) el estado de
- * error se reinicia. La imagen se cachea sola al verla (service worker).
+ * Muestra una foto (producto o familia) y, si la imagen no existe o falla al
+ * cargar, cae al placeholder indicado. Al cambiar el `src` el estado de error
+ * se reinicia. La imagen se cachea sola al verla (service worker).
  */
 @Component({
   selector: 'app-foto-producto',
@@ -13,7 +13,7 @@ import { IMAGEN_PRODUCTO_GENERICA } from '../../models/carta.models';
   template: `
     <img
       class="foto"
-      [src]="fallo() ? placeholder : src()"
+      [src]="fallo() ? placeholder() : src()"
       [alt]="alt()"
       (error)="fallo.set(true)"
       loading="lazy"
@@ -27,8 +27,7 @@ import { IMAGEN_PRODUCTO_GENERICA } from '../../models/carta.models';
 export class FotoProducto {
   readonly src = input.required<string>();
   readonly alt = input('');
-
-  protected readonly placeholder = IMAGEN_PRODUCTO_GENERICA;
+  readonly placeholder = input(IMAGEN_PRODUCTO_GENERICA);
 
   /** Se reinicia a `false` cada vez que cambia el `src`. */
   protected readonly fallo = linkedSignal(() => {

@@ -7,12 +7,13 @@ import { HorarioService } from '../../services/horario.service';
 import { CestaService } from '../../services/cesta.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
+import { SlotPipe } from '../../pipes/slot.pipe';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
 import { FotoProducto } from '../../components/foto-producto/foto-producto';
 
 @Component({
   selector: 'app-plato-detalle',
-  imports: [RouterLink, LocPipe, AvisoHorario, FotoProducto],
+  imports: [RouterLink, LocPipe, SlotPipe, AvisoHorario, FotoProducto],
   templateUrl: './plato-detalle.html',
   styleUrl: './plato-detalle.scss',
 })
@@ -27,9 +28,7 @@ export class PlatoDetalle {
   /** Código de producto recibido desde la ruta (`/plato/:id`). */
   readonly id = input.required<string>();
 
-  protected readonly producto = computed(() =>
-    this.carta.producto(Number(this.id())),
-  );
+  protected readonly producto = computed(() => this.carta.producto(this.id()));
 
   protected readonly nota = signal('');
   protected readonly cantidad = signal(1);

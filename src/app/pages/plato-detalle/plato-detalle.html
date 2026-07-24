@@ -4,18 +4,24 @@
   <p class="estado">{{ idiomas.txt().platoNoEncontrado }}</p>
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
-  <a class="volver" [routerLink]="empresa.ruta('familia', producto()!.familia.pos)">
-    ← {{ producto()!.familia.descripcion }}
+  <a class="volver" [routerLink]="empresa.ruta('familia', producto()!.familia.codfamilia)">
+    ← {{ producto()!.familia.nombres | slot: idiomas.slot() }}
   </a>
 
   <article class="detalle">
-    <app-foto-producto class="detalle__foto" [src]="producto()!.imagen" [alt]="producto()!.nombre" />
+    <app-foto-producto class="detalle__foto" [src]="producto()!.imagen" [alt]="producto()!.nombres | slot: idiomas.slot()" />
 
     <div class="detalle__cuerpo">
       <div class="detalle__cabecera">
-        <h1 class="detalle__nombre">{{ producto()!.nombre }}</h1>
+        <h1 class="detalle__nombre">{{ producto()!.nombres | slot: idiomas.slot() }}</h1>
         <span class="detalle__precio">{{ producto()!.precio.toFixed(2) }} €</span>
       </div>
+
+      @if (producto()!.descripciones | slot: idiomas.slot(); as desc) {
+        @if (desc) {
+          <p class="detalle__desc">{{ desc }}</p>
+        }
+      }
 
       <section class="alergenos">
         <h2 class="bloque-titulo">{{ idiomas.txt().alergenos }}</h2>

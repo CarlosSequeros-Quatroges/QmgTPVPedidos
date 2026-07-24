@@ -63,7 +63,7 @@ export class CestaService {
     const linea: LineaCesta = {
       id: crypto.randomUUID(),
       codProducto: producto.codigo,
-      nombre: producto.nombre,
+      nombres: producto.nombres,
       imagen: producto.imagen,
       precioBase: producto.precio,
       extras,

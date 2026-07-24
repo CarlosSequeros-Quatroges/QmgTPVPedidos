@@ -5,15 +5,15 @@
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
-  <h1 class="titulo">{{ familia()!.descripcion }}</h1>
+  <h1 class="titulo">{{ familia()!.nombres | slot: idiomas.slot() }}</h1>
 
   <ul class="platos">
     @for (producto of productos(); track producto.codigo) {
       <li class="plato">
         <a class="plato__link" [routerLink]="empresa.ruta('plato', producto.codigo)">
-          <app-foto-producto class="plato__foto" [src]="producto.imagen" [alt]="producto.nombre" />
+          <app-foto-producto class="plato__foto" [src]="producto.imagen" [alt]="producto.nombres | slot: idiomas.slot()" />
           <div class="plato__cuerpo">
-            <span class="plato__nombre">{{ producto.nombre }}</span>
+            <span class="plato__nombre">{{ producto.nombres | slot: idiomas.slot() }}</span>
 
             @if (producto.alergenos.length) {
               <div class="plato__alergenos">

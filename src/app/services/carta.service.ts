@@ -8,6 +8,7 @@ import {
   Familia,
   Producto,
   ProductoResuelto,
+  normalizarFamilia,
   normalizarProducto,
 } from '../models/carta.models';
 import { AlergenosService } from './alergenos.service';
@@ -15,11 +16,10 @@ import { AlergenosService } from './alergenos.service';
 /**
  * Carta de un local: familias y productos.
  *
- * Notas del contrato de la API:
- * - Los productos enlazan con la familia por `pos`, no por `codigo`.
- * - Solo se muestran los productos marcados como visibles (`ver_extra = "S"`),
- *   y se ocultan las familias que se queden sin productos visibles.
- * - Los alérgenos llegan como códigos y se resuelven contra el catálogo.
+ * - Los productos enlazan con la familia por `codfamilia` (= `codfam`).
+ * - Solo se muestran los productos visibles (los extras, solo si se venden
+ *   sueltos); se ocultan las familias que quedan sin productos visibles.
+ * - Nombres/descripciones llegan en 4 slots de idioma; los alérgenos, por código.
  */
 @Injectable({ providedIn: 'root' })
 export class CartaService {
@@ -38,7 +38,6 @@ export class CartaService {
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
 
-  /** Alérgenos resueltos (traducidos + icono) indexados por su código. */
   private readonly alergenosPorCodigo = computed(
     () =>
       new Map(
@@ -48,14 +47,14 @@ export class CartaService {
       ),
   );
 
-  /** Familias indexadas por su `pos` (que es por donde enlazan los productos). */
-  private readonly familiasPorPos = computed(
-    () => new Map(this._familias().map((f) => [f.pos, f])),
+  /** Familias indexadas por `codfamilia`. */
+  private readonly familiasPorCod = computed(
+    () => new Map(this._familias().map((f) => [f.codfamilia, f])),
   );
 
   /** Productos visibles, con familia y alérgenos resueltos. */
   readonly productos = computed<ProductoResuelto[]>(() => {
-    const familias = this.familiasPorPos();
+    const familias = this.familiasPorCod();
     const alergenos = this.alergenosPorCodigo();
     return this._productos()
       .filter((p) => p.visible)
@@ -63,12 +62,12 @@ export class CartaService {
       .filter((p): p is ProductoResuelto => p !== null);
   });
 
-  /** Familias con al menos un producto visible, en orden de `pos`. */
+  /** Familias con al menos un producto visible, ordenadas por `codfamilia`. */
   readonly familias = computed(() => {
-    const conProductos = new Set(this.productos().map((p) => p.familiaPos));
+    const conProductos = new Set(this.productos().map((p) => p.codfamilia));
     return this._familias()
-      .filter((f) => conProductos.has(f.pos))
-      .sort((a, b) => a.pos - b.pos);
+      .filter((f) => conProductos.has(f.codfamilia))
+      .sort((a, b) => a.codfamilia - b.codfamilia);
   });
 
   /** Carga la carta del local. Reutiliza si ya está cargada. */
@@ -81,15 +80,13 @@ export class CartaService {
     this._error.set(null);
     return forkJoin({
       carta: this.api.getCarta(codtpv, tmenu),
-      // Los alérgenos son de empresa: se piden una sola vez.
       alergenos: this._alergenos().length
         ? of(this._alergenos())
         : this.api.getAlergenos(),
-      // Tabla local de traducciones e iconos (también una sola vez).
       tabla: this.alergenosSvc.asegurarTabla(),
     }).pipe(
       tap(({ carta, alergenos }) => {
-        this._familias.set(carta.familias);
+        this._familias.set(carta.familias.map(normalizarFamilia));
         this._productos.set(carta.productos.map(normalizarProducto));
         this._alergenos.set(alergenos);
         this.cartaCargada = clave;
@@ -104,20 +101,19 @@ export class CartaService {
     );
   }
 
-  /** Familia por su `pos`. */
-  familia(pos: number): Familia | undefined {
-    return this.familiasPorPos().get(pos);
+  familia(codfamilia: number): Familia | undefined {
+    return this.familiasPorCod().get(codfamilia);
   }
 
   /** Productos visibles de una familia, ordenados. */
-  productosDeFamilia(pos: number): ProductoResuelto[] {
+  productosDeFamilia(codfamilia: number): ProductoResuelto[] {
     return this.productos()
-      .filter((p) => p.familiaPos === pos)
-      .sort((a, b) => a.orden - b.orden || a.nombre.localeCompare(b.nombre));
+      .filter((p) => p.codfamilia === codfamilia)
+      .sort((a, b) => a.orden - b.orden);
   }
 
   /** Producto visible por su código. */
-  producto(codigo: number): ProductoResuelto | undefined {
+  producto(codigo: string): ProductoResuelto | undefined {
     return this.productos().find((p) => p.codigo === codigo);
   }
 
@@ -126,7 +122,7 @@ export class CartaService {
     familias: Map<number, Familia>,
     alergenos: Map<number, AlergenoResuelto>,
   ): ProductoResuelto | null {
-    const familia = familias.get(producto.familiaPos);
+    const familia = familias.get(producto.codfamilia);
     if (!familia) return null;
     const { alergenos: codigos, ...resto } = producto;
     return {

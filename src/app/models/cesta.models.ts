@@ -7,9 +7,10 @@ import { ExtraSeleccionado } from './extra.models';
 export interface LineaCesta {
   /** Identificador local único de la línea (crypto.randomUUID). */
   id: string;
-  /** Código del producto (el `codmenu` de la API). */
-  codProducto: number;
-  nombre: string;
+  /** Código del producto (el `codmenu` de la API, p. ej. "0015"). */
+  codProducto: string;
+  /** Nombre en los 4 slots de idioma (snapshot). */
+  nombres: string[];
   imagen: string;
   precioBase: number;
   /** Extras añadidos (pendiente de `getSubFamilias`). */
