@@ -21,13 +21,13 @@ export interface HorarioPedidos {
 
 /**
  * Local (punto de venta) devuelto por `getLocales`.
- * `codtpv` es la identidad única del local; `codmenu` indica qué carta de
- * productos usa (varios locales pueden compartir el mismo `codmenu`).
+ * `codtpv` es la identidad única del local; `tmenu` indica qué carta de
+ * productos usa (varios locales pueden compartir el mismo `tmenu`).
  */
 export interface Local {
   codtpv: string;
   nombre: string;
-  codmenu: number;
+  tmenu: number;
   horario: HorarioPedidos;
 }
 

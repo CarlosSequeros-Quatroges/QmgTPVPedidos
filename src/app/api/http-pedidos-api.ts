@@ -46,10 +46,10 @@ export class HttpPedidosApi extends PedidosApi {
     );
   }
 
-  getCarta(codtpv: string, codmenu: number): Observable<CartaLocal> {
+  getCarta(codtpv: string, tmenu: number): Observable<CartaLocal> {
     return this.http
       .get<RespuestaCarta>(`${API_BASE}/getCarta`, {
-        params: { codtpv, codmenu },
+        params: { codtpv, tmenu },
       })
       .pipe(
         map((r) => {

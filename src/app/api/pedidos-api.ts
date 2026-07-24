@@ -29,8 +29,8 @@ export abstract class PedidosApi {
   /** Locales (puntos de venta) e idiomas de trabajo de la empresa. */
   abstract getLocales(): Observable<LocalesEmpresa>;
 
-  /** Carta del local: familias y productos del menú. */
-  abstract getCarta(codtpv: string, codmenu: number): Observable<CartaLocal>;
+  /** Carta del local: familias y productos del menú `tmenu`. */
+  abstract getCarta(codtpv: string, tmenu: number): Observable<CartaLocal>;
 
   /**
    * Catálogo de alérgenos de la empresa (código + descripción en un idioma).

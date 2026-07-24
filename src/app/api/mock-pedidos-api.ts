@@ -10,7 +10,7 @@ import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
 const DATA = 'data';
 
-/** Estructura del JSON de carta simulada (`data/cartas/carta-{codmenu}.json`). */
+/** Estructura del JSON de carta simulada (`data/cartas/carta-{tmenu}.json`). */
 type CartaArchivo = CartaLocal;
 
 /** Cuenta de habitación del mock (`data/cuentas.json`). */
@@ -37,9 +37,9 @@ export class MockPedidosApi extends PedidosApi {
     );
   }
 
-  getCarta(codtpv: string, codmenu: number): Observable<CartaLocal> {
+  getCarta(codtpv: string, tmenu: number): Observable<CartaLocal> {
     return this.http
-      .get<CartaArchivo>(`${DATA}/cartas/carta-${codmenu}.json`)
+      .get<CartaArchivo>(`${DATA}/cartas/carta-${tmenu}.json`)
       .pipe(delay(250));
   }
 

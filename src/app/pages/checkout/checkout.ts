@@ -65,7 +65,7 @@ export class Checkout {
 
     const pedido: Pedido = {
       codtpv: activo.codtpv,
-      codmenu: activo.codmenu,
+      tmenu: activo.tmenu,
       lineas: this.cesta.lineas(),
       total: this.cesta.total(),
       formaPago: forma,

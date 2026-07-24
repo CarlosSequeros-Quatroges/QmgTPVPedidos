@@ -6,7 +6,7 @@
     {
       "codtpv": "1",
       "nombre": "BUFFET",
-      "codmenu": 1,
+      "tmenu": 1,
       "horario": {
         "dias": {
           "0": [{ "desde": "08:00", "hasta": "10:00", "tipo": "D" }, { "desde": "13:00", "hasta": "16:00", "tipo": "A" }],
@@ -22,7 +22,7 @@
     {
       "codtpv": "2",
       "nombre": "BAR PISCINA",
-      "codmenu": 1,
+      "tmenu": 1,
       "horario": {
         "dias": {
           "0": [{ "desde": "11:00", "hasta": "02:00", "tipo": "C" }],

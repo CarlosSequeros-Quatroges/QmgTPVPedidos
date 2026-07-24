@@ -9,7 +9,7 @@ const KEY = 'pedidos.local';
 
 /**
  * Locales disponibles y cuál está seleccionado.
- * La identidad del local es `codtpv` (único); `codmenu` solo indica qué carta
+ * La identidad del local es `codtpv` (único); `tmenu` solo indica qué carta
  * de productos usa. La selección se persiste para recuperarla al volver.
  */
 @Injectable({ providedIn: 'root' })

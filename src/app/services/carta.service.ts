@@ -32,7 +32,7 @@ export class CartaService {
   private readonly _cargando = signal(false);
   private readonly _error = signal<string | null>(null);
 
-  /** Clave codtpv-codmenu de la carta ya cargada (evita recargar). */
+  /** Clave codtpv-tmenu de la carta ya cargada (evita recargar). */
   private cartaCargada: string | null = null;
 
   readonly cargando = this._cargando.asReadonly();
@@ -72,15 +72,15 @@ export class CartaService {
   });
 
   /** Carga la carta del local. Reutiliza si ya está cargada. */
-  cargarCarta(codtpv: string, codmenu: number): Observable<unknown> {
-    const clave = `${codtpv}-${codmenu}`;
+  cargarCarta(codtpv: string, tmenu: number): Observable<unknown> {
+    const clave = `${codtpv}-${tmenu}`;
     if (this.cartaCargada === clave && !this._error()) {
       return of(null);
     }
     this._cargando.set(true);
     this._error.set(null);
     return forkJoin({
-      carta: this.api.getCarta(codtpv, codmenu),
+      carta: this.api.getCarta(codtpv, tmenu),
       // Los alérgenos son de empresa: se piden una sola vez.
       alergenos: this._alergenos().length
         ? of(this._alergenos())
