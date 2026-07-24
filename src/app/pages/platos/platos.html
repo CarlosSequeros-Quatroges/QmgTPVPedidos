@@ -11,6 +11,7 @@
     @for (producto of productos(); track producto.codigo) {
       <li class="plato">
         <a class="plato__link" [routerLink]="empresa.ruta('plato', producto.codigo)">
+          <app-foto-producto class="plato__foto" [src]="producto.imagen" [alt]="producto.nombre" />
           <div class="plato__cuerpo">
             <span class="plato__nombre">{{ producto.nombre }}</span>
 

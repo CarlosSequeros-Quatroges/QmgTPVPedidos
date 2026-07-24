@@ -8,10 +8,11 @@ import { CestaService } from '../../services/cesta.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
+import { FotoProducto } from '../../components/foto-producto/foto-producto';
 
 @Component({
   selector: 'app-plato-detalle',
-  imports: [RouterLink, LocPipe, AvisoHorario],
+  imports: [RouterLink, LocPipe, AvisoHorario, FotoProducto],
   templateUrl: './plato-detalle.html',
   styleUrl: './plato-detalle.scss',
 })

@@ -64,6 +64,7 @@ export class CestaService {
       id: crypto.randomUUID(),
       codProducto: producto.codigo,
       nombre: producto.nombre,
+      imagen: producto.imagen,
       precioBase: producto.precio,
       extras,
       nota: nota.trim(),

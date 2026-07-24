@@ -9,10 +9,12 @@
   overflow: hidden;
   box-shadow: var(--sombra);
 
-  &__img {
+  &__foto {
+    display: block;
     width: 100%;
-    max-height: 340px;
-    object-fit: cover;
+    aspect-ratio: 1 / 1;
+    max-height: 320px;
+    background: var(--color-arena);
   }
 
   &__cuerpo {

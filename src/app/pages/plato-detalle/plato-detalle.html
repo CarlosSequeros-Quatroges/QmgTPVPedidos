@@ -9,6 +9,8 @@
   </a>
 
   <article class="detalle">
+    <app-foto-producto class="detalle__foto" [src]="producto()!.imagen" [alt]="producto()!.nombre" />
+
     <div class="detalle__cuerpo">
       <div class="detalle__cabecera">
         <h1 class="detalle__nombre">{{ producto()!.nombre }}</h1>

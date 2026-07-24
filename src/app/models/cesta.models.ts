@@ -10,6 +10,7 @@ export interface LineaCesta {
   /** Código del producto (el `codmenu` de la API). */
   codProducto: number;
   nombre: string;
+  imagen: string;
   precioBase: number;
   /** Extras añadidos (pendiente de `getSubFamilias`). */
   extras: ExtraSeleccionado[];

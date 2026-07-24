@@ -54,12 +54,22 @@ export interface Producto {
   orden: number;
   codsub: string;
   esExtra: boolean;
+  /** Ruta de la imagen (`img/platos/plato-{tmenu}-{codigo}.webp`). */
+  imagen: string;
   /**
    * Se muestra en la carta al huésped: los productos normales siempre, y los
    * extras solo si además se venden sueltos (`ver_extra = "S"`).
    */
   visible: boolean;
 }
+
+/** Ruta de la imagen de un producto. */
+export function imagenProducto(tmenu: string | number, codigo: number): string {
+  return `img/platos/plato-${tmenu}-${codigo}.webp`;
+}
+
+/** Imagen genérica cuando el producto no tiene foto. */
+export const IMAGEN_PRODUCTO_GENERICA = 'img/platos/plato-0-0.svg';
 
 /** Alérgeno tal cual llega de la API (descripción en un solo idioma). */
 export interface Alergeno {
@@ -107,6 +117,7 @@ export function normalizarProducto(p: ProductoApi): Producto {
     orden: p.orden ?? 0,
     codsub: p.codsub ?? '',
     esExtra,
+    imagen: imagenProducto(p.tmenu, p.codmenu),
     // Los normales se muestran siempre; los extras, solo si se venden sueltos.
     visible: !esExtra || p.ver_extra === 'S',
   };

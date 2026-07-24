@@ -5,10 +5,11 @@ import { CartaService } from '../../services/carta.service';
 import { IdiomaService } from '../../services/idioma.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { LocPipe } from '../../pipes/loc.pipe';
+import { FotoProducto } from '../../components/foto-producto/foto-producto';
 
 @Component({
   selector: 'app-platos',
-  imports: [RouterLink, LocPipe],
+  imports: [RouterLink, LocPipe, FotoProducto],
   templateUrl: './platos.html',
   styleUrl: './platos.scss',
 })
