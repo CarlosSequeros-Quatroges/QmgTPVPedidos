@@ -45,6 +45,8 @@ interface TextosUI {
   extras: string;
   anadir: string;
   quitar: string;
+  con: string;
+  sin: string;
   notaCocina: string;
   notaPlaceholder: string;
   cantidad: string;
@@ -130,6 +132,8 @@ const UI: Record<Idioma, TextosUI> = {
     extras: 'Extras',
     anadir: 'Añadir',
     quitar: 'Quitar',
+    con: 'Con',
+    sin: 'Sin',
     notaCocina: 'Nota para cocina',
     notaPlaceholder: 'Ej: poco hecho, sin sal…',
     cantidad: 'Cantidad',
@@ -200,6 +204,8 @@ const UI: Record<Idioma, TextosUI> = {
     extras: 'Extras',
     anadir: 'Add',
     quitar: 'Remove',
+    con: 'With',
+    sin: 'Without',
     notaCocina: 'Note for the kitchen',
     notaPlaceholder: 'e.g. well done, no salt…',
     cantidad: 'Quantity',
@@ -270,6 +276,8 @@ const UI: Record<Idioma, TextosUI> = {
     extras: 'Suppléments',
     anadir: 'Ajouter',
     quitar: 'Retirer',
+    con: 'Avec',
+    sin: 'Sans',
     notaCocina: 'Note pour la cuisine',
     notaPlaceholder: 'Ex : bien cuit, sans sel…',
     cantidad: 'Quantité',
@@ -341,6 +349,8 @@ const UI: Record<Idioma, TextosUI> = {
     extras: 'Extras',
     anadir: 'Hinzufügen',
     quitar: 'Entfernen',
+    con: 'Mit',
+    sin: 'Ohne',
     notaCocina: 'Notiz für die Küche',
     notaPlaceholder: 'z. B. durchgebraten, ohne Salz…',
     cantidad: 'Menge',

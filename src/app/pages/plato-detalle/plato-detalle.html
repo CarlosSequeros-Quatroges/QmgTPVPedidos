@@ -40,6 +40,36 @@
       </section>
 
       @if (horario.pedidosAbiertos()) {
+        @if (extras().length) {
+          <section class="extras">
+            <h2 class="bloque-titulo">{{ idiomas.txt().extras }}</h2>
+            <ul class="extras__lista">
+              @for (e of extras(); track e.codigo) {
+                <li class="extra">
+                  <span class="extra__nombre">{{ e.nombres | slot: idiomas.slot() }}</span>
+                  @if (e.precio > 0) {
+                    <span class="extra__precio">+{{ e.precio.toFixed(2) }} €</span>
+                  }
+                  <div class="extra__marcas" role="group">
+                    <button
+                      type="button"
+                      class="marca marca--con"
+                      [class.marca--activa]="marca(e.codigo) === 'con'"
+                      (click)="marcarExtra(e.codigo, 'con')"
+                    >{{ idiomas.txt().con }}</button>
+                    <button
+                      type="button"
+                      class="marca marca--sin"
+                      [class.marca--activa]="marca(e.codigo) === 'sin'"
+                      (click)="marcarExtra(e.codigo, 'sin')"
+                    >{{ idiomas.txt().sin }}</button>
+                  </div>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+
         <section class="nota">
           <h2 class="bloque-titulo">{{ idiomas.txt().notaCocina }}</h2>
           <textarea

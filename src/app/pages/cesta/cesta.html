@@ -23,11 +23,13 @@
 
         @if (linea.extras.length) {
           <ul class="linea__extras">
-            @for (e of linea.extras; track e.extraId) {
+            @for (e of linea.extras; track e.codigo) {
               <li>
-                {{ e.tipo === 'anadir' ? '+' : '−' }}
-                {{ e.nombre | loc: idiomas.idioma() }}
-                @if (e.precio > 0) { ({{ e.precio.toFixed(2) }} €) }
+                <span class="linea__marca" [class.linea__marca--sin]="e.marca === 'sin'">
+                  {{ e.marca === 'con' ? idiomas.txt().con : idiomas.txt().sin }}
+                </span>
+                {{ e.nombres | slot: idiomas.slot() }}
+                @if (e.marca === 'con' && e.precio > 0) { (+{{ e.precio.toFixed(2) }} €) }
               </li>
             }
           </ul>

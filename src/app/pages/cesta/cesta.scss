@@ -76,6 +76,18 @@
     color: var(--color-texto-suave);
   }
 
+  &__marca {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #1c7a3e;
+
+    &--sin {
+      color: #9a2b2b;
+    }
+  }
+
   &__nota {
     margin: 0;
     font-size: 0.9rem;
