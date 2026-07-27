@@ -54,7 +54,11 @@ export class HttpPedidosApi extends PedidosApi {
       .pipe(
         map((r) => {
           const c = comprobar(r);
-          return { familias: c.familias ?? [], productos: c.productos ?? [] };
+          return {
+            familias: c.familias ?? [],
+            productos: c.productos ?? [],
+            subfamilias: c.subfamilias ?? [],
+          };
         }),
       );
   }

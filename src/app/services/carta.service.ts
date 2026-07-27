@@ -8,8 +8,10 @@ import {
   Familia,
   Producto,
   ProductoResuelto,
+  Subfamilia,
   normalizarFamilia,
   normalizarProducto,
+  normalizarSubfamilia,
 } from '../models/carta.models';
 import { AlergenosService } from './alergenos.service';
 
@@ -28,6 +30,7 @@ export class CartaService {
 
   private readonly _familias = signal<Familia[]>([]);
   private readonly _productos = signal<Producto[]>([]);
+  private readonly _subfamilias = signal<Subfamilia[]>([]);
   private readonly _alergenos = signal<Alergeno[]>([]);
   private readonly _cargando = signal(false);
   private readonly _error = signal<string | null>(null);
@@ -51,6 +54,23 @@ export class CartaService {
   private readonly familiasPorCod = computed(
     () => new Map(this._familias().map((f) => [f.codfamilia, f])),
   );
+
+  /** Subfamilias indexadas por `codsub` (definen los extras de cada producto). */
+  private readonly subfamiliasPorCod = computed(
+    () => new Map(this._subfamilias().map((s) => [s.codsub, s])),
+  );
+
+  /** Todos los productos resueltos por código (incluye los que son solo extra). */
+  private readonly productosPorCodigo = computed(() => {
+    const familias = this.familiasPorCod();
+    const alergenos = this.alergenosPorCodigo();
+    const mapa = new Map<string, ProductoResuelto>();
+    for (const p of this._productos()) {
+      const r = this.resolver(p, familias, alergenos);
+      if (r) mapa.set(p.codigo, r);
+    }
+    return mapa;
+  });
 
   /** Productos visibles, con familia y alérgenos resueltos. */
   readonly productos = computed<ProductoResuelto[]>(() => {
@@ -88,6 +108,9 @@ export class CartaService {
       tap(({ carta, alergenos }) => {
         this._familias.set(carta.familias.map(normalizarFamilia));
         this._productos.set(carta.productos.map(normalizarProducto));
+        this._subfamilias.set(
+          (carta.subfamilias ?? []).map(normalizarSubfamilia),
+        );
         this._alergenos.set(alergenos);
         this.cartaCargada = clave;
         this._cargando.set(false);
@@ -115,6 +138,20 @@ export class CartaService {
   /** Producto visible por su código. */
   producto(codigo: string): ProductoResuelto | undefined {
     return this.productos().find((p) => p.codigo === codigo);
+  }
+
+  /**
+   * Productos disponibles como extra para un producto, según su subfamilia
+   * (`producto.codsub` → subfamilia → códigos de producto-extra).
+   */
+  extrasDe(codsub: string): ProductoResuelto[] {
+    if (!codsub) return [];
+    const sub = this.subfamiliasPorCod().get(codsub);
+    if (!sub) return [];
+    const porCodigo = this.productosPorCodigo();
+    return sub.extras
+      .map((c) => porCodigo.get(c))
+      .filter((p): p is ProductoResuelto => p !== undefined);
   }
 
   private resolver(

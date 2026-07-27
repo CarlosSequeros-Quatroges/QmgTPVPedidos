@@ -1,14 +1,21 @@
 import { Observable } from 'rxjs';
 
-import { Alergeno, FamiliaApi, ProductoApi } from '../models/carta.models';
+import {
+  Alergeno,
+  FamiliaApi,
+  ProductoApi,
+  SubfamiliaApi,
+} from '../models/carta.models';
 import { Local } from '../models/local.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
-/** Carta de un local: familias y productos, tal cual los devuelve la API. */
+/** Carta de un local: familias, productos y subfamilias (extras). */
 export interface CartaLocal {
   familias: FamiliaApi[];
   productos: ProductoApi[];
+  /** Subfamilias que definen los extras admitidos por cada producto (codsub). */
+  subfamilias: SubfamiliaApi[];
 }
 
 /** Respuesta de `getLocales`: locales + idiomas de trabajo de la empresa. */

@@ -85,6 +85,22 @@ export interface Producto {
   visible: boolean;
 }
 
+/** Subfamilia tal cual llega de la API (gestiona los extras de un producto). */
+export interface SubfamiliaApi {
+  codsub: string;
+  descripcion: string;
+  /** Códigos de producto-extra concatenados entre pipes: "|0277|0278|". */
+  extras: string;
+}
+
+/** Subfamilia normalizada: `extras` ya separado en array de códigos. */
+export interface Subfamilia {
+  codsub: string;
+  descripcion: string;
+  /** Códigos de producto disponibles como extra. */
+  extras: string[];
+}
+
 /** Alérgeno tal cual llega de la API (descripción en un solo idioma). */
 export interface Alergeno {
   codigo: number;
@@ -131,6 +147,23 @@ export function aCodigosAlergeno(alergenos: string): number[] {
     .split('|')
     .map((s) => Number.parseInt(s, 10))
     .filter((n) => Number.isFinite(n));
+}
+
+/** Convierte "|0277|0278|" en ["0277", "0278"] (códigos de producto en texto). */
+export function aCodigosExtra(extras: string): string[] {
+  return (extras ?? '')
+    .split('|')
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0);
+}
+
+/** Normaliza una subfamilia de la API (separa los extras en array). */
+export function normalizarSubfamilia(s: SubfamiliaApi): Subfamilia {
+  return {
+    codsub: s.codsub,
+    descripcion: s.descripcion ?? '',
+    extras: aCodigosExtra(s.extras),
+  };
 }
 
 export function normalizarFamilia(f: FamiliaApi): Familia {
