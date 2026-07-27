@@ -3,7 +3,7 @@ import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { LocalService } from './local.service';
 import { LineaCesta } from '../models/cesta.models';
 import { ProductoResuelto } from '../models/carta.models';
-import { ExtraSeleccionado } from '../models/extra.models';
+import { ExtraSeleccionado, MarcaExtra } from '../models/extra.models';
 
 const KEY = 'pedidos.cesta';
 
@@ -73,6 +73,40 @@ export class CestaService {
       subtotal: precioUnitario * cantidad,
     };
     this._lineas.update((ls) => [...ls, linea]);
+    this.persistir();
+  }
+
+  /**
+   * Cambia la marca de un extra en una línea (con / sin), o lo quita si
+   * `marca` es null. Recalcula el precio de la línea.
+   */
+  setExtra(
+    lineaId: string,
+    extra: { codigo: string; nombres: string[]; precio: number },
+    marca: MarcaExtra | null,
+  ): void {
+    this._lineas.update((ls) =>
+      ls.map((l) => {
+        if (l.id !== lineaId) return l;
+        const extras = l.extras.filter((e) => e.codigo !== extra.codigo);
+        if (marca) {
+          extras.push({
+            codigo: extra.codigo,
+            nombres: extra.nombres,
+            marca,
+            precio: marca === 'con' ? extra.precio : 0,
+          });
+        }
+        const precioUnitario =
+          l.precioBase + extras.reduce((s, e) => s + e.precio, 0);
+        return {
+          ...l,
+          extras,
+          precioUnitario,
+          subtotal: precioUnitario * l.cantidad,
+        };
+      }),
+    );
     this.persistir();
   }
 

@@ -21,7 +21,33 @@
           >✕</button>
         </div>
 
-        @if (linea.extras.length) {
+        @let disponibles = extrasDisponibles(linea);
+        @if (disponibles.length) {
+          <ul class="linea-extras">
+            @for (ex of disponibles; track ex.codigo) {
+              <li class="linea-extra">
+                <span class="linea-extra__nombre">{{ ex.nombres | slot: idiomas.slot() }}</span>
+                @if (ex.precio > 0) {
+                  <span class="linea-extra__precio">+{{ ex.precio.toFixed(2) }} €</span>
+                }
+                <div class="linea-extra__marcas">
+                  <button
+                    type="button"
+                    class="marca marca--con"
+                    [class.marca--activa]="marcaDe(linea, ex.codigo) === 'con'"
+                    (click)="toggleExtra(linea, ex, 'con')"
+                  >{{ idiomas.txt().con }}</button>
+                  <button
+                    type="button"
+                    class="marca marca--sin"
+                    [class.marca--activa]="marcaDe(linea, ex.codigo) === 'sin'"
+                    (click)="toggleExtra(linea, ex, 'sin')"
+                  >{{ idiomas.txt().sin }}</button>
+                </div>
+              </li>
+            }
+          </ul>
+        } @else if (linea.extras.length) {
           <ul class="linea__extras">
             @for (e of linea.extras; track e.codigo) {
               <li>
