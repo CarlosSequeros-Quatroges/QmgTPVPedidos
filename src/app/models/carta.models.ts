@@ -87,7 +87,8 @@ export interface Producto {
 
 /** Subfamilia tal cual llega de la API (gestiona los extras de un producto). */
 export interface SubfamiliaApi {
-  codsub: string;
+  /** Numérico en la subfamilia, texto en el producto: se normaliza a string. */
+  codsub: string | number;
   descripcion: string;
   /** Códigos de producto-extra concatenados entre pipes: "|0277|0278|". */
   extras: string;
@@ -157,10 +158,10 @@ export function aCodigosExtra(extras: string): string[] {
     .filter((s) => s.length > 0);
 }
 
-/** Normaliza una subfamilia de la API (separa los extras en array). */
+/** Normaliza una subfamilia de la API (codsub a string, extras a array). */
 export function normalizarSubfamilia(s: SubfamiliaApi): Subfamilia {
   return {
-    codsub: s.codsub,
+    codsub: String(s.codsub),
     descripcion: s.descripcion ?? '',
     extras: aCodigosExtra(s.extras),
   };
