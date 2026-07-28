@@ -11,6 +11,7 @@ import { ClienteService } from './services/cliente.service';
 import { EmpresaService } from './services/empresa.service';
 import { ActualizacionService } from './services/actualizacion.service';
 import { SlotPipe } from './pipes/slot.pipe';
+import { BUILD_TIMESTAMP } from './build-info';
 
 @Component({
   selector: 'app-root',
@@ -28,6 +29,9 @@ export class App {
   protected readonly cesta = inject(CestaService);
   protected readonly cliente = inject(ClienteService);
   protected readonly empresa = inject(EmpresaService);
+
+  /** Marca de tiempo de la compilación (YYMMDDHHMMSS). */
+  protected readonly build = BUILD_TIMESTAMP;
 
   constructor() {
     // Auto-actualiza la app cuando se publica un build nuevo.

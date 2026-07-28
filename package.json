@@ -3,13 +3,15 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
+    "gen:build": "node scripts/gen-build.mjs",
+    "postinstall": "node scripts/gen-build.mjs",
+    "start": "node scripts/gen-build.mjs && ng serve",
+    "build": "node scripts/gen-build.mjs && ng build",
+    "watch": "node scripts/gen-build.mjs && ng build --watch --configuration development",
     "test": "ng test",
-    "build:pedidos": "ng build --base-href /pedidos/",
+    "build:pedidos": "node scripts/gen-build.mjs && ng build --base-href /pedidos/",
     "serve:prod": "node serve.mjs",
-    "preview": "ng build --base-href /pedidos/ && node serve.mjs"
+    "preview": "node scripts/gen-build.mjs && ng build --base-href /pedidos/ && node serve.mjs"
   },
   "private": true,
   "packageManager": "npm@11.16.0",
