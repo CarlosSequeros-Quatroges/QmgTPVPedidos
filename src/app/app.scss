@@ -65,34 +65,6 @@
   }
 }
 
-.estado {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.1rem 0.55rem;
-  border-radius: 999px;
-
-  &::before {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-
-  &--abierto {
-    color: #1c7a3e;
-    background: #cdeecf;
-  }
-
-  &--cerrado {
-    color: #9a2b2b;
-    background: #f3d3d0;
-  }
-}
-
 .acciones {
   margin-left: auto;
   display: inline-flex;

@@ -31,6 +31,14 @@ export class PlatoDetalle {
 
   protected readonly producto = computed(() => this.carta.producto(this.id()));
 
+  /**
+   * Familia para el enlace "volver". Un producto puede estar en varias; a falta
+   * del contexto de navegación, usamos la primera.
+   */
+  protected readonly familiaVolver = computed(
+    () => this.producto()?.familias[0],
+  );
+
   /** Extras disponibles para el producto (según su subfamilia). */
   protected readonly extras = computed(() =>
     this.carta.extrasDe(this.producto()?.codsub ?? ''),

@@ -6,6 +6,7 @@ import { API_BASE } from './api.config';
 import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
 import { MockPedidosApi } from './mock-pedidos-api';
 import { Alergeno } from '../models/carta.models';
+import { normalizarCarta } from '../models/local.models';
 import {
   RespuestaAlergenos,
   RespuestaApi,
@@ -41,7 +42,11 @@ export class HttpPedidosApi extends PedidosApi {
     return this.http.get<RespuestaLocales>(`${API_BASE}/getLocales`).pipe(
       map((r) => {
         const c = comprobar(r);
-        return { locales: c.locales ?? [], idiomas: c.idiomas ?? [] };
+        return {
+          locales: c.locales ?? [],
+          idiomas: c.idiomas ?? [],
+          cartas: (c.cartas ?? []).map(normalizarCarta),
+        };
       }),
     );
   }

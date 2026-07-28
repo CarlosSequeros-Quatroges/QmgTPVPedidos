@@ -101,6 +101,13 @@ img {
   margin-bottom: 1rem;
   color: var(--color-mar);
   font-weight: 600;
+  // Para usarlo también en <button> (mismo aspecto que el enlace).
+  border: 0;
+  background: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
 }
 
 .aviso {
@@ -120,4 +127,33 @@ img {
   text-align: center;
   padding: 3rem 1rem;
   color: var(--color-texto-suave);
+}
+
+/** Chip de estado abierto/cerrado (header y tarjetas de carta). */
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+
+  &::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  &--abierto {
+    color: #1c7a3e;
+    background: #cdeecf;
+  }
+
+  &--cerrado {
+    color: #9a2b2b;
+    background: #f3d3d0;
+  }
 }

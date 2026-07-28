@@ -5,6 +5,7 @@ import { Observable, delay, forkJoin, map, of } from 'rxjs';
 import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
 import { Alergeno } from '../models/carta.models';
 import { RespuestaLocales } from '../models/respuesta.models';
+import { normalizarCarta } from '../models/local.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
@@ -33,7 +34,11 @@ export class MockPedidosApi extends PedidosApi {
   getLocales(): Observable<LocalesEmpresa> {
     return this.http.get<RespuestaLocales>(`${DATA}/locales.json`).pipe(
       delay(200),
-      map((r) => ({ locales: r.locales ?? [], idiomas: r.idiomas ?? [] })),
+      map((r) => ({
+        locales: r.locales ?? [],
+        idiomas: r.idiomas ?? [],
+        cartas: (r.cartas ?? []).map(normalizarCarta),
+      })),
     );
   }
 

@@ -1,4 +1,4 @@
-import { Local } from './local.models';
+import { CartaApi, Local } from './local.models';
 import {
   Alergeno,
   FamiliaApi,
@@ -22,6 +22,8 @@ export interface RespuestaLocales extends RespuestaApi {
   locales: Local[];
   /** Idiomas de trabajo de la empresa, en orden (códigos ISO 639-1). */
   idiomas: string[];
+  /** Catálogo de cartas de la empresa (crudo). */
+  cartas: CartaApi[];
 }
 
 /** Respuesta del endpoint de alérgenos. */

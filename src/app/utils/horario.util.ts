@@ -1,5 +1,20 @@
 import { FranjaHoraria, HorarioPedidos } from '../models/local.models';
 
+/**
+ * Devuelve un horario que solo conserva las franjas de una carta concreta
+ * (`codcarta`). Sirve para evaluar apertura/cierre respecto a la carta elegida.
+ */
+export function franjasDeCarta(
+  horario: HorarioPedidos,
+  codcarta: string,
+): HorarioPedidos {
+  const dias: Record<number, FranjaHoraria[]> = {};
+  for (const [dia, franjas] of Object.entries(horario.dias ?? {})) {
+    dias[Number(dia)] = franjas.filter((f) => f.codcarta === codcarta);
+  }
+  return { dias };
+}
+
 /** Convierte "HH:mm" a minutos desde medianoche. */
 function aMinutos(hhmm: string): number {
   const [h, m] = hhmm.split(':').map(Number);

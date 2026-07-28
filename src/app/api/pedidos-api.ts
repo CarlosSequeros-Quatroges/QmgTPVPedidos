@@ -6,7 +6,7 @@ import {
   ProductoApi,
   SubfamiliaApi,
 } from '../models/carta.models';
-import { Local } from '../models/local.models';
+import { Carta, Local } from '../models/local.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
@@ -18,10 +18,12 @@ export interface CartaLocal {
   subfamilias: SubfamiliaApi[];
 }
 
-/** Respuesta de `getLocales`: locales + idiomas de trabajo de la empresa. */
+/** Respuesta de `getLocales`: locales, idiomas y catálogo de cartas. */
 export interface LocalesEmpresa {
   locales: Local[];
   idiomas: string[];
+  /** Catálogo de cartas de la empresa (los locales las usan por `codcarta`). */
+  cartas: Carta[];
 }
 
 /**
@@ -36,7 +38,11 @@ export abstract class PedidosApi {
   /** Locales (puntos de venta) e idiomas de trabajo de la empresa. */
   abstract getLocales(): Observable<LocalesEmpresa>;
 
-  /** Carta del local: familias y productos del menú `tmenu`. */
+  /**
+   * Carta del local: todas las familias y productos del menú `tmenu`. El
+   * filtrado por carta lo hace el cliente con las familias que declara cada
+   * carta en `getLocales`.
+   */
   abstract getCarta(codtpv: string, tmenu: number): Observable<CartaLocal>;
 
   /**

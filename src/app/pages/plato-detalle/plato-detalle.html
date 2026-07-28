@@ -4,9 +4,13 @@
   <p class="estado">{{ idiomas.txt().platoNoEncontrado }}</p>
   <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
 } @else {
-  <a class="volver" [routerLink]="empresa.ruta('familia', producto()!.familia.codfamilia)">
-    ← {{ producto()!.familia.nombres | slot: idiomas.slot() }}
-  </a>
+  @if (familiaVolver(); as fam) {
+    <a class="volver" [routerLink]="empresa.ruta('familia', fam.codfamilia)">
+      ← {{ fam.nombres | slot: idiomas.slot() }}
+    </a>
+  } @else {
+    <a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
+  }
 
   <article class="detalle">
     <app-foto-producto class="detalle__foto" [src]="producto()!.imagen" [alt]="producto()!.nombres | slot: idiomas.slot()" />

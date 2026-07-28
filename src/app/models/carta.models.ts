@@ -64,8 +64,11 @@ export interface ProductoApi {
 export interface Producto {
   /** Código de producto (el `codmenu` de la API, tal cual: "0015"). */
   codigo: string;
-  /** Familia a la que pertenece (`codfamilia`). */
-  codfamilia: number;
+  /**
+   * Familias a las que pertenece (`codfam`, que puede venir multivalor como
+   * "|1|5|"). Un producto puede salir en varias familias/cartas.
+   */
+  codfamilias: number[];
   /** Nombre en los 4 slots de idioma. */
   nombres: string[];
   /** Descripción en los 4 slots de idioma. */
@@ -116,9 +119,10 @@ export interface AlergenoResuelto {
   icono: string;
 }
 
-/** Producto con su familia y sus alérgenos ya resueltos. */
+/** Producto con sus familias y sus alérgenos ya resueltos. */
 export interface ProductoResuelto extends Omit<Producto, 'alergenos'> {
-  familia: Familia;
+  /** Familias a las que pertenece (resueltas). Puede ser más de una. */
+  familias: Familia[];
   alergenos: AlergenoResuelto[];
 }
 
@@ -145,6 +149,17 @@ export function aPrecio(euros: string): number {
 /** Convierte "|1|3|7|" en [1, 3, 7]. */
 export function aCodigosAlergeno(alergenos: string): number[] {
   return (alergenos ?? '')
+    .split('|')
+    .map((s) => Number.parseInt(s, 10))
+    .filter((n) => Number.isFinite(n));
+}
+
+/**
+ * Convierte el `codfam` (una o varias familias) en un array de códigos.
+ * Acepta simple ("1") o multivalor ("|1|5|").
+ */
+export function aCodigosFamilia(codfam: string): number[] {
+  return (codfam ?? '')
     .split('|')
     .map((s) => Number.parseInt(s, 10))
     .filter((n) => Number.isFinite(n));
@@ -179,7 +194,7 @@ export function normalizarProducto(p: ProductoApi): Producto {
   const esExtra = p.es_extra === 'S';
   return {
     codigo: p.codmenu,
-    codfamilia: Number(p.codfam),
+    codfamilias: aCodigosFamilia(p.codfam),
     nombres: [p.nombre1, p.nombre2, p.nombre3, p.nombre4].map((s) => s ?? ''),
     descripciones: [
       p.descripcion1,

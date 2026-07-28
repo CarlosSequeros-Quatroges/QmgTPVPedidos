@@ -8,7 +8,12 @@
 
     @if (local.localActivo(); as activo) {
       <div class="local">
-        <span class="local__nombre">{{ activo.nombre }}</span>
+        <span class="local__nombre">
+          {{ activo.nombre }}
+          @if (carta.cartaActiva(); as c) {
+            <span class="local__carta">· {{ c.nombres | slot: idiomas.slot() }}</span>
+          }
+        </span>
         @if (horario.pedidosAbiertos()) {
           <span class="estado estado--abierto">{{ idiomas.txt().abierto }}</span>
         } @else {

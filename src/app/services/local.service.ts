@@ -2,15 +2,14 @@ import { Injectable, computed, inject, signal } from '@angular/core';
 import { Observable, map, of, shareReplay, tap } from 'rxjs';
 
 import { PedidosApi } from '../api/pedidos-api';
-import { Local } from '../models/local.models';
+import { Carta, Local, codcartasDeLocal } from '../models/local.models';
 import { IdiomaService } from './idioma.service';
-
-const KEY = 'pedidos.local';
 
 /**
  * Locales disponibles y cuál está seleccionado.
  * La identidad del local es `codtpv` (único); `tmenu` solo indica qué carta
- * de productos usa. La selección se persiste para recuperarla al volver.
+ * de productos usa. La selección **no se persiste**: al abrir la app siempre se
+ * obliga a elegir local + carta.
  */
 @Injectable({ providedIn: 'root' })
 export class LocalService {
@@ -18,22 +17,38 @@ export class LocalService {
   private readonly idiomas = inject(IdiomaService);
 
   private readonly _locales = signal<Local[]>([]);
-  private readonly _codtpv = signal<string | null>(this.leer());
+  /** Catálogo de cartas de la empresa (indexadas luego por `codcarta`). */
+  private readonly _cartas = signal<Carta[]>([]);
+  private readonly _codtpv = signal<string | null>(null);
   private readonly _cargando = signal(true);
   private readonly _error = signal<string | null>(null);
 
   private locales$?: Observable<Local[]>;
 
   readonly locales = this._locales.asReadonly();
+  readonly cartas = this._cartas.asReadonly();
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
   readonly codtpv = this._codtpv.asReadonly();
+
+  /** Cartas indexadas por `codcarta`. */
+  private readonly cartasPorCod = computed(
+    () => new Map(this._cartas().map((c) => [c.codcarta, c])),
+  );
 
   /** Local seleccionado, resuelto contra la lista de locales. */
   readonly localActivo = computed(() => {
     const cod = this._codtpv();
     return cod ? this._locales().find((l) => l.codtpv === cod) : undefined;
   });
+
+  /** Cartas que ofrece un local (según los `codcarta` de sus franjas). */
+  cartasDeLocal(local: Local): Carta[] {
+    const porCod = this.cartasPorCod();
+    return codcartasDeLocal(local)
+      .map((cod) => porCod.get(cod))
+      .filter((c): c is Carta => c !== undefined);
+  }
 
   /**
    * Carga la lista de locales una sola vez (memoizada). Si solo hay uno, lo
@@ -44,8 +59,9 @@ export class LocalService {
     if (!this.locales$) {
       this.locales$ = this.api.getLocales().pipe(
         tap({
-          next: ({ locales, idiomas }) => {
+          next: ({ locales, idiomas, cartas }) => {
             this._locales.set(locales);
+            this._cartas.set(cartas);
             this.idiomas.configurar(idiomas);
             this._cargando.set(false);
             if (locales.length === 1 && !this._codtpv()) {
@@ -67,27 +83,9 @@ export class LocalService {
 
   seleccionar(local: Local): void {
     this._codtpv.set(local.codtpv);
-    try {
-      localStorage.setItem(KEY, local.codtpv);
-    } catch {
-      /* localStorage puede no estar disponible */
-    }
   }
 
   limpiar(): void {
     this._codtpv.set(null);
-    try {
-      localStorage.removeItem(KEY);
-    } catch {
-      /* ignore */
-    }
-  }
-
-  private leer(): string | null {
-    try {
-      return localStorage.getItem(KEY);
-    } catch {
-      return null;
-    }
   }
 }

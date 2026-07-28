@@ -1,4 +1,4 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { Observable, catchError, forkJoin, of, tap, throwError } from 'rxjs';
 
 import { PedidosApi } from '../api/pedidos-api';
@@ -13,7 +13,9 @@ import {
   normalizarProducto,
   normalizarSubfamilia,
 } from '../models/carta.models';
+import { Carta } from '../models/local.models';
 import { AlergenosService } from './alergenos.service';
+import { LocalService } from './local.service';
 
 /**
  * Carta de un local: familias y productos.
@@ -27,6 +29,7 @@ import { AlergenosService } from './alergenos.service';
 export class CartaService {
   private readonly api = inject(PedidosApi);
   private readonly alergenosSvc = inject(AlergenosService);
+  private readonly local = inject(LocalService);
 
   private readonly _familias = signal<Familia[]>([]);
   private readonly _productos = signal<Producto[]>([]);
@@ -35,11 +38,52 @@ export class CartaService {
   private readonly _cargando = signal(false);
   private readonly _error = signal<string | null>(null);
 
-  /** Clave codtpv-tmenu de la carta ya cargada (evita recargar). */
+  /** Carta (de las varias del local) elegida por el cliente (`codcarta`). */
+  private readonly _codcarta = signal<string | null>(null);
+  /** Local al que pertenece la selección de carta cargada. */
+  private codtpvCarta: string | null = null;
+
+  /** Clave codtpv-tmenu-codcarta de la carta ya cargada (evita recargar). */
   private cartaCargada: string | null = null;
 
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
+
+  /** Cartas que ofrece el local activo. */
+  readonly cartasLocal = computed<Carta[]>(() => {
+    const l = this.local.localActivo();
+    return l ? this.local.cartasDeLocal(l) : [];
+  });
+
+  /** El local ofrece varias cartas (hay que elegir una). */
+  readonly tieneCartas = computed(() => this.cartasLocal().length > 0);
+
+  /** Carta seleccionada, resuelta contra las cartas del local. */
+  readonly cartaActiva = computed<Carta | undefined>(() => {
+    const cod = this._codcarta();
+    return cod == null
+      ? undefined
+      : this.cartasLocal().find((c) => c.codcarta === cod);
+  });
+
+  constructor() {
+    // Al cambiar de local, se limpia la carta elegida (no se persiste).
+    effect(() => {
+      const codtpv = this.local.localActivo()?.codtpv ?? null;
+      if (codtpv !== this.codtpvCarta) {
+        this.codtpvCarta = codtpv;
+        this._codcarta.set(null);
+      }
+    });
+  }
+
+  /** Selecciona una de las cartas del local (no se persiste). */
+  seleccionarCarta(codcarta: string): void {
+    // Fijamos el local de la carta antes de que reaccione el effect, para que
+    // no la borre al detectar el cambio de local en la misma acción.
+    this.codtpvCarta = this.local.localActivo()?.codtpv ?? this.codtpvCarta;
+    this._codcarta.set(codcarta);
+  }
 
   private readonly alergenosPorCodigo = computed(
     () =>
@@ -66,31 +110,51 @@ export class CartaService {
     const alergenos = this.alergenosPorCodigo();
     const mapa = new Map<string, ProductoResuelto>();
     for (const p of this._productos()) {
-      const r = this.resolver(p, familias, alergenos);
-      if (r) mapa.set(p.codigo, r);
+      mapa.set(p.codigo, this.resolver(p, familias, alergenos));
     }
     return mapa;
   });
 
-  /** Productos visibles, con familia y alérgenos resueltos. */
+  /**
+   * Productos visibles, con familia y alérgenos resueltos.
+   *
+   * Un producto sin familia (`codfam` vacío) no se muestra en la carta: se
+   * excluye aquí para que no aparezca ni por listado ni por enlace directo. Los
+   * extras se resuelven aparte (`productosPorCodigo`, sobre todos los productos).
+   */
   readonly productos = computed<ProductoResuelto[]>(() => {
     const familias = this.familiasPorCod();
     const alergenos = this.alergenosPorCodigo();
     return this._productos()
-      .filter((p) => p.visible)
-      .map((p) => this.resolver(p, familias, alergenos))
-      .filter((p): p is ProductoResuelto => p !== null);
+      .filter((p) => p.visible && p.codfamilias.length > 0)
+      .map((p) => this.resolver(p, familias, alergenos));
   });
 
-  /** Familias con al menos un producto visible, ordenadas por `codfamilia`. */
+  /**
+   * Familias a mostrar, con al menos un producto visible.
+   *
+   * Si hay una carta seleccionada, se restringe a las familias que declara la
+   * carta (`codfamilias` de `getLocales`), respetando su orden. Si no, se
+   * muestran todas las del menú ordenadas por `codfamilia`.
+   */
   readonly familias = computed(() => {
-    const conProductos = new Set(this.productos().map((p) => p.codfamilia));
+    const conProductos = new Set(
+      this.productos().flatMap((p) => p.codfamilias),
+    );
+    const carta = this.cartaActiva();
+    if (carta) {
+      const porCod = this.familiasPorCod();
+      return carta.codfamilias
+        .filter((c) => conProductos.has(c))
+        .map((c) => porCod.get(c))
+        .filter((f): f is Familia => f !== undefined);
+    }
     return this._familias()
       .filter((f) => conProductos.has(f.codfamilia))
       .sort((a, b) => a.codfamilia - b.codfamilia);
   });
 
-  /** Carga la carta del local. Reutiliza si ya está cargada. */
+  /** Carga la carta (menú completo del `tmenu`) del local. Reutiliza si ya está. */
   cargarCarta(codtpv: string, tmenu: number): Observable<unknown> {
     const clave = `${codtpv}-${tmenu}`;
     if (this.cartaCargada === clave && !this._error()) {
@@ -131,7 +195,7 @@ export class CartaService {
   /** Productos visibles de una familia, ordenados. */
   productosDeFamilia(codfamilia: number): ProductoResuelto[] {
     return this.productos()
-      .filter((p) => p.codfamilia === codfamilia)
+      .filter((p) => p.codfamilias.includes(codfamilia))
       .sort((a, b) => a.orden - b.orden);
   }
 
@@ -158,13 +222,13 @@ export class CartaService {
     producto: Producto,
     familias: Map<number, Familia>,
     alergenos: Map<number, AlergenoResuelto>,
-  ): ProductoResuelto | null {
-    const familia = familias.get(producto.codfamilia);
-    if (!familia) return null;
+  ): ProductoResuelto {
     const { alergenos: codigos, ...resto } = producto;
     return {
       ...resto,
-      familia,
+      familias: producto.codfamilias
+        .map((c) => familias.get(c))
+        .filter((f): f is Familia => f !== undefined),
       alergenos: codigos
         .map((c) => alergenos.get(c))
         .filter((a): a is AlergenoResuelto => a !== undefined),

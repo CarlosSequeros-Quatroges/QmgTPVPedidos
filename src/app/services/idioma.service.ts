@@ -26,6 +26,10 @@ interface TextosUI {
   cargandoLocales: string;
   sinLocales: string;
   verCarta: string;
+  // Selección de carta
+  eligeCarta: string;
+  cambiarCarta: string;
+  verCartas: string;
   // Carta
   nuestraCarta: string;
   eligeCategoria: string;
@@ -116,6 +120,9 @@ const UI: Record<Idioma, TextosUI> = {
     cargandoLocales: 'Cargando locales…',
     sinLocales: 'No hay locales disponibles.',
     verCarta: 'Ver carta',
+    eligeCarta: 'Elige una carta',
+    cambiarCarta: 'Cambiar carta',
+    verCartas: 'Ver todas las cartas',
     nuestraCarta: 'Nuestra carta',
     eligeCategoria: 'Elige una categoría',
     platos: 'platos',
@@ -188,6 +195,9 @@ const UI: Record<Idioma, TextosUI> = {
     cargandoLocales: 'Loading venues…',
     sinLocales: 'No venues available.',
     verCarta: 'View menu',
+    eligeCarta: 'Choose a menu',
+    cambiarCarta: 'Change menu',
+    verCartas: 'See all menus',
     nuestraCarta: 'Our menu',
     eligeCategoria: 'Choose a category',
     platos: 'dishes',
@@ -259,6 +269,9 @@ const UI: Record<Idioma, TextosUI> = {
     cargandoLocales: 'Chargement des points de vente…',
     sinLocales: 'Aucun point de vente disponible.',
     verCarta: 'Voir la carte',
+    eligeCarta: 'Choisissez une carte',
+    cambiarCarta: 'Changer de carte',
+    verCartas: 'Voir toutes les cartes',
     nuestraCarta: 'Notre carte',
     eligeCategoria: 'Choisissez une catégorie',
     platos: 'plats',
@@ -332,6 +345,9 @@ const UI: Record<Idioma, TextosUI> = {
     cargandoLocales: 'Lokale werden geladen…',
     sinLocales: 'Keine Lokale verfügbar.',
     verCarta: 'Karte ansehen',
+    eligeCarta: 'Karte wählen',
+    cambiarCarta: 'Karte wechseln',
+    verCartas: 'Alle Karten ansehen',
     nuestraCarta: 'Unsere Karte',
     eligeCategoria: 'Wählen Sie eine Kategorie',
     platos: 'Gerichte',
