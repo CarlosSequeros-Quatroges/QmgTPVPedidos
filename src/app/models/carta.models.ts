@@ -7,8 +7,16 @@
  * `idiomas` de `getLocales` (slot 1 = idiomas[0], etc.).
  */
 
-/** Idiomas soportados por la interfaz de la app. */
-export type Idioma = 'es' | 'en' | 'fr' | 'de';
+/**
+ * Idiomas para los que la app tiene interfaz y traducciones (alérgenos, textos
+ * de UI). **Fuente única**: para añadir/cambiar un idioma se edita solo esta
+ * lista; el tipo `Idioma` se deriva de ella y TypeScript marcará en compilación
+ * los diccionarios (`Record<Idioma, …>`) que falte traducir.
+ */
+export const IDIOMAS_SOPORTADOS = ['es', 'en', 'fr', 'de'] as const;
+
+/** Idioma soportado por la interfaz de la app. */
+export type Idioma = (typeof IDIOMAS_SOPORTADOS)[number];
 
 /** Texto traducido a los idiomas soportados (interfaz y alérgenos). */
 export type TextoLocalizado = Record<Idioma, string>;

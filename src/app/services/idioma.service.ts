@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-import { Idioma } from '../models/carta.models';
+import { Idioma, IDIOMAS_SOPORTADOS } from '../models/carta.models';
 
 /** Idioma disponible en el selector, con su etiqueta y bandera. */
 export interface OpcionIdioma {
@@ -94,9 +94,6 @@ interface TextosUI {
   habitacion: string;
   validando: string;
 }
-
-/** Idiomas para los que la app tiene interfaz y traducciones de alérgenos. */
-const IDIOMAS_SOPORTADOS = ['es', 'en', 'fr', 'de'] as const;
 
 /** Nombre nativo de cada idioma soportado (para el selector). */
 const NOMBRES: Record<Idioma, string> = {
