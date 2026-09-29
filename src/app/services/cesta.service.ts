@@ -1,6 +1,8 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 
 import { LocalService } from './local.service';
+import { IdiomaService } from './idioma.service';
+import { ConfirmService } from './confirm.service';
 import { LineaCesta } from '../models/cesta.models';
 import { ProductoResuelto } from '../models/carta.models';
 import { ExtraSeleccionado, MarcaExtra } from '../models/extra.models';
@@ -21,6 +23,8 @@ interface CestaGuardada {
 @Injectable({ providedIn: 'root' })
 export class CestaService {
   private readonly local = inject(LocalService);
+  private readonly idiomas = inject(IdiomaService);
+  private readonly confirm = inject(ConfirmService);
 
   private readonly _lineas = signal<LineaCesta[]>([]);
   /** Local al que pertenece la cesta cargada. */
@@ -133,6 +137,23 @@ export class CestaService {
   vaciar(): void {
     this._lineas.set([]);
     this.persistir();
+  }
+
+  /**
+   * Guard para las acciones de "cambiar de carta/local": si la cesta tiene
+   * productos, avisa de que se perderán y, si el usuario acepta, la vacía.
+   * Devuelve `true` si se puede continuar (cesta vacía o aceptado).
+   */
+  async confirmarPerder(): Promise<boolean> {
+    if (this.vacia()) return true;
+    const t = this.idiomas.txt();
+    const ok = await this.confirm.confirmar({
+      mensaje: t.cambiarPierdeCesta,
+      confirmar: t.cambiarIgual,
+      cancelar: t.seguirAqui,
+    });
+    if (ok) this.vaciar();
+    return ok;
   }
 
   private persistir(): void {

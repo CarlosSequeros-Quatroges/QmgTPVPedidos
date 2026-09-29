@@ -10,6 +10,7 @@ import { CestaService } from './services/cesta.service';
 import { ClienteService } from './services/cliente.service';
 import { EmpresaService } from './services/empresa.service';
 import { ActualizacionService } from './services/actualizacion.service';
+import { ConfirmService } from './services/confirm.service';
 import { SlotPipe } from './pipes/slot.pipe';
 import { BUILD_TIMESTAMP } from './build-info';
 
@@ -29,6 +30,7 @@ export class App {
   protected readonly cesta = inject(CestaService);
   protected readonly cliente = inject(ClienteService);
   protected readonly empresa = inject(EmpresaService);
+  protected readonly confirm = inject(ConfirmService);
 
   /** Marca de tiempo de la compilación (YYMMDDHHMMSS). */
   protected readonly build = BUILD_TIMESTAMP;
@@ -38,8 +40,12 @@ export class App {
     inject(ActualizacionService).iniciar();
   }
 
-  /** Vuelve a la selección de local (limpiando la actual para poder cambiar). */
-  cambiarLocal(): void {
+  /**
+   * Vuelve a la selección de local (limpiando la actual para poder cambiar).
+   * Si hay productos en la cesta, pide confirmación y la vacía al aceptar.
+   */
+  async cambiarLocal(): Promise<void> {
+    if (!(await this.cesta.confirmarPerder())) return;
     this.local.limpiar();
     this.router.navigate(this.empresa.ruta());
   }

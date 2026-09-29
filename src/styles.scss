@@ -92,6 +92,11 @@ img {
   box-shadow: 0 6px 16px rgba(224, 107, 44, 0.3);
 }
 
+.btn--secundario {
+  background: var(--color-arena);
+  color: var(--color-mar);
+}
+
 .btn--bloque {
   width: 100%;
 }

@@ -96,3 +96,19 @@
     {{ idiomas.txt().pie }} · build {{ build }}
   </footer>
 }
+
+@if (confirm.peticion(); as p) {
+  <div class="modal" role="dialog" aria-modal="true" (click)="confirm.responder(false)">
+    <div class="modal__caja" (click)="$event.stopPropagation()">
+      <p class="modal__mensaje">{{ p.mensaje }}</p>
+      <div class="modal__acciones">
+        <button type="button" class="btn btn--secundario" (click)="confirm.responder(false)">
+          {{ p.cancelar }}
+        </button>
+        <button type="button" class="btn btn--primario" (click)="confirm.responder(true)">
+          {{ p.confirmar }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

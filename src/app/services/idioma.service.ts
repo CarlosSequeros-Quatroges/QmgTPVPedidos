@@ -30,6 +30,10 @@ interface TextosUI {
   eligeCarta: string;
   cambiarCarta: string;
   verCartas: string;
+  // Aviso al cambiar de carta con cesta con productos
+  cambiarPierdeCesta: string;
+  cambiarIgual: string;
+  seguirAqui: string;
   // Carta
   nuestraCarta: string;
   eligeCategoria: string;
@@ -120,6 +124,10 @@ const UI: Record<Idioma, TextosUI> = {
     eligeCarta: 'Elige una carta',
     cambiarCarta: 'Cambiar carta',
     verCartas: 'Ver todas las cartas',
+    cambiarPierdeCesta:
+      'Tienes productos en la cesta. Si cambias de carta los perderás.',
+    cambiarIgual: 'Cambiar de todas formas',
+    seguirAqui: 'Seguir aquí',
     nuestraCarta: 'Nuestra carta',
     eligeCategoria: 'Elige una categoría',
     platos: 'platos',
@@ -195,6 +203,10 @@ const UI: Record<Idioma, TextosUI> = {
     eligeCarta: 'Choose a menu',
     cambiarCarta: 'Change menu',
     verCartas: 'See all menus',
+    cambiarPierdeCesta:
+      'You have items in your cart. If you switch menu you will lose them.',
+    cambiarIgual: 'Switch anyway',
+    seguirAqui: 'Stay here',
     nuestraCarta: 'Our menu',
     eligeCategoria: 'Choose a category',
     platos: 'dishes',
@@ -269,6 +281,10 @@ const UI: Record<Idioma, TextosUI> = {
     eligeCarta: 'Choisissez une carte',
     cambiarCarta: 'Changer de carte',
     verCartas: 'Voir toutes les cartes',
+    cambiarPierdeCesta:
+      'Vous avez des articles dans le panier. Si vous changez de carte, vous les perdrez.',
+    cambiarIgual: 'Changer quand même',
+    seguirAqui: 'Rester ici',
     nuestraCarta: 'Notre carte',
     eligeCategoria: 'Choisissez une catégorie',
     platos: 'plats',
@@ -345,6 +361,10 @@ const UI: Record<Idioma, TextosUI> = {
     eligeCarta: 'Karte wählen',
     cambiarCarta: 'Karte wechseln',
     verCartas: 'Alle Karten ansehen',
+    cambiarPierdeCesta:
+      'Sie haben Artikel im Warenkorb. Wenn Sie die Karte wechseln, gehen sie verloren.',
+    cambiarIgual: 'Trotzdem wechseln',
+    seguirAqui: 'Hier bleiben',
     nuestraCarta: 'Unsere Karte',
     eligeCategoria: 'Wählen Sie eine Kategorie',
     platos: 'Gerichte',

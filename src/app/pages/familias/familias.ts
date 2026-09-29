@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { CartaService } from '../../services/carta.service';
 import { LocalService } from '../../services/local.service';
+import { CestaService } from '../../services/cesta.service';
 import { IdiomaService } from '../../services/idioma.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
@@ -19,14 +20,19 @@ import { IMAGEN_FAMILIA_GENERICA } from '../../models/carta.models';
 export class Familias {
   protected readonly carta = inject(CartaService);
   protected readonly local = inject(LocalService);
+  private readonly cesta = inject(CestaService);
   protected readonly idiomas = inject(IdiomaService);
   protected readonly empresa = inject(EmpresaService);
   private readonly router = inject(Router);
 
   protected readonly placeholderFamilia = IMAGEN_FAMILIA_GENERICA;
 
-  /** Vuelve a la selección de local/carta, limpiando la actual para reelegir. */
-  verTodasLasCartas(): void {
+  /**
+   * Vuelve a la selección de local/carta, limpiando la actual para reelegir.
+   * Si hay productos en la cesta, pide confirmación (y la vacía al aceptar).
+   */
+  async verTodasLasCartas(): Promise<void> {
+    if (!(await this.cesta.confirmarPerder())) return;
     this.local.limpiar();
     this.router.navigate(this.empresa.ruta());
   }
