@@ -486,6 +486,15 @@ export class IdiomaService {
     return i >= 0 ? i : 0;
   });
 
+  /**
+   * Índice del slot de un idioma concreto (p. ej. `'es'` para la descripción de
+   * cocina en la comanda). Si no está en los idiomas de la empresa, devuelve 0.
+   */
+  slotDe(idioma: string): number {
+    const i = this._idiomasEmpresa().indexOf(idioma);
+    return i >= 0 ? i : 0;
+  }
+
   /** Opciones del selector: código, nombre nativo y bandera. */
   readonly opciones = computed<OpcionIdioma[]>(() =>
     this._idiomas().map((c) => ({

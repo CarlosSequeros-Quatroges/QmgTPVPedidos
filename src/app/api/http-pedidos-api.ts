@@ -8,6 +8,9 @@ import { MockPedidosApi } from './mock-pedidos-api';
 import { Alergeno } from '../models/carta.models';
 import { normalizarCarta } from '../models/local.models';
 import { Zona, normalizarZona } from '../models/zona.models';
+import { construirComanda } from '../models/comanda.models';
+import { EmpresaService } from '../services/empresa.service';
+import { IdiomaService } from '../services/idioma.service';
 import {
   RespuestaAlergenos,
   RespuestaApi,
@@ -39,6 +42,8 @@ function comprobar<T extends RespuestaApi>(r: T): T {
 export class HttpPedidosApi extends PedidosApi {
   private readonly http = inject(HttpClient);
   private readonly mock = inject(MockPedidosApi);
+  private readonly empresa = inject(EmpresaService);
+  private readonly idiomas = inject(IdiomaService);
 
   getLocales(): Observable<LocalesEmpresa> {
     return this.http.get<RespuestaLocales>(`${API_BASE}/getLocales`).pipe(
@@ -96,6 +101,16 @@ export class HttpPedidosApi extends PedidosApi {
   }
 
   crearPedido(pedido: Pedido): Observable<PedidoConfirmado> {
+    // Comanda web (subconjunto del modelo del comandero) lista para enviar.
+    const comanda = construirComanda(
+      pedido,
+      this.empresa.codigo() ?? '',
+      this.idiomas.slotDe('es'),
+    );
+    // TODO: endpoint real pendiente. Cuando exista:
+    //   return this.http.post<RespuestaPedido>(`${API_BASE}/crearPedido`, comanda)
+    //     .pipe(map((r) => ...));
+    console.log('[crearPedido] comanda a enviar:\n' + JSON.stringify(comanda, null, 2));
     return this.mock.crearPedido(pedido);
   }
 }
