@@ -7,11 +7,13 @@ import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
 import { MockPedidosApi } from './mock-pedidos-api';
 import { Alergeno } from '../models/carta.models';
 import { normalizarCarta } from '../models/local.models';
+import { Zona, normalizarZona } from '../models/zona.models';
 import {
   RespuestaAlergenos,
   RespuestaApi,
   RespuestaCarta,
   RespuestaLocales,
+  RespuestaPuntos,
 } from '../models/respuesta.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
@@ -72,6 +74,12 @@ export class HttpPedidosApi extends PedidosApi {
     return this.http
       .get<RespuestaAlergenos>(`${API_BASE}/getAlergenos`)
       .pipe(map((r) => comprobar(r).alergenos ?? []));
+  }
+
+  getPuntosPedidos(): Observable<Zona[]> {
+    return this.http
+      .get<RespuestaPuntos>(`${API_BASE}/getPuntosPedidos`)
+      .pipe(map((r) => (comprobar(r).zonas ?? []).map(normalizarZona)));
   }
 
   // --- Pendientes de API real: por ahora, datos simulados ---

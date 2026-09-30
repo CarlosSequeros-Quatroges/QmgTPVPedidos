@@ -10,6 +10,49 @@
     <span>{{ cesta.total().toFixed(2) }} €</span>
   </div>
 
+  <h2 class="titulo">{{ idiomas.txt().puntoPedido }}</h2>
+
+  @if (puntos.fijado() && puntos.puntoActivo(); as p) {
+    <p class="punto-fijo">
+      📍 {{ puntos.zonaActiva()!.nombres | slot: idiomas.slot() }}
+      · {{ p.nombres | slot: idiomas.slot() }}
+    </p>
+  } @else {
+    <div class="punto-selector">
+      <label class="campo">
+        <span class="campo__label">{{ idiomas.txt().zona }}</span>
+        <select
+          class="campo__select"
+          (change)="puntos.seleccionarZona($any($event.target).value)"
+        >
+          <option value="" [selected]="!puntos.zonaActiva()">{{ idiomas.txt().eligeZona }}</option>
+          @for (z of puntos.zonas(); track z.id) {
+            <option [value]="z.id" [selected]="z.id === puntos.zonaActiva()?.id">
+              {{ z.nombres | slot: idiomas.slot() }}
+            </option>
+          }
+        </select>
+      </label>
+
+      @if (puntos.zonaActiva()) {
+        <label class="campo">
+          <span class="campo__label">{{ idiomas.txt().punto }}</span>
+          <select
+            class="campo__select"
+            (change)="puntos.seleccionarPunto($any($event.target).value)"
+          >
+            <option value="" [selected]="!puntos.puntoActivo()">{{ idiomas.txt().eligePunto }}</option>
+            @for (p of puntos.puntosZona(); track p.id) {
+              <option [value]="p.id" [selected]="p.id === puntos.puntoActivo()?.id">
+                {{ p.nombres | slot: idiomas.slot() }}
+              </option>
+            }
+          </select>
+        </label>
+      }
+    </div>
+  }
+
   <h1 class="titulo">{{ idiomas.txt().formaPago }}</h1>
 
   <div class="pagos">

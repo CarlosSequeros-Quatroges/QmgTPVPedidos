@@ -1,4 +1,5 @@
 import { CartaApi, Local } from './local.models';
+import { ZonaApi } from './zona.models';
 import {
   Alergeno,
   FamiliaApi,
@@ -36,4 +37,9 @@ export interface RespuestaCarta extends RespuestaApi {
   familias: FamiliaApi[];
   productos: ProductoApi[];
   subfamilias: SubfamiliaApi[];
+}
+
+/** Respuesta de `getPuntosPedidos`: zonas con sus puntos. */
+export interface RespuestaPuntos extends RespuestaApi {
+  zonas: ZonaApi[];
 }

@@ -69,6 +69,13 @@ interface TextosUI {
   eliminar: string;
   nota: string;
   // Checkout
+  // Punto de pedido (zona/punto)
+  puntoPedido: string;
+  zona: string;
+  punto: string;
+  eligeZona: string;
+  eligePunto: string;
+  // Pago
   formaPago: string;
   efectivo: string;
   tarjeta: string;
@@ -158,6 +165,11 @@ const UI: Record<Idioma, TextosUI> = {
     tramitar: 'Tramitar pedido',
     eliminar: 'Eliminar',
     nota: 'Nota',
+    puntoPedido: '¿Dónde lo servimos?',
+    zona: 'Zona',
+    punto: 'Punto',
+    eligeZona: 'Elige una zona',
+    eligePunto: 'Elige un punto',
     formaPago: 'Forma de pago',
     efectivo: 'Efectivo',
     tarjeta: 'Tarjeta',
@@ -237,6 +249,11 @@ const UI: Record<Idioma, TextosUI> = {
     tramitar: 'Check out',
     eliminar: 'Remove',
     nota: 'Note',
+    puntoPedido: 'Where shall we serve it?',
+    zona: 'Zone',
+    punto: 'Spot',
+    eligeZona: 'Choose a zone',
+    eligePunto: 'Choose a spot',
     formaPago: 'Payment method',
     efectivo: 'Cash',
     tarjeta: 'Card',
@@ -316,6 +333,11 @@ const UI: Record<Idioma, TextosUI> = {
     tramitar: 'Valider la commande',
     eliminar: 'Supprimer',
     nota: 'Note',
+    puntoPedido: 'Où le servons-nous ?',
+    zona: 'Zone',
+    punto: 'Emplacement',
+    eligeZona: 'Choisissez une zone',
+    eligePunto: 'Choisissez un emplacement',
     formaPago: 'Mode de paiement',
     efectivo: 'Espèces',
     tarjeta: 'Carte',
@@ -396,6 +418,11 @@ const UI: Record<Idioma, TextosUI> = {
     tramitar: 'Zur Kasse',
     eliminar: 'Entfernen',
     nota: 'Notiz',
+    puntoPedido: 'Wohin sollen wir servieren?',
+    zona: 'Zone',
+    punto: 'Platz',
+    eligeZona: 'Zone wählen',
+    eligePunto: 'Platz wählen',
     formaPago: 'Zahlungsart',
     efectivo: 'Bar',
     tarjeta: 'Karte',

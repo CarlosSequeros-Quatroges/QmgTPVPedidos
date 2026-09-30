@@ -7,6 +7,7 @@ import {
   SubfamiliaApi,
 } from '../models/carta.models';
 import { Carta, Local } from '../models/local.models';
+import { Zona } from '../models/zona.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
@@ -50,6 +51,11 @@ export abstract class PedidosApi {
    * Los códigos son los que se asocian a los productos.
    */
   abstract getAlergenos(): Observable<Alergeno[]>;
+
+  /**
+   * Zonas y puntos de pedido de la empresa (dónde se sirve/recoge el pedido).
+   */
+  abstract getPuntosPedidos(): Observable<Zona[]>;
 
   /**
    * Valida el código de cliente que el huésped recibe en recepción y devuelve

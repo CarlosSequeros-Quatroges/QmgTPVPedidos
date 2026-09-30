@@ -11,7 +11,9 @@ export type FormaPago = 'efectivo' | 'tarjeta' | 'habitacion';
 export interface Pedido {
   codtpv: string;
   tmenu: number;
-  /** Punto de entrega (letra + 3 dígitos). Pendiente de implementar su captura. */
+  /** Zona de entrega (`codigo` de zona, ≤4 caracteres). */
+  codzona?: string;
+  /** Punto de entrega dentro de la zona (`codigo` de punto, 3 dígitos). */
   codpunto?: string;
   lineas: LineaCesta[];
   total: number;

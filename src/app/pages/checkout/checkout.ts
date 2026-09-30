@@ -9,13 +9,15 @@ import { ClienteService } from '../../services/cliente.service';
 import { LocalService } from '../../services/local.service';
 import { EmpresaService } from '../../services/empresa.service';
 import { PedidoService } from '../../services/pedido.service';
+import { PuntosService } from '../../services/puntos.service';
 import { AvisoHorario } from '../../components/aviso-horario/aviso-horario';
+import { SlotPipe } from '../../pipes/slot.pipe';
 import { FormaPago, Pedido } from '../../models/pedido.models';
 import { ValidacionCargo } from '../../models/cliente.models';
 
 @Component({
   selector: 'app-checkout',
-  imports: [RouterLink, AvisoHorario],
+  imports: [RouterLink, AvisoHorario, SlotPipe],
   templateUrl: './checkout.html',
   styleUrl: './checkout.scss',
 })
@@ -26,6 +28,7 @@ export class Checkout {
   protected readonly cliente = inject(ClienteService);
   private readonly local = inject(LocalService);
   protected readonly empresa = inject(EmpresaService);
+  protected readonly puntos = inject(PuntosService);
   private readonly api = inject(PedidosApi);
   private readonly pedidos = inject(PedidoService);
   private readonly router = inject(Router);
@@ -35,9 +38,15 @@ export class Checkout {
   protected readonly validando = signal(false);
   protected readonly enviando = signal(false);
 
+  constructor() {
+    // Carga zonas/puntos; si el QR trae ?punto=, queda fijado.
+    this.puntos.cargar().subscribe();
+  }
+
   protected readonly puedeConfirmar = computed(() => {
     const f = this.formaPago();
     if (!f || this.cesta.vacia() || !this.horario.pedidosAbiertos()) return false;
+    if (!this.puntos.completo()) return false;
     if (f === 'habitacion') return this.validacion()?.permitido === true;
     return true;
   });
@@ -66,6 +75,8 @@ export class Checkout {
     const pedido: Pedido = {
       codtpv: activo.codtpv,
       tmenu: activo.tmenu,
+      codzona: this.puntos.codigoZona(),
+      codpunto: this.puntos.codigoPunto(),
       lineas: this.cesta.lineas(),
       total: this.cesta.total(),
       formaPago: forma,

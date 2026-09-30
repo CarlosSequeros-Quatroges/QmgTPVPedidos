@@ -6,6 +6,7 @@ import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
 import { Alergeno } from '../models/carta.models';
 import { RespuestaLocales } from '../models/respuesta.models';
 import { normalizarCarta } from '../models/local.models';
+import { Zona } from '../models/zona.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
 
@@ -60,6 +61,29 @@ export class MockPedidosApi extends PedidosApi {
           filas.map((f) => ({ codigo: f.codigo, descripcion: f.nombre.es })),
         ),
       );
+  }
+
+  getPuntosPedidos(): Observable<Zona[]> {
+    // Sin backend: dos zonas de ejemplo con un par de puntos.
+    return of<Zona[]>([
+      {
+        id: 1,
+        codigo: 'PIS',
+        nombres: ['PISCINA', 'POOL', 'PISCINA', 'PISCINA'],
+        puntos: [
+          { id: 1, codigo: '001', nombres: ['Hamaca 1', 'Sunbed 1', 'Liege 1', 'Lettino 1'] },
+          { id: 2, codigo: '002', nombres: ['Hamaca 2', 'Sunbed 2', 'Liege 2', 'Lettino 2'] },
+        ],
+      },
+      {
+        id: 2,
+        codigo: 'SOL',
+        nombres: ['SOLARIUM', 'SOLARIUM', 'SOLARIUM', 'SOLARIUM'],
+        puntos: [
+          { id: 3, codigo: '001', nombres: ['Hamaca 1', 'Sunbed 1', 'Liege 1', 'Lettino 1'] },
+        ],
+      },
+    ]).pipe(delay(150));
   }
 
   validarCliente(codigo: string): Observable<ValidacionCliente> {
