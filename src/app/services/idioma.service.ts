@@ -75,6 +75,7 @@ interface TextosUI {
   punto: string;
   eligeZona: string;
   eligePunto: string;
+  cambiarPunto: string;
   // Pago
   formaPago: string;
   efectivo: string;
@@ -170,6 +171,7 @@ const UI: Record<Idioma, TextosUI> = {
     punto: 'Punto',
     eligeZona: 'Elige una zona',
     eligePunto: 'Elige un punto',
+    cambiarPunto: 'Cambiar',
     formaPago: 'Forma de pago',
     efectivo: 'Efectivo',
     tarjeta: 'Tarjeta',
@@ -254,6 +256,7 @@ const UI: Record<Idioma, TextosUI> = {
     punto: 'Spot',
     eligeZona: 'Choose a zone',
     eligePunto: 'Choose a spot',
+    cambiarPunto: 'Change',
     formaPago: 'Payment method',
     efectivo: 'Cash',
     tarjeta: 'Card',
@@ -338,6 +341,7 @@ const UI: Record<Idioma, TextosUI> = {
     punto: 'Emplacement',
     eligeZona: 'Choisissez une zone',
     eligePunto: 'Choisissez un emplacement',
+    cambiarPunto: 'Changer',
     formaPago: 'Mode de paiement',
     efectivo: 'Espèces',
     tarjeta: 'Carte',
@@ -423,6 +427,7 @@ const UI: Record<Idioma, TextosUI> = {
     punto: 'Platz',
     eligeZona: 'Zone wählen',
     eligePunto: 'Platz wählen',
+    cambiarPunto: 'Ändern',
     formaPago: 'Zahlungsart',
     efectivo: 'Bar',
     tarjeta: 'Karte',

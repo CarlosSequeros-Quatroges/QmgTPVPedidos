@@ -13,10 +13,15 @@
   <h2 class="titulo">{{ idiomas.txt().puntoPedido }}</h2>
 
   @if (puntos.fijado() && puntos.puntoActivo(); as p) {
-    <p class="punto-fijo">
-      📍 {{ puntos.zonaActiva()!.nombres | slot: idiomas.slot() }}
-      · {{ p.nombres | slot: idiomas.slot() }}
-    </p>
+    <div class="punto-fijo">
+      <span class="punto-fijo__texto">
+        📍 {{ puntos.zonaActiva()!.nombres | slot: idiomas.slot() }}
+        · {{ p.nombres | slot: idiomas.slot() }}
+      </span>
+      <button type="button" class="punto-fijo__cambiar" (click)="puntos.cambiar()">
+        {{ idiomas.txt().cambiarPunto }}
+      </button>
+    </div>
   } @else {
     <div class="punto-selector">
       <label class="campo">

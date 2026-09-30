@@ -53,6 +53,14 @@ export class PuntosService {
     );
   }
 
+  /**
+   * Libera el punto fijado por la URL para poder elegir a mano (los desplegables
+   * arrancan con la selección actual). No borra la selección.
+   */
+  cambiar(): void {
+    this._fijado.set(false);
+  }
+
   /** Recibe el `id` de zona (como string, desde el `<select>`). */
   seleccionarZona(id: string): void {
     this._idZona.set(id ? Number(id) : null);
