@@ -30,4 +30,10 @@ export interface PedidoConfirmado {
   id: string;
   estado: 'recibido';
   pedido: Pedido;
+  /** Nº de mesa asignado por el backend (≥ 1000). */
+  mesa?: string;
+  /** Código de cabecera del pedido. */
+  codenl?: number;
+  /** Nº de líneas grabadas. */
+  nlineas?: number;
 }

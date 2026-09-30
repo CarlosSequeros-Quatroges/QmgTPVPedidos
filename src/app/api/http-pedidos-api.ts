@@ -15,6 +15,7 @@ import {
   RespuestaAlergenos,
   RespuestaApi,
   RespuestaCarta,
+  RespuestaGrabaPedido,
   RespuestaLocales,
   RespuestaPuntos,
 } from '../models/respuesta.models';
@@ -101,16 +102,26 @@ export class HttpPedidosApi extends PedidosApi {
   }
 
   crearPedido(pedido: Pedido): Observable<PedidoConfirmado> {
-    // Comanda web (subconjunto del modelo del comandero) lista para enviar.
+    // Comanda web (subconjunto del modelo del comandero).
     const comanda = construirComanda(
       pedido,
       this.empresa.codigo() ?? '',
       this.idiomas.slotDe('es'),
     );
-    // TODO: endpoint real pendiente. Cuando exista:
-    //   return this.http.post<RespuestaPedido>(`${API_BASE}/crearPedido`, comanda)
-    //     .pipe(map((r) => ...));
-    console.log('[crearPedido] comanda a enviar:\n' + JSON.stringify(comanda, null, 2));
-    return this.mock.crearPedido(pedido);
+    return this.http
+      .post<RespuestaGrabaPedido>(`${API_BASE}/grabaLineas`, comanda)
+      .pipe(
+        map((r) => {
+          const c = comprobar(r);
+          return {
+            id: String(c.codenl),
+            estado: 'recibido' as const,
+            pedido,
+            mesa: c.mesa,
+            codenl: c.codenl,
+            nlineas: c.nlineas,
+          };
+        }),
+      );
   }
 }

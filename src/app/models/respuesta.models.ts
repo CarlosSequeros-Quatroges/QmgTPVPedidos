@@ -43,3 +43,13 @@ export interface RespuestaCarta extends RespuestaApi {
 export interface RespuestaPuntos extends RespuestaApi {
   zonas: ZonaApi[];
 }
+
+/** Respuesta de `grabaLineas` (crear pedido). */
+export interface RespuestaGrabaPedido extends RespuestaApi {
+  /** Nº de mesa asignado al pedido web (≥ 1000). */
+  mesa: string;
+  /** Código de cabecera del pedido (`cabecera_mesas.codigo`). */
+  codenl: number;
+  /** Nº de líneas grabadas. */
+  nlineas: number;
+}
