@@ -3,11 +3,15 @@
   <h1 class="confirmacion__titulo">{{ idiomas.txt().pedidoRecibido }}</h1>
 
   <p class="confirmacion__numero">
-    {{ idiomas.txt().numeroPedido }} <strong>{{ numeroCorto() }}</strong>
+    {{ idiomas.txt().numeroPedido }} <strong>{{ numero() }}</strong>
   </p>
 
   @if (confirmado(); as c) {
     <div class="confirmacion__datos">
+      <div>
+        <span>{{ idiomas.txt().hora }}</span>
+        <strong>{{ horaDe(c.pedido.creadoEn) }}</strong>
+      </div>
       <div>
         <span>{{ idiomas.txt().total }}</span>
         <strong>{{ c.pedido.total.toFixed(2) }} €</strong>

@@ -69,6 +69,12 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'mis-pedidos',
+        title: 'Mis pedidos',
+        loadComponent: () =>
+          import('./pages/mis-pedidos/mis-pedidos').then((m) => m.MisPedidos),
+      },
+      {
         path: 'mi-codigo',
         title: 'Mi código',
         loadComponent: () =>

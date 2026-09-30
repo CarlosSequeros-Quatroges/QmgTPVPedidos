@@ -92,6 +92,9 @@ interface TextosUI {
   // Confirmación
   pedidoRecibido: string;
   numeroPedido: string;
+  hora: string;
+  misPedidos: string;
+  sinPedidos: string;
   pagaras: string;
   graciasPedido: string;
   // Registro de código
@@ -187,6 +190,9 @@ const UI: Record<Idioma, TextosUI> = {
     avisoPago: 'El camarero verá cómo vas a pagar al entregar el pedido.',
     pedidoRecibido: '¡Pedido recibido!',
     numeroPedido: 'Nº de pedido',
+    hora: 'Hora',
+    misPedidos: 'Mis pedidos',
+    sinPedidos: 'Aún no has hecho ningún pedido desde este dispositivo.',
     pagaras: 'Pagarás con',
     graciasPedido: 'Gracias, tu pedido está en camino.',
     codigoTitulo: 'Código de cliente',
@@ -271,6 +277,9 @@ const UI: Record<Idioma, TextosUI> = {
     avisoPago: 'The waiter will see how you plan to pay when they bring the order.',
     pedidoRecibido: 'Order received!',
     numeroPedido: 'Order no.',
+    hora: 'Time',
+    misPedidos: 'My orders',
+    sinPedidos: 'You have not placed any order from this device yet.',
     pagaras: 'You will pay with',
     graciasPedido: 'Thank you, your order is on its way.',
     codigoTitulo: 'Guest code',
@@ -357,6 +366,9 @@ const UI: Record<Idioma, TextosUI> = {
     avisoPago: 'Le serveur verra votre mode de paiement à la livraison.',
     pedidoRecibido: 'Commande reçue !',
     numeroPedido: 'Commande n°',
+    hora: 'Heure',
+    misPedidos: 'Mes commandes',
+    sinPedidos: "Vous n'avez encore passé aucune commande depuis cet appareil.",
     pagaras: 'Vous paierez par',
     graciasPedido: 'Merci, votre commande arrive.',
     codigoTitulo: 'Code client',
@@ -443,6 +455,9 @@ const UI: Record<Idioma, TextosUI> = {
     avisoPago: 'Der Kellner sieht bei der Lieferung, wie Sie zahlen möchten.',
     pedidoRecibido: 'Bestellung erhalten!',
     numeroPedido: 'Bestell-Nr.',
+    hora: 'Uhrzeit',
+    misPedidos: 'Meine Bestellungen',
+    sinPedidos: 'Sie haben von diesem Gerät noch keine Bestellung aufgegeben.',
     pagaras: 'Sie zahlen mit',
     graciasPedido: 'Danke, Ihre Bestellung ist unterwegs.',
     codigoTitulo: 'Gästecode',

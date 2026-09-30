@@ -74,6 +74,13 @@
         }
       </a>
 
+      @if (pedidos.historial().length) {
+        <a [routerLink]="empresa.ruta('mis-pedidos')" class="mis-pedidos-btn" [title]="idiomas.txt().misPedidos">
+          <span aria-hidden="true">🧾</span>
+          <span class="visually-hidden">{{ idiomas.txt().misPedidos }}</span>
+        </a>
+      }
+
       @if (local.localActivo()) {
         <a [routerLink]="empresa.ruta('cesta')" class="cesta-btn" [title]="idiomas.txt().tuPedido">
           <span aria-hidden="true">🛒</span>

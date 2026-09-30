@@ -1,0 +1,49 @@
+<a class="volver" [routerLink]="empresa.ruta('carta')">← {{ idiomas.txt().volverCarta }}</a>
+<h1 class="titulo">{{ idiomas.txt().misPedidos }}</h1>
+
+@if (!pedidos.historial().length) {
+  <p class="vacio">{{ idiomas.txt().sinPedidos }}</p>
+} @else {
+  <ul class="pedidos">
+    @for (p of pedidos.historial(); track p.id) {
+      <li class="pedido">
+        <div class="pedido__cabecera">
+          <span class="pedido__num">{{ idiomas.txt().numeroPedido }} <strong>{{ p.mesa ?? p.id }}</strong></span>
+          <span class="pedido__hora">{{ horaDe(p.pedido.creadoEn) }}</span>
+        </div>
+
+        @if (p.pedido.codzona || p.pedido.codpunto) {
+          <p class="pedido__punto">📍 {{ p.pedido.codzona }}-{{ p.pedido.codpunto }}</p>
+        }
+
+        <ul class="pedido__lineas">
+          @for (l of p.pedido.lineas; track l.id) {
+            <li class="pedido__linea">
+              <span><span class="pedido__cant">{{ l.cantidad }}×</span> {{ l.nombres | slot: idiomas.slot() }}</span>
+              @if (l.extras.length) {
+                <ul class="pedido__extras">
+                  @for (e of l.extras; track e.codigo) {
+                    <li>
+                      <span class="pedido__marca" [class.pedido__marca--sin]="e.marca === 'sin'">
+                        {{ e.marca === 'con' ? idiomas.txt().con : idiomas.txt().sin }}
+                      </span>
+                      {{ e.nombres | slot: idiomas.slot() }}
+                    </li>
+                  }
+                </ul>
+              }
+              @if (l.nota) {
+                <span class="pedido__nota">{{ idiomas.txt().nota }}: {{ l.nota }}</span>
+              }
+            </li>
+          }
+        </ul>
+
+        <div class="pedido__pie">
+          <span>{{ formaPagoTexto(p.pedido.formaPago) }}</span>
+          <strong>{{ p.pedido.total.toFixed(2) }} €</strong>
+        </div>
+      </li>
+    }
+  </ul>
+}

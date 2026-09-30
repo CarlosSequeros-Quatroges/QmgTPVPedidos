@@ -20,15 +20,17 @@ export class Confirmacion {
   /** Id del pedido recibido desde la ruta (`/confirmacion/:id`). */
   readonly id = input.required<string>();
 
-  protected readonly confirmado = computed(() => {
-    const ultimo = this.pedidos.ultimo();
-    return ultimo && ultimo.id === this.id() ? ultimo : null;
-  });
+  protected readonly confirmado = computed(() => this.pedidos.porId(this.id()));
 
-  /** Nº corto legible para mostrar. */
-  protected readonly numeroCorto = computed(() =>
-    this.id().slice(0, 8).toUpperCase(),
+  /** Nº de pedido a mostrar: la **mesa** asignada (o el id si no está). */
+  protected readonly numero = computed(
+    () => this.confirmado()?.mesa ?? this.id(),
   );
+
+  /** Fecha/hora legible de un pedido (usa la configuración local del dispositivo). */
+  protected horaDe(iso: string): string {
+    return new Date(iso).toLocaleString();
+  }
 
   protected formaPagoTexto(forma: FormaPago): string {
     const t = this.idiomas.txt();

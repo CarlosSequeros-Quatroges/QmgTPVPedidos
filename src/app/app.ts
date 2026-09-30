@@ -8,6 +8,7 @@ import { CartaService } from './services/carta.service';
 import { HorarioService } from './services/horario.service';
 import { CestaService } from './services/cesta.service';
 import { ClienteService } from './services/cliente.service';
+import { PedidoService } from './services/pedido.service';
 import { EmpresaService } from './services/empresa.service';
 import { ActualizacionService } from './services/actualizacion.service';
 import { ConfirmService } from './services/confirm.service';
@@ -29,6 +30,7 @@ export class App {
   protected readonly horario = inject(HorarioService);
   protected readonly cesta = inject(CestaService);
   protected readonly cliente = inject(ClienteService);
+  protected readonly pedidos = inject(PedidoService);
   protected readonly empresa = inject(EmpresaService);
   protected readonly confirm = inject(ConfirmService);
 
