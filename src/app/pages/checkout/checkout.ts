@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 
 import { PedidosApi } from '../../api/pedidos-api';
 import { CestaService } from '../../services/cesta.service';
+import { CartaService } from '../../services/carta.service';
 import { IdiomaService } from '../../services/idioma.service';
 import { HorarioService } from '../../services/horario.service';
 import { ClienteService } from '../../services/cliente.service';
@@ -23,6 +24,7 @@ import { ValidacionCargo } from '../../models/cliente.models';
 })
 export class Checkout {
   protected readonly cesta = inject(CestaService);
+  private readonly carta = inject(CartaService);
   protected readonly idiomas = inject(IdiomaService);
   protected readonly horario = inject(HorarioService);
   protected readonly cliente = inject(ClienteService);
@@ -88,9 +90,12 @@ export class Checkout {
     const activo = this.local.localActivo();
     if (!forma || !activo || !this.puedeConfirmar() || this.enviando()) return;
 
+    const cartaActiva = this.carta.cartaActiva();
     const pedido: Pedido = {
       codtpv: activo.codtpv,
       tmenu: activo.tmenu,
+      localNombre: activo.nombre,
+      cartaNombre: cartaActiva?.nombres[this.idiomas.slot()] ?? cartaActiva?.nombres[0],
       codzona: this.puntos.codigoZona(),
       codpunto: this.puntos.codigoPunto(),
       lineas: this.cesta.lineas(),

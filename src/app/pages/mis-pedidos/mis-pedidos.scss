@@ -45,6 +45,16 @@
     font-size: 0.9rem;
   }
 
+  &__local {
+    margin: 0.3rem 0 0;
+    font-weight: 700;
+  }
+
+  &__carta {
+    font-weight: 600;
+    color: var(--color-texto-suave);
+  }
+
   &__punto {
     margin: 0.35rem 0 0;
     font-weight: 600;

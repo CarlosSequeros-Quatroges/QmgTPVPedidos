@@ -11,6 +11,10 @@ export type FormaPago = 'efectivo' | 'tarjeta' | 'habitacion';
 export interface Pedido {
   codtpv: string;
   tmenu: number;
+  /** Nombre del local, resuelto al crear el pedido (para el historial). */
+  localNombre?: string;
+  /** Nombre de la carta en el idioma del pedido, al crearlo (para el historial). */
+  cartaNombre?: string;
   /** Zona de entrega (`codigo` de zona, ≤4 caracteres). */
   codzona?: string;
   /** Punto de entrega dentro de la zona (`codigo` de punto, 3 dígitos). */

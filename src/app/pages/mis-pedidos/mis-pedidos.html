@@ -12,6 +12,16 @@
           <span class="pedido__hora">{{ horaDe(p.pedido.creadoEn) }}</span>
         </div>
 
+        @if (p.pedido.localNombre || p.pedido.cartaNombre) {
+          <p class="pedido__local">
+            {{ p.pedido.localNombre }}
+            @if (p.pedido.localNombre && p.pedido.cartaNombre) { · }
+            @if (p.pedido.cartaNombre) {
+              <span class="pedido__carta">{{ p.pedido.cartaNombre }}</span>
+            }
+          </p>
+        }
+
         @if (p.pedido.codzona || p.pedido.codpunto) {
           <p class="pedido__punto">📍 {{ p.pedido.codzona }}-{{ p.pedido.codpunto }}</p>
         }
