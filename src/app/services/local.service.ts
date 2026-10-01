@@ -44,14 +44,15 @@ export class LocalService {
 
   /**
    * Cartas que ofrece un local (según los `codcarta` de sus franjas).
-   * Se descartan las que el local referencia pero no están definidas en el
-   * catálogo de la empresa (franja con `codcarta` sin carta asociada).
+   * Se descartan: las que el local referencia pero no están en el catálogo, y
+   * las que **no declaran ninguna familia** (`familias` vacío → nada que
+   * mostrar, p. ej. una carta de noche sin contenido asignado).
    */
   cartasDeLocal(local: Local): Carta[] {
     const porCod = this.cartasPorCod();
     return codcartasDeLocal(local)
       .map((cod) => porCod.get(cod))
-      .filter((c): c is Carta => c !== undefined);
+      .filter((c): c is Carta => c !== undefined && c.codfamilias.length > 0);
   }
 
   /**
