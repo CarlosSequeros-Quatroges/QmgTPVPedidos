@@ -21,8 +21,11 @@ export interface ValidacionCliente {
   motivo?: 'ok' | 'datos_invalidos' | 'no_encontrado';
 }
 
-/** Motivo del resultado de validar un cargo a cuenta de habitación. */
-export type MotivoCargo = 'ok' | 'sin_saldo' | 'codigo_invalido';
+/**
+ * Motivo del resultado de validar un cargo a cuenta de habitación.
+ * `error`: no se pudo recuperar la información de saldo (fallo o sin respuesta).
+ */
+export type MotivoCargo = 'ok' | 'sin_saldo' | 'error' | 'codigo_invalido';
 
 /** Respuesta de la API al validar si se puede cargar un importe a la habitación. */
 export interface ValidacionCargo {

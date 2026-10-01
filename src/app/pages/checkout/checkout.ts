@@ -51,19 +51,35 @@ export class Checkout {
     return true;
   });
 
+  /**
+   * El cargo a habitación queda bloqueado si una comprobación de saldo falló
+   * (saldo insuficiente o no se pudo recuperar): el botón se deshabilita y el
+   * huésped debe elegir efectivo o tarjeta.
+   */
+  protected readonly cargoBloqueado = computed(() => {
+    const v = this.validacion();
+    return !!v && !v.permitido;
+  });
+
   seleccionarPago(forma: FormaPago): void {
-    this.formaPago.set(forma);
-    this.validacion.set(null);
-    if (forma === 'habitacion' && this.cliente.tieneCodigo()) {
+    if (forma === 'habitacion') {
+      // Si ya se comprobó y no hay saldo, el botón está deshabilitado: nada que hacer.
+      if (this.cargoBloqueado() || !this.cliente.tieneCodigo() || this.validando()) return;
+      this.formaPago.set('habitacion');
       this.validar();
+      return;
     }
+    this.formaPago.set(forma);
   }
 
   validar(): void {
     this.validando.set(true);
+    this.validacion.set(null);
     this.cliente.validarCargo(this.cesta.total()).subscribe((v) => {
       this.validacion.set(v);
       this.validando.set(false);
+      // Si no hay saldo, se deselecciona para que elija efectivo/tarjeta.
+      if (!v.permitido) this.formaPago.set(null);
     });
   }
 

@@ -86,6 +86,8 @@
         type="button"
         class="pago"
         [class.pago--activo]="formaPago() === 'habitacion'"
+        [class.pago--bloqueado]="cargoBloqueado()"
+        [disabled]="cargoBloqueado()"
         (click)="seleccionarPago('habitacion')"
       >
         <span class="pago__icono">🏨</span>
@@ -94,19 +96,24 @@
     }
   </div>
 
-  @if (formaPago() === 'habitacion') {
+  @if (validando()) {
     <div class="cargo">
-      @if (validando()) {
-        <p>{{ idiomas.txt().comprobarSaldo }}…</p>
-      } @else if (validacion(); as v) {
-        @if (v.permitido) {
-          <p class="cargo__ok">
-            ✓ {{ idiomas.txt().cargoOk }}
-            @if (v.saldoDisponible != null) {
-              · {{ idiomas.txt().saldoDisponible }}: {{ v.saldoDisponible.toFixed(2) }} €
-            }
-          </p>
-        } @else if (v.motivo === 'sin_saldo') {
+      <p class="cargo__progreso">
+        <span class="cargo__spinner" aria-hidden="true"></span>
+        {{ idiomas.txt().comprobandoSaldo }}…
+      </p>
+    </div>
+  } @else if (validacion(); as v) {
+    <div class="cargo">
+      @if (v.permitido && formaPago() === 'habitacion') {
+        <p class="cargo__ok">
+          ✓ {{ idiomas.txt().cargoOk }}
+          @if (v.saldoDisponible != null) {
+            · {{ idiomas.txt().saldoDisponible }}: {{ v.saldoDisponible.toFixed(2) }} €
+          }
+        </p>
+      } @else if (!v.permitido) {
+        @if (v.motivo === 'sin_saldo') {
           <p class="cargo__error">
             ✕ {{ idiomas.txt().saldoInsuficiente }}
             @if (v.saldoDisponible != null) {
@@ -114,8 +121,9 @@
             }
           </p>
         } @else {
-          <p class="cargo__error">✕ {{ idiomas.txt().codigoInvalido }}</p>
+          <p class="cargo__error">✕ {{ idiomas.txt().saldoNoRecuperado }}</p>
         }
+        <p class="cargo__pista">{{ idiomas.txt().eligeOtroPago }}</p>
       }
     </div>
   }

@@ -82,10 +82,11 @@ interface TextosUI {
   tarjeta: string;
   cargoHabitacion: string;
   registraCodigo: string;
-  comprobarSaldo: string;
+  comprobandoSaldo: string;
   saldoDisponible: string;
   saldoInsuficiente: string;
-  codigoInvalido: string;
+  saldoNoRecuperado: string;
+  eligeOtroPago: string;
   cargoOk: string;
   confirmarPedido: string;
   avisoPago: string;
@@ -184,10 +185,11 @@ const UI: Record<Idioma, TextosUI> = {
     cargoHabitacion: 'Cargo a la habitación',
     registraCodigo:
       'Registra tu código de cliente para pagar con cargo a la habitación.',
-    comprobarSaldo: 'Comprobar saldo',
+    comprobandoSaldo: 'Comprobando saldo disponible',
     saldoDisponible: 'Saldo disponible',
     saldoInsuficiente: 'Saldo insuficiente',
-    codigoInvalido: 'Código no válido',
+    saldoNoRecuperado: 'No se pudo recuperar la información de saldo',
+    eligeOtroPago: 'Elige efectivo o tarjeta para continuar.',
     cargoOk: 'Cargo disponible',
     confirmarPedido: 'Confirmar pedido',
     avisoPago: 'El camarero verá cómo vas a pagar al entregar el pedido.',
@@ -274,10 +276,11 @@ const UI: Record<Idioma, TextosUI> = {
     tarjeta: 'Card',
     cargoHabitacion: 'Charge to room',
     registraCodigo: 'Register your guest code to charge orders to your room.',
-    comprobarSaldo: 'Check balance',
+    comprobandoSaldo: 'Checking available balance',
     saldoDisponible: 'Available balance',
     saldoInsuficiente: 'Insufficient balance',
-    codigoInvalido: 'Invalid code',
+    saldoNoRecuperado: 'Could not retrieve balance information',
+    eligeOtroPago: 'Choose cash or card to continue.',
     cargoOk: 'Charge available',
     confirmarPedido: 'Confirm order',
     avisoPago: 'The waiter will see how you plan to pay when they bring the order.',
@@ -366,10 +369,11 @@ const UI: Record<Idioma, TextosUI> = {
     cargoHabitacion: 'Sur la note de chambre',
     registraCodigo:
       'Enregistrez votre code client pour imputer les commandes à votre chambre.',
-    comprobarSaldo: 'Vérifier le solde',
+    comprobandoSaldo: 'Vérification du solde disponible',
     saldoDisponible: 'Solde disponible',
     saldoInsuficiente: 'Solde insuffisant',
-    codigoInvalido: 'Code non valide',
+    saldoNoRecuperado: 'Impossible de récupérer les informations de solde',
+    eligeOtroPago: 'Choisissez espèces ou carte pour continuer.',
     cargoOk: 'Imputation possible',
     confirmarPedido: 'Confirmer la commande',
     avisoPago: 'Le serveur verra votre mode de paiement à la livraison.',
@@ -458,10 +462,11 @@ const UI: Record<Idioma, TextosUI> = {
     cargoHabitacion: 'Auf die Zimmerrechnung',
     registraCodigo:
       'Registrieren Sie Ihren Gästecode, um Bestellungen aufs Zimmer zu buchen.',
-    comprobarSaldo: 'Guthaben prüfen',
+    comprobandoSaldo: 'Verfügbares Guthaben wird geprüft',
     saldoDisponible: 'Verfügbares Guthaben',
     saldoInsuficiente: 'Nicht genügend Guthaben',
-    codigoInvalido: 'Ungültiger Code',
+    saldoNoRecuperado: 'Guthaben konnte nicht abgerufen werden',
+    eligeOtroPago: 'Wählen Sie Bar oder Karte, um fortzufahren.',
     cargoOk: 'Buchung möglich',
     confirmarPedido: 'Bestellung bestätigen',
     avisoPago: 'Der Kellner sieht bei der Lieferung, wie Sie zahlen möchten.',

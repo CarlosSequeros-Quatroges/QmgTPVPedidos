@@ -54,6 +54,17 @@ export interface RespuestaRegistroCliente extends RespuestaApi {
   reserva?: string;
 }
 
+/** Respuesta de `recuperaCredito`: crédito disponible para cargo a habitación. */
+export interface RespuestaCredito extends RespuestaApi {
+  /** Nº de reserva consultado. */
+  nreserva?: number;
+  /**
+   * Crédito disponible como cadena decimal con punto (p. ej. "0.00",
+   * "125.50"). Puede ser 0. Ausente si no se pudo recuperar.
+   */
+  credito?: string;
+}
+
 /** Respuesta de `grabaLineas` (crear pedido). */
 export interface RespuestaGrabaPedido extends RespuestaApi {
   /** Nº de mesa asignado al pedido web (≥ 1000). */

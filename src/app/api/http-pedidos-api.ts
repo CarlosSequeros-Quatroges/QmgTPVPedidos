@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 
 import { apiBase } from './api.config';
 import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
-import { MockPedidosApi } from './mock-pedidos-api';
 import { Alergeno } from '../models/carta.models';
 import { normalizarCarta } from '../models/local.models';
 import { Zona, normalizarZona } from '../models/zona.models';
@@ -17,6 +16,7 @@ import {
   RespuestaCarta,
   RespuestaGrabaPedido,
   RespuestaLocales,
+  RespuestaCredito,
   RespuestaPuntos,
   RespuestaRegistroCliente,
 } from '../models/respuesta.models';
@@ -36,14 +36,10 @@ function comprobar<T extends RespuestaApi>(r: T): T {
  *
  * El código de empresa (`codemp`) lo añade el interceptor a partir del que
  * viene en la ruta, así que aquí no aparece.
- *
- * Los endpoints que todavía no están disponibles se delegan en
- * {@link MockPedidosApi}; se irán sustituyendo conforme se publiquen.
  */
 @Injectable({ providedIn: 'root' })
 export class HttpPedidosApi extends PedidosApi {
   private readonly http = inject(HttpClient);
-  private readonly mock = inject(MockPedidosApi);
   private readonly empresa = inject(EmpresaService);
   private readonly idiomas = inject(IdiomaService);
 
@@ -112,13 +108,39 @@ export class HttpPedidosApi extends PedidosApi {
       );
   }
 
-  // --- Pendiente de API real: por ahora, datos simulados ---
-
   validarCargoHabitacion(
     codigo: string,
     importe: number,
   ): Observable<ValidacionCargo> {
-    return this.mock.validarCargoHabitacion(codigo, importe);
+    // El código guardado es el nº de reserva en base64; la API lo quiere como
+    // entero. Si no se puede decodificar, se trata como "no recuperable".
+    let ref: string;
+    try {
+      ref = atob(codigo).trim();
+    } catch {
+      return of<ValidacionCargo>({ permitido: false, motivo: 'error' });
+    }
+    if (!ref) return of<ValidacionCargo>({ permitido: false, motivo: 'error' });
+
+    return this.http
+      .get<RespuestaCredito>(`${apiBase()}/recuperaCredito`, {
+        params: { codigo: ref },
+      })
+      .pipe(
+        map((r): ValidacionCargo => {
+          const saldo = r.credito != null ? Number(r.credito) : NaN;
+          if (r.errnum !== 0 || Number.isNaN(saldo)) {
+            return { permitido: false, motivo: 'error' };
+          }
+          if (saldo < importe) {
+            return { permitido: false, motivo: 'sin_saldo', saldoDisponible: saldo };
+          }
+          return { permitido: true, motivo: 'ok', saldoDisponible: saldo };
+        }),
+        catchError(() =>
+          of<ValidacionCargo>({ permitido: false, motivo: 'error' }),
+        ),
+      );
   }
 
   crearPedido(pedido: Pedido): Observable<PedidoConfirmado> {

@@ -51,6 +51,15 @@
     border-color: var(--color-acento);
     background: #fdf0e7;
   }
+
+  &--bloqueado {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: var(--color-borde);
+    }
+  }
 }
 
 .cargo {
@@ -76,6 +85,34 @@
   &__error {
     color: #b3261e;
     font-weight: 700;
+  }
+
+  &__progreso {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 600;
+    color: var(--color-texto-suave);
+  }
+
+  &__spinner {
+    width: 1.1rem;
+    height: 1.1rem;
+    border: 2px solid var(--color-borde);
+    border-top-color: var(--color-acento);
+    border-radius: 50%;
+    animation: cargo-giro 0.7s linear infinite;
+  }
+
+  &__pista {
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+  }
+}
+
+@keyframes cargo-giro {
+  to {
+    transform: rotate(360deg);
   }
 }
 
