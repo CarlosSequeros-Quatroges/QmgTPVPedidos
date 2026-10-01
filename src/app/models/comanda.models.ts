@@ -1,4 +1,4 @@
-import { Pedido } from './pedido.models';
+import { FormaPago, Pedido } from './pedido.models';
 
 /**
  * Comanda que espera el backend para grabar un pedido de la web (subconjunto
@@ -40,12 +40,26 @@ export interface Comanda {
   codzona?: string;
   /** Punto de entrega (`codigo` de punto). */
   codpunto?: string;
+  /** Forma de pago elegida: `E` efectivo, `T` tarjeta, `R` cargo a habitación. */
+  formapago: string;
   lineas: ComandaLinea[];
 }
 
 /** Precio a texto con punto y 2 decimales. */
 function precio(n: number): string {
   return (n ?? 0).toFixed(2);
+}
+
+/** Forma de pago interna → código que espera el backend. */
+function codigoFormaPago(forma: FormaPago): string {
+  switch (forma) {
+    case 'efectivo':
+      return 'E';
+    case 'tarjeta':
+      return 'T';
+    case 'habitacion':
+      return 'R';
+  }
 }
 
 /**
@@ -64,6 +78,7 @@ export function construirComanda(
     tpv: pedido.codtpv,
     codzona: pedido.codzona,
     codpunto: pedido.codpunto,
+    formapago: codigoFormaPago(pedido.formaPago),
     lineas: pedido.lineas.map((l) => {
       const extras: ComandaExtra[] = [];
 
