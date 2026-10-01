@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 
-import { API_BASE } from './api.config';
+import { apiBase } from './api.config';
 import { CartaLocal, LocalesEmpresa, PedidosApi } from './pedidos-api';
 import { MockPedidosApi } from './mock-pedidos-api';
 import { Alergeno } from '../models/carta.models';
@@ -47,7 +47,7 @@ export class HttpPedidosApi extends PedidosApi {
   private readonly idiomas = inject(IdiomaService);
 
   getLocales(): Observable<LocalesEmpresa> {
-    return this.http.get<RespuestaLocales>(`${API_BASE}/getLocales`).pipe(
+    return this.http.get<RespuestaLocales>(`${apiBase()}/getLocales`).pipe(
       map((r) => {
         const c = comprobar(r);
         return {
@@ -61,7 +61,7 @@ export class HttpPedidosApi extends PedidosApi {
 
   getCarta(codtpv: string, tmenu: number): Observable<CartaLocal> {
     return this.http
-      .get<RespuestaCarta>(`${API_BASE}/getCarta`, {
+      .get<RespuestaCarta>(`${apiBase()}/getCarta`, {
         params: { codtpv, tmenu },
       })
       .pipe(
@@ -78,13 +78,13 @@ export class HttpPedidosApi extends PedidosApi {
 
   getAlergenos(): Observable<Alergeno[]> {
     return this.http
-      .get<RespuestaAlergenos>(`${API_BASE}/getAlergenos`)
+      .get<RespuestaAlergenos>(`${apiBase()}/getAlergenos`)
       .pipe(map((r) => comprobar(r).alergenos ?? []));
   }
 
   getPuntosPedidos(): Observable<Zona[]> {
     return this.http
-      .get<RespuestaPuntos>(`${API_BASE}/getPuntosPedidos`)
+      .get<RespuestaPuntos>(`${apiBase()}/getPuntosPedidos`)
       .pipe(map((r) => (comprobar(r).zonas ?? []).map(normalizarZona)));
   }
 
@@ -109,7 +109,7 @@ export class HttpPedidosApi extends PedidosApi {
       this.idiomas.slotDe('es'),
     );
     return this.http
-      .post<RespuestaGrabaPedido>(`${API_BASE}/grabaLineas`, comanda)
+      .post<RespuestaGrabaPedido>(`${apiBase()}/grabaLineas`, comanda)
       .pipe(
         map((r) => {
           const c = comprobar(r);

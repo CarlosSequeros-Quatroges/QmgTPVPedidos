@@ -70,10 +70,4 @@ export class SeleccionLocal {
     this.carta.seleccionarCarta(carta.codcarta);
     this.router.navigate(this.empresa.ruta('carta'));
   }
-
-  /** Local sin cartas: entra directo (el backend sirve una sola carta). */
-  entrar(local: Local): void {
-    this.local.seleccionar(local);
-    this.router.navigate(this.empresa.ruta('carta'));
-  }
 }

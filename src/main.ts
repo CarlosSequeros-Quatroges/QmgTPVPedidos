@@ -1,6 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
+import { cargarConfig } from './app/api/api.config';
 
 /**
  * Captura el punto de pedido del QR (`?punto=ZONA-PPP`) ANTES del bootstrap: el
@@ -18,4 +19,8 @@ try {
   /* sessionStorage puede no estar disponible */
 }
 
-bootstrapApplication(App, appConfig).catch((err) => console.error(err));
+// La URL de la API se lee de `data/config.json` ANTES de arrancar Angular, para
+// que interceptor y servicios usen ya el valor definitivo.
+cargarConfig().then(() =>
+  bootstrapApplication(App, appConfig).catch((err) => console.error(err)),
+);

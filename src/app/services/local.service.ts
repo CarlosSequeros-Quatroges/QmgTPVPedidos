@@ -42,13 +42,26 @@ export class LocalService {
     return cod ? this._locales().find((l) => l.codtpv === cod) : undefined;
   });
 
-  /** Cartas que ofrece un local (según los `codcarta` de sus franjas). */
+  /**
+   * Cartas que ofrece un local (según los `codcarta` de sus franjas).
+   * Se descartan las que el local referencia pero no están definidas en el
+   * catálogo de la empresa (franja con `codcarta` sin carta asociada).
+   */
   cartasDeLocal(local: Local): Carta[] {
     const porCod = this.cartasPorCod();
     return codcartasDeLocal(local)
       .map((cod) => porCod.get(cod))
       .filter((c): c is Carta => c !== undefined);
   }
+
+  /**
+   * Locales que se pueden mostrar: los que tienen al menos una carta definida.
+   * Un local cuyas franjas apuntan a cartas inexistentes no tendría nada desde
+   * lo que pedir, así que no se lista.
+   */
+  readonly localesVisibles = computed(() =>
+    this._locales().filter((l) => this.cartasDeLocal(l).length > 0),
+  );
 
   /**
    * Carga la lista de locales una sola vez (memoizada). Si solo hay uno, lo
@@ -64,8 +77,10 @@ export class LocalService {
             this._cartas.set(cartas);
             this.idiomas.configurar(idiomas);
             this._cargando.set(false);
-            if (locales.length === 1 && !this._codtpv()) {
-              this.seleccionar(locales[0]);
+            // Si solo hay un local mostrable, se autoselecciona.
+            const visibles = this.localesVisibles();
+            if (visibles.length === 1 && !this._codtpv()) {
+              this.seleccionar(visibles[0]);
             }
           },
           error: (err) => {

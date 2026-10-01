@@ -2,54 +2,47 @@
   <p class="estado-carga">{{ idiomas.txt().cargandoLocales }}</p>
 } @else if (local.error()) {
   <p class="estado-carga">{{ local.error() }}</p>
-} @else if (!local.locales().length) {
+} @else if (!local.localesVisibles().length) {
   <p class="estado-carga">{{ idiomas.txt().sinLocales }}</p>
 } @else {
   <h1 class="titulo">{{ idiomas.txt().eligeLocal }}</h1>
 
-  @for (l of local.locales(); track l.codtpv) {
+  @for (l of local.localesVisibles(); track l.codtpv) {
     <section class="local">
       <header class="local__cabecera">
         <h2 class="local__nombre">{{ l.nombre }}</h2>
       </header>
 
-      @let cartas = cartasDe(l);
-      @if (cartas.length) {
-        <div class="cartas">
-          @for (c of cartas; track c.codcarta) {
-            <button type="button" class="carta-card" (click)="elegir(l, c)">
-              <app-foto-producto
-                class="carta-card__foto"
-                [src]="c.imagen"
-                [placeholder]="placeholderCarta"
-                [alt]="c.nombres | slot: idiomas.slot()"
-              />
-              <div class="carta-card__cuerpo">
-                <div class="carta-card__titulo">
-                  <span class="carta-card__nombre">{{ c.nombres | slot: idiomas.slot() }}</span>
-                  @if (abierta(l, c.codcarta)) {
-                    <span class="estado estado--abierto">{{ idiomas.txt().abierto }}</span>
-                  } @else {
-                    <span class="estado estado--cerrado">{{ idiomas.txt().cerrado }}</span>
-                  }
-                </div>
-                @let franjas = franjasDe(l, c.codcarta);
-                @if (franjas.length) {
-                  <ul class="carta-card__horario">
-                    @for (rango of franjas; track rango) {
-                      <li class="carta-card__franja">{{ rango }}</li>
-                    }
-                  </ul>
+      <div class="cartas">
+        @for (c of cartasDe(l); track c.codcarta) {
+          <button type="button" class="carta-card" (click)="elegir(l, c)">
+            <app-foto-producto
+              class="carta-card__foto"
+              [src]="c.imagen"
+              [placeholder]="placeholderCarta"
+              [alt]="c.nombres | slot: idiomas.slot()"
+            />
+            <div class="carta-card__cuerpo">
+              <div class="carta-card__titulo">
+                <span class="carta-card__nombre">{{ c.nombres | slot: idiomas.slot() }}</span>
+                @if (abierta(l, c.codcarta)) {
+                  <span class="estado estado--abierto">{{ idiomas.txt().abierto }}</span>
+                } @else {
+                  <span class="estado estado--cerrado">{{ idiomas.txt().cerrado }}</span>
                 }
               </div>
-            </button>
-          }
-        </div>
-      } @else {
-        <button type="button" class="carta-card carta-card--sola" (click)="entrar(l)">
-          <span class="carta-card__nombre">{{ idiomas.txt().verCarta }} →</span>
-        </button>
-      }
+              @let franjas = franjasDe(l, c.codcarta);
+              @if (franjas.length) {
+                <ul class="carta-card__horario">
+                  @for (rango of franjas; track rango) {
+                    <li class="carta-card__franja">{{ rango }}</li>
+                  }
+                </ul>
+              }
+            </div>
+          </button>
+        }
+      </div>
     </section>
   }
 }
