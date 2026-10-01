@@ -68,14 +68,6 @@ export interface Local {
   horario: HorarioPedidos;
 }
 
-/**
- * Ruta de la imagen del local. No viene de la API: es un recurso público
- * servido junto a la aplicación, nombrado por `codtpv`.
- */
-export function imagenLocal(codtpv: string): string {
-  return `img/locales/${codtpv}.svg`;
-}
-
 /** Ruta de la imagen de una carta (recurso público, nombrado por `codcarta`). */
 export function imagenCarta(codcarta: string): string {
   return `img/cartas/carta-${codcarta}.webp`;

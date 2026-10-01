@@ -2,5 +2,5 @@
   "useServerEndpoint": "server",
   "server_url": "http://192.168.1.51:8082/mgwres/rest/pedidos",
   "endpoint": "/mgwres/rest/pedidos",
-  "mostrarImagenPorDefecto": true
+  "mostrarImagenPorDefecto": false
 }
