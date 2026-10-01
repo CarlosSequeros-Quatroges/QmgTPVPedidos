@@ -44,6 +44,16 @@ export interface RespuestaPuntos extends RespuestaApi {
   zonas: ZonaApi[];
 }
 
+/** Respuesta de `registraCliente`. */
+export interface RespuestaRegistroCliente extends RespuestaApi {
+  /**
+   * Nº de reserva en base64 (solo cuando `errnum === 0`). Es el dato que se
+   * guarda como código de cliente registrado. `errnum` 1/2 → habitación no
+   * ocupada o documento no registrado en esa habitación.
+   */
+  reserva?: string;
+}
+
 /** Respuesta de `grabaLineas` (crear pedido). */
 export interface RespuestaGrabaPedido extends RespuestaApi {
   /** Nº de mesa asignado al pedido web (≥ 1000). */

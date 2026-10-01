@@ -18,6 +18,7 @@ import {
   RespuestaGrabaPedido,
   RespuestaLocales,
   RespuestaPuntos,
+  RespuestaRegistroCliente,
 } from '../models/respuesta.models';
 import { ValidacionCargo, ValidacionCliente } from '../models/cliente.models';
 import { Pedido, PedidoConfirmado } from '../models/pedido.models';
@@ -88,11 +89,30 @@ export class HttpPedidosApi extends PedidosApi {
       .pipe(map((r) => (comprobar(r).zonas ?? []).map(normalizarZona)));
   }
 
-  // --- Pendientes de API real: por ahora, datos simulados ---
-
-  validarCliente(codigo: string): Observable<ValidacionCliente> {
-    return this.mock.validarCliente(codigo);
+  registrarCliente(
+    habitacion: string,
+    documento: string,
+  ): Observable<ValidacionCliente> {
+    return this.http
+      .get<RespuestaRegistroCliente>(`${apiBase()}/registraCliente`, {
+        params: { habitacion, documento },
+      })
+      .pipe(
+        map((r) => {
+          // errnum 1/2 = habitación no ocupada o documento no registrado.
+          if (r.errnum !== 0 || !r.reserva) {
+            return { valido: false, motivo: 'no_encontrado' as const };
+          }
+          return {
+            valido: true,
+            motivo: 'ok' as const,
+            cliente: { codigo: r.reserva, habitacion },
+          };
+        }),
+      );
   }
+
+  // --- Pendiente de API real: por ahora, datos simulados ---
 
   validarCargoHabitacion(
     codigo: string,

@@ -14,8 +14,9 @@ interface ClienteGuardado {
 }
 
 /**
- * Código de cliente que el huésped recibe en recepción. Al registrarlo, la API
- * lo valida y devuelve su **habitación**; ambos se guardan en el dispositivo.
+ * Registro del huésped: introduce su nº de habitación y el documento del
+ * check-in; la API comprueba la reserva y devuelve el **código de cliente**
+ * (nº de reserva). Código y habitación se guardan en el dispositivo.
  */
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
@@ -29,15 +30,20 @@ export class ClienteService {
   readonly tieneCodigo = computed(() => !!this._cliente());
 
   /**
-   * Valida el código contra la API y, si es correcto, guarda código y
-   * habitación. Devuelve la validación para que la UI muestre el resultado.
+   * Registra al huésped (habitación + documento del check-in) contra la API y,
+   * si la reserva existe, guarda el código de cliente y la habitación. Devuelve
+   * la validación para que la UI muestre el resultado.
    */
-  registrar(codigo: string): Observable<ValidacionCliente> {
-    const limpio = codigo.trim().toUpperCase();
-    if (!limpio) {
-      return of({ valido: false, motivo: 'codigo_invalido' as const });
+  registrar(
+    habitacion: string,
+    documento: string,
+  ): Observable<ValidacionCliente> {
+    const hab = habitacion.trim();
+    const doc = documento.trim().toUpperCase();
+    if (!hab || !doc) {
+      return of({ valido: false, motivo: 'datos_invalidos' as const });
     }
-    return this.api.validarCliente(limpio).pipe(
+    return this.api.registrarCliente(hab, doc).pipe(
       tap((v) => {
         if (v.valido && v.cliente) {
           this.guardar({

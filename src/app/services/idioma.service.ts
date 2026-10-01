@@ -97,10 +97,13 @@ interface TextosUI {
   sinPedidos: string;
   pagaras: string;
   graciasPedido: string;
-  // Registro de código
+  // Registro de cliente
   codigoTitulo: string;
   codigoTexto: string;
-  codigoPlaceholder: string;
+  documento: string;
+  habitacionPlaceholder: string;
+  documentoPlaceholder: string;
+  registroError: string;
   guardar: string;
   borrar: string;
   codigoActivo: string;
@@ -195,10 +198,13 @@ const UI: Record<Idioma, TextosUI> = {
     sinPedidos: 'Aún no has hecho ningún pedido desde este dispositivo.',
     pagaras: 'Pagarás con',
     graciasPedido: 'Gracias, tu pedido está en camino.',
-    codigoTitulo: 'Código de cliente',
+    codigoTitulo: 'Registro de cliente',
     codigoTexto:
-      'Introduce el código que te dieron en recepción para cargar pedidos a tu habitación.',
-    codigoPlaceholder: 'Ej: HAB101',
+      'Introduce tu número de habitación y el documento con el que hiciste el check-in para poder cargar pedidos a tu habitación.',
+    documento: 'Documento',
+    habitacionPlaceholder: 'Ej: 101',
+    documentoPlaceholder: 'Ej: 12345678Z',
+    registroError: 'No encontramos una reserva con esos datos.',
     guardar: 'Guardar',
     borrar: 'Borrar código',
     codigoActivo: 'Código registrado',
@@ -282,10 +288,13 @@ const UI: Record<Idioma, TextosUI> = {
     sinPedidos: 'You have not placed any order from this device yet.',
     pagaras: 'You will pay with',
     graciasPedido: 'Thank you, your order is on its way.',
-    codigoTitulo: 'Guest code',
+    codigoTitulo: 'Guest registration',
     codigoTexto:
-      'Enter the code you were given at reception to charge orders to your room.',
-    codigoPlaceholder: 'e.g. HAB101',
+      'Enter your room number and the document you checked in with to charge orders to your room.',
+    documento: 'Document',
+    habitacionPlaceholder: 'e.g. 101',
+    documentoPlaceholder: 'e.g. 12345678Z',
+    registroError: 'We could not find a booking with those details.',
     guardar: 'Save',
     borrar: 'Remove code',
     codigoActivo: 'Code registered',
@@ -371,10 +380,13 @@ const UI: Record<Idioma, TextosUI> = {
     sinPedidos: "Vous n'avez encore passé aucune commande depuis cet appareil.",
     pagaras: 'Vous paierez par',
     graciasPedido: 'Merci, votre commande arrive.',
-    codigoTitulo: 'Code client',
+    codigoTitulo: 'Enregistrement client',
     codigoTexto:
-      'Saisissez le code remis à la réception pour imputer vos commandes à la chambre.',
-    codigoPlaceholder: 'Ex : HAB101',
+      'Saisissez votre numéro de chambre et le document utilisé lors du check-in pour imputer vos commandes à la chambre.',
+    documento: 'Document',
+    habitacionPlaceholder: 'Ex : 101',
+    documentoPlaceholder: 'Ex : 12345678Z',
+    registroError: 'Aucune réservation trouvée avec ces informations.',
     guardar: 'Enregistrer',
     borrar: 'Effacer le code',
     codigoActivo: 'Code enregistré',
@@ -460,10 +472,13 @@ const UI: Record<Idioma, TextosUI> = {
     sinPedidos: 'Sie haben von diesem Gerät noch keine Bestellung aufgegeben.',
     pagaras: 'Sie zahlen mit',
     graciasPedido: 'Danke, Ihre Bestellung ist unterwegs.',
-    codigoTitulo: 'Gästecode',
+    codigoTitulo: 'Gästeanmeldung',
     codigoTexto:
-      'Geben Sie den Code von der Rezeption ein, um Bestellungen aufs Zimmer zu buchen.',
-    codigoPlaceholder: 'z. B. HAB101',
+      'Geben Sie Ihre Zimmernummer und das beim Check-in verwendete Dokument ein, um Bestellungen aufs Zimmer zu buchen.',
+    documento: 'Dokument',
+    habitacionPlaceholder: 'z. B. 101',
+    documentoPlaceholder: 'z. B. 12345678Z',
+    registroError: 'Mit diesen Angaben wurde keine Buchung gefunden.',
     guardar: 'Speichern',
     borrar: 'Code löschen',
     codigoActivo: 'Code registriert',

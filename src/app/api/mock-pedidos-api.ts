@@ -70,14 +70,19 @@ export class MockPedidosApi extends PedidosApi {
   }
 
   /**
-   * STUB de registro de cliente (pendiente del método real en el backend).
-   * Acepta cualquier código no vacío y usa el propio código como habitación.
+   * STUB de registro de cliente (solo para tests / desarrollo sin backend).
+   * Acepta cualquier habitación + documento no vacíos y simula un nº de reserva.
    */
-  validarCliente(codigo: string): Observable<ValidacionCliente> {
-    const c = codigo.trim();
-    const res: ValidacionCliente = c
-      ? { valido: true, motivo: 'ok', cliente: { codigo: c, habitacion: c } }
-      : { valido: false, motivo: 'codigo_invalido' };
+  registrarCliente(
+    habitacion: string,
+    documento: string,
+  ): Observable<ValidacionCliente> {
+    const hab = habitacion.trim();
+    const doc = documento.trim();
+    const res: ValidacionCliente =
+      hab && doc
+        ? { valido: true, motivo: 'ok', cliente: { codigo: btoa(hab), habitacion: hab } }
+        : { valido: false, motivo: 'datos_invalidos' };
     return of(res).pipe(delay(200));
   }
 

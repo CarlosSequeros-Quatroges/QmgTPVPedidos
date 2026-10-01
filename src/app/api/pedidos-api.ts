@@ -58,10 +58,14 @@ export abstract class PedidosApi {
   abstract getPuntosPedidos(): Observable<Zona[]>;
 
   /**
-   * Valida el código de cliente que el huésped recibe en recepción y devuelve
-   * sus datos, incluida la **habitación** asociada.
+   * Registra al huésped con su nº de **habitación** y el **documento** con el
+   * que hizo el check-in. Si existe una reserva que cuadre, devuelve el código
+   * de cliente (nº de reserva) para guardarlo en el dispositivo.
    */
-  abstract validarCliente(codigo: string): Observable<ValidacionCliente>;
+  abstract registrarCliente(
+    habitacion: string,
+    documento: string,
+  ): Observable<ValidacionCliente>;
 
   /** ¿Se puede cargar `importe` a la cuenta de habitación de `codigo`? */
   abstract validarCargoHabitacion(

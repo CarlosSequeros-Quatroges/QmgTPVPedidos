@@ -4,23 +4,36 @@
   <h1 class="tarjeta__titulo">🔑 {{ idiomas.txt().codigoTitulo }}</h1>
   <p class="tarjeta__texto">{{ idiomas.txt().codigoTexto }}</p>
 
+  <label class="tarjeta__etiqueta" for="reg-habitacion">{{ idiomas.txt().habitacion }}</label>
   <input
+    id="reg-habitacion"
     class="tarjeta__input"
     type="text"
-    [value]="entrada()"
-    (input)="setEntrada($any($event.target).value)"
-    [placeholder]="idiomas.txt().codigoPlaceholder"
+    inputmode="numeric"
+    [value]="habitacion()"
+    (input)="setHabitacion($any($event.target).value)"
+    [placeholder]="idiomas.txt().habitacionPlaceholder"
+  />
+
+  <label class="tarjeta__etiqueta" for="reg-documento">{{ idiomas.txt().documento }}</label>
+  <input
+    id="reg-documento"
+    class="tarjeta__input"
+    type="text"
+    [value]="documento()"
+    (input)="setDocumento($any($event.target).value)"
+    [placeholder]="idiomas.txt().documentoPlaceholder"
     autocapitalize="characters"
   />
 
   @if (error()) {
-    <p class="tarjeta__error">✕ {{ idiomas.txt().codigoInvalido }}</p>
+    <p class="tarjeta__error">✕ {{ idiomas.txt().registroError }}</p>
   }
 
   <button
     type="button"
     class="btn btn--primario btn--bloque"
-    [disabled]="!entrada().trim() || validando()"
+    [disabled]="!puedeEnviar() || validando()"
     (click)="guardar()"
   >
     {{ validando() ? idiomas.txt().validando : idiomas.txt().guardar }}
@@ -30,7 +43,7 @@
     <div class="tarjeta__activo">
       <div>
         <strong>✓ {{ idiomas.txt().habitacion }} {{ cliente.habitacion() }}</strong>
-        <span class="tarjeta__codigo">{{ cliente.codigo() }}</span>
+        <span class="tarjeta__codigo">{{ idiomas.txt().codigoActivo }}</span>
       </div>
       <button type="button" class="enlace-borrar" (click)="borrar()">
         {{ idiomas.txt().borrar }}
