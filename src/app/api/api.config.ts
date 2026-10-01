@@ -28,6 +28,11 @@ interface Config {
   server_url?: string;
   /** `"server"` = usar `server_url`; cualquier otro = `origin` + `endpoint`. */
   useServerEndpoint?: string;
+  /**
+   * Qué hacer cuando una imagen no existe/falla: `true` (por defecto) muestra
+   * la imagen predeterminada; `false` oculta la imagen y deja solo el texto.
+   */
+  mostrarImagenPorDefecto?: boolean;
 }
 
 function sinBarraFinal(s: string): string {
@@ -45,10 +50,19 @@ function construir(cfg: Config): string {
 }
 
 let apiBaseActual = construir({});
+let mostrarImagenPorDefectoActual = true;
 
 /** URL base de la API en uso. */
 export function apiBase(): string {
   return apiBaseActual;
+}
+
+/**
+ * Si no hay imagen (no existe o falla la descarga): `true` muestra la imagen
+ * predeterminada; `false` oculta la imagen y deja solo el texto.
+ */
+export function mostrarImagenPorDefecto(): boolean {
+  return mostrarImagenPorDefectoActual;
 }
 
 /**
@@ -65,4 +79,7 @@ export async function cargarConfig(): Promise<void> {
     /* sin conexión o fichero ausente: se usa el valor por defecto */
   }
   apiBaseActual = construir(cfg);
+  if (typeof cfg.mostrarImagenPorDefecto === 'boolean') {
+    mostrarImagenPorDefectoActual = cfg.mostrarImagenPorDefecto;
+  }
 }
