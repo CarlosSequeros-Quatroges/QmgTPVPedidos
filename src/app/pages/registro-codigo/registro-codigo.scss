@@ -72,6 +72,13 @@
     color: #b3261e;
     font-weight: 700;
   }
+
+  &__volviendo {
+    margin: 0;
+    color: var(--color-texto-suave);
+    font-size: 0.9rem;
+    text-align: center;
+  }
 }
 
 .enlace-borrar {

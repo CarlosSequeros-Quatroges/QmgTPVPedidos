@@ -49,5 +49,9 @@
         {{ idiomas.txt().borrar }}
       </button>
     </div>
+
+    @if (guardado()) {
+      <p class="tarjeta__volviendo">{{ idiomas.txt().registroVolviendo }}</p>
+    }
   }
 </div>

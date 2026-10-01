@@ -105,6 +105,7 @@ interface TextosUI {
   habitacionPlaceholder: string;
   documentoPlaceholder: string;
   registroError: string;
+  registroVolviendo: string;
   guardar: string;
   borrar: string;
   codigoActivo: string;
@@ -207,6 +208,7 @@ const UI: Record<Idioma, TextosUI> = {
     habitacionPlaceholder: 'Ej: 101',
     documentoPlaceholder: 'Ej: 12345678Z',
     registroError: 'No encontramos una reserva con esos datos.',
+    registroVolviendo: 'Registrado. Volviendo a la carta…',
     guardar: 'Guardar',
     borrar: 'Borrar código',
     codigoActivo: 'Código registrado',
@@ -298,6 +300,7 @@ const UI: Record<Idioma, TextosUI> = {
     habitacionPlaceholder: 'e.g. 101',
     documentoPlaceholder: 'e.g. 12345678Z',
     registroError: 'We could not find a booking with those details.',
+    registroVolviendo: 'Registered. Returning to the menu…',
     guardar: 'Save',
     borrar: 'Remove code',
     codigoActivo: 'Code registered',
@@ -391,6 +394,7 @@ const UI: Record<Idioma, TextosUI> = {
     habitacionPlaceholder: 'Ex : 101',
     documentoPlaceholder: 'Ex : 12345678Z',
     registroError: 'Aucune réservation trouvée avec ces informations.',
+    registroVolviendo: 'Enregistré. Retour à la carte…',
     guardar: 'Enregistrer',
     borrar: 'Effacer le code',
     codigoActivo: 'Code enregistré',
@@ -484,6 +488,7 @@ const UI: Record<Idioma, TextosUI> = {
     habitacionPlaceholder: 'z. B. 101',
     documentoPlaceholder: 'z. B. 12345678Z',
     registroError: 'Mit diesen Angaben wurde keine Buchung gefunden.',
+    registroVolviendo: 'Registriert. Zurück zur Karte…',
     guardar: 'Speichern',
     borrar: 'Code löschen',
     codigoActivo: 'Code registriert',
