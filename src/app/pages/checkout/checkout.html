@@ -81,23 +81,22 @@
       <span>{{ idiomas.txt().tarjeta }}</span>
     </button>
 
-    <button
-      type="button"
-      class="pago"
-      [class.pago--activo]="formaPago() === 'habitacion'"
-      (click)="seleccionarPago('habitacion')"
-    >
-      <span class="pago__icono">🏨</span>
-      <span>{{ idiomas.txt().cargoHabitacion }}</span>
-    </button>
+    @if (cliente.tieneCodigo()) {
+      <button
+        type="button"
+        class="pago"
+        [class.pago--activo]="formaPago() === 'habitacion'"
+        (click)="seleccionarPago('habitacion')"
+      >
+        <span class="pago__icono">🏨</span>
+        <span>{{ idiomas.txt().cargoHabitacion }}</span>
+      </button>
+    }
   </div>
 
   @if (formaPago() === 'habitacion') {
     <div class="cargo">
-      @if (!cliente.tieneCodigo()) {
-        <p>{{ idiomas.txt().registraCodigo }}</p>
-        <a class="btn" [routerLink]="empresa.ruta('mi-codigo')">{{ idiomas.txt().miCodigo }}</a>
-      } @else if (validando()) {
+      @if (validando()) {
         <p>{{ idiomas.txt().comprobarSaldo }}…</p>
       } @else if (validacion(); as v) {
         @if (v.permitido) {
