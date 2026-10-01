@@ -24,8 +24,11 @@
     </div>
   } @else {
     <div class="punto-selector">
-      <label class="campo">
-        <span class="campo__label">{{ idiomas.txt().zona }}</span>
+      <label class="campo" [class.campo--pendiente]="faltaZona()">
+        <span class="campo__label">
+          {{ idiomas.txt().zona }}
+          @if (faltaZona()) { <span class="campo__pendiente">· {{ idiomas.txt().pendiente }}</span> }
+        </span>
         <select
           class="campo__select"
           (change)="puntos.seleccionarZona($any($event.target).value)"
@@ -40,8 +43,11 @@
       </label>
 
       @if (puntos.zonaActiva()) {
-        <label class="campo">
-          <span class="campo__label">{{ idiomas.txt().punto }}</span>
+        <label class="campo" [class.campo--pendiente]="faltaPunto()">
+          <span class="campo__label">
+            {{ idiomas.txt().punto }}
+            @if (faltaPunto()) { <span class="campo__pendiente">· {{ idiomas.txt().pendiente }}</span> }
+          </span>
           <select
             class="campo__select"
             (change)="puntos.seleccionarPunto($any($event.target).value)"
@@ -58,9 +64,12 @@
     </div>
   }
 
-  <h1 class="titulo">{{ idiomas.txt().formaPago }}</h1>
+  <h1 class="titulo">
+    {{ idiomas.txt().formaPago }}
+    @if (faltaPago()) { <span class="campo__pendiente">· {{ idiomas.txt().pendiente }}</span> }
+  </h1>
 
-  <div class="pagos">
+  <div class="pagos" [class.pagos--pendiente]="faltaPago()">
     <button
       type="button"
       class="pago"

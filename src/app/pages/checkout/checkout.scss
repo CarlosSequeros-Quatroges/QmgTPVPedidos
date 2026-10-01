@@ -23,6 +23,14 @@
   @media (max-width: 520px) {
     grid-template-columns: 1fr;
   }
+
+  &--pendiente {
+    padding: 0.5rem;
+    margin: -0.5rem;
+    border-radius: var(--radio);
+    outline: 2px dashed #d08a1e;
+    outline-offset: 0;
+  }
 }
 
 .pago {
@@ -166,6 +174,16 @@
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--color-texto-suave);
+  }
+
+  &__pendiente {
+    color: #d08a1e;
+    font-weight: 700;
+  }
+
+  &--pendiente &__select {
+    border-color: #d08a1e;
+    background: #fff8ee;
   }
 
   &__select {

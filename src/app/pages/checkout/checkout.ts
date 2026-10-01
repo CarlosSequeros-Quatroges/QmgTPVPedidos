@@ -63,6 +63,23 @@ export class Checkout {
     return !!v && !v.permitido;
   });
 
+  /**
+   * Se resaltan los datos que faltan cuando el pedido no se puede enviar y
+   * estamos en horario (fuera de horario el bloqueo es otro y ya se avisa).
+   */
+  protected readonly resaltarPendientes = computed(
+    () => this.horario.pedidosAbiertos() && !this.puedeConfirmar(),
+  );
+  protected readonly faltaZona = computed(
+    () => this.resaltarPendientes() && !this.puntos.zonaActiva(),
+  );
+  protected readonly faltaPunto = computed(
+    () => this.resaltarPendientes() && !!this.puntos.zonaActiva() && !this.puntos.puntoActivo(),
+  );
+  protected readonly faltaPago = computed(
+    () => this.resaltarPendientes() && !this.formaPago(),
+  );
+
   seleccionarPago(forma: FormaPago): void {
     if (forma === 'habitacion') {
       // Si ya se comprobó y no hay saldo, el botón está deshabilitado: nada que hacer.

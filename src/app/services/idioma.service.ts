@@ -90,6 +90,8 @@ interface TextosUI {
   cargoOk: string;
   confirmarPedido: string;
   avisoPago: string;
+  /** Marca de dato pendiente/erróneo junto a zona, punto o forma de pago. */
+  pendiente: string;
   // Confirmación
   pedidoRecibido: string;
   numeroPedido: string;
@@ -194,6 +196,7 @@ const UI: Record<Idioma, TextosUI> = {
     cargoOk: 'Cargo disponible',
     confirmarPedido: 'Confirmar pedido',
     avisoPago: 'El camarero verá cómo vas a pagar al entregar el pedido.',
+    pendiente: 'Pendiente',
     pedidoRecibido: '¡Pedido recibido!',
     numeroPedido: 'Nº de pedido',
     hora: 'Hora',
@@ -286,6 +289,7 @@ const UI: Record<Idioma, TextosUI> = {
     cargoOk: 'Charge available',
     confirmarPedido: 'Confirm order',
     avisoPago: 'The waiter will see how you plan to pay when they bring the order.',
+    pendiente: 'Pending',
     pedidoRecibido: 'Order received!',
     numeroPedido: 'Order no.',
     hora: 'Time',
@@ -380,6 +384,7 @@ const UI: Record<Idioma, TextosUI> = {
     cargoOk: 'Imputation possible',
     confirmarPedido: 'Confirmer la commande',
     avisoPago: 'Le serveur verra votre mode de paiement à la livraison.',
+    pendiente: 'À compléter',
     pedidoRecibido: 'Commande reçue !',
     numeroPedido: 'Commande n°',
     hora: 'Heure',
@@ -474,6 +479,7 @@ const UI: Record<Idioma, TextosUI> = {
     cargoOk: 'Buchung möglich',
     confirmarPedido: 'Bestellung bestätigen',
     avisoPago: 'Der Kellner sieht bei der Lieferung, wie Sie zahlen möchten.',
+    pendiente: 'Offen',
     pedidoRecibido: 'Bestellung erhalten!',
     numeroPedido: 'Bestell-Nr.',
     hora: 'Uhrzeit',
