@@ -36,9 +36,17 @@ export class SeleccionLocal {
   protected readonly placeholderCarta = IMAGEN_CARTA_GENERICA;
 
   constructor() {
-    // Siempre se obliga a elegir local + carta: solo cargamos los datos, no se
-    // entra en automático aunque hubiera una selección anterior.
-    this.local.asegurarLocales().subscribe();
+    // Se obliga a elegir local + carta, SALVO que solo haya un local con una
+    // sola carta: en ese caso no hay nada que elegir y se entra directo.
+    this.local.asegurarLocales().subscribe(() => {
+      const visibles = this.local.localesVisibles();
+      if (visibles.length !== 1) return;
+      const cartas = this.local.cartasDeLocal(visibles[0]);
+      if (cartas.length !== 1) return;
+      this.local.seleccionar(visibles[0]);
+      this.carta.seleccionarCarta(cartas[0].codcarta);
+      this.router.navigate(this.empresa.ruta('carta'));
+    });
   }
 
   /** Cartas que ofrece un local (según sus franjas horarias). */

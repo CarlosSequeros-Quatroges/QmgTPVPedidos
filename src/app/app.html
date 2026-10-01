@@ -19,7 +19,7 @@
         } @else {
           <span class="estado estado--cerrado">{{ idiomas.txt().cerrado }}</span>
         }
-        @if (local.locales().length > 1) {
+        @if (local.hayEleccion()) {
           <button type="button" class="local__cambiar" (click)="cambiarLocal()">
             {{ idiomas.txt().cambiarLocal }}
           </button>

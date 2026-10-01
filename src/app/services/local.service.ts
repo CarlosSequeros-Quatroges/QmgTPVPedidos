@@ -65,6 +65,16 @@ export class LocalService {
   );
 
   /**
+   * ¿Hay realmente algo que elegir? `false` cuando solo hay **un local con una
+   * sola carta** (se entra directo y se oculta "Cambiar"/"Ver todas las cartas").
+   */
+  readonly hayEleccion = computed(() => {
+    const visibles = this.localesVisibles();
+    if (visibles.length !== 1) return visibles.length > 1;
+    return this.cartasDeLocal(visibles[0]).length > 1;
+  });
+
+  /**
    * Carga la lista de locales una sola vez (memoizada). Si solo hay uno, lo
    * autoselecciona. Se usa desde el guard para decidir el flujo de arranque.
    */
