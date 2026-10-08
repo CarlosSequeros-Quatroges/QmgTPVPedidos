@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
+import { provideServiceWorker } from '@angular/service-worker';
 
 import { App } from './app';
 import { PedidosApi } from './api/pedidos-api';
@@ -14,6 +15,8 @@ describe('App', () => {
       providers: [
         provideRouter([]),
         provideHttpClient(),
+        // App arranca ActualizacionService, que inyecta SwUpdate.
+        provideServiceWorker('ngsw-worker.js', { enabled: false }),
         { provide: PedidosApi, useClass: MockPedidosApi },
       ],
     }).compileComponents();
@@ -25,7 +28,7 @@ describe('App', () => {
   });
 
   it('should render the brand name', () => {
-    // La cabecera solo se pinta con un código de empresa válido en la ruta.
+    // Sin respuesta de la API, el nombre sale del valor por defecto de config.
     TestBed.inject(EmpresaService).fijar('800');
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();

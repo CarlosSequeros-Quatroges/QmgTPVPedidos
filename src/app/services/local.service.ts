@@ -4,6 +4,7 @@ import { Observable, map, of, shareReplay, tap } from 'rxjs';
 import { PedidosApi } from '../api/pedidos-api';
 import { Carta, Local, codcartasDeLocal } from '../models/local.models';
 import { IdiomaService } from './idioma.service';
+import { nombreHotel } from '../api/api.config';
 
 /**
  * Locales disponibles y cuál está seleccionado.
@@ -20,6 +21,8 @@ export class LocalService {
   /** Catálogo de cartas de la empresa (indexadas luego por `codcarta`). */
   private readonly _cartas = signal<Carta[]>([]);
   private readonly _codtpv = signal<string | null>(null);
+  /** Nombre del establecimiento que envía `getLocales` ('' si no lo envía). */
+  private readonly _hotel = signal('');
   private readonly _cargando = signal(true);
   private readonly _error = signal<string | null>(null);
 
@@ -30,6 +33,12 @@ export class LocalService {
   readonly cargando = this._cargando.asReadonly();
   readonly error = this._error.asReadonly();
   readonly codtpv = this._codtpv.asReadonly();
+
+  /**
+   * Nombre del establecimiento. Manda el que envía la API; si el backend aún
+   * no lo devuelve, se usa el de `data/config.json`.
+   */
+  readonly hotel = computed(() => this._hotel() || nombreHotel());
 
   /** Cartas indexadas por `codcarta`. */
   private readonly cartasPorCod = computed(
@@ -83,7 +92,8 @@ export class LocalService {
     if (!this.locales$) {
       this.locales$ = this.api.getLocales().pipe(
         tap({
-          next: ({ locales, idiomas, cartas }) => {
+          next: ({ hotel, locales, idiomas, cartas }) => {
+            this._hotel.set(hotel);
             this._locales.set(locales);
             this._cartas.set(cartas);
             this.idiomas.configurar(idiomas);

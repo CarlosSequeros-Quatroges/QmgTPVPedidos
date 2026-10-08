@@ -8,6 +8,7 @@ import {
   provideRouter,
   withComponentInputBinding,
   withHashLocation,
+  TitleStrategy,
 } from '@angular/router';
 import {
   provideHttpClient,
@@ -20,6 +21,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 
 import { PedidosApi } from './api/pedidos-api';
 import { HttpPedidosApi } from './api/http-pedidos-api';
+import { TituloConHotel } from './titulo.strategy';
 import { empresaInterceptor } from './api/empresa.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -29,6 +31,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding(), withHashLocation()),
     // El interceptor añade `codemp` (empresa de la ruta) a las llamadas de la API.
     provideHttpClient(withFetch(), withInterceptors([empresaInterceptor])),
+    // Título de pestaña: "{ruta} · {establecimiento}".
+    { provide: TitleStrategy, useClass: TituloConHotel },
     // API real; los endpoints aún no publicados caen en MockPedidosApi.
     { provide: PedidosApi, useExisting: HttpPedidosApi },
     provideServiceWorker('ngsw-worker.js', {

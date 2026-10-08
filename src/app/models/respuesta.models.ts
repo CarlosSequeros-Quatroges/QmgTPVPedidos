@@ -20,6 +20,8 @@ export interface RespuestaApi {
 
 /** Respuesta de `getLocales`. */
 export interface RespuestaLocales extends RespuestaApi {
+  /** Nombre del establecimiento (puede no venir en backends antiguos). */
+  hotel?: string;
   locales: Local[];
   /** Idiomas de trabajo de la empresa, en orden (códigos ISO 639-1). */
   idiomas: string[];

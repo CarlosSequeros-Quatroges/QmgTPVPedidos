@@ -48,6 +48,7 @@ export class HttpPedidosApi extends PedidosApi {
       map((r) => {
         const c = comprobar(r);
         return {
+          hotel: c.hotel?.trim() ?? '',
           locales: c.locales ?? [],
           idiomas: c.idiomas ?? [],
           cartas: (c.cartas ?? []).map(normalizarCarta),

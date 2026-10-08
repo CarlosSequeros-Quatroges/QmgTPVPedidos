@@ -21,7 +21,7 @@ export class MockPedidosApi extends PedidosApi {
   private readonly http = inject(HttpClient);
 
   getLocales(): Observable<LocalesEmpresa> {
-    return of<LocalesEmpresa>({ locales: [], idiomas: [], cartas: [] }).pipe(
+    return of<LocalesEmpresa>({ hotel: '', locales: [], idiomas: [], cartas: [] }).pipe(
       delay(100),
     );
   }

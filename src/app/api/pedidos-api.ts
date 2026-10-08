@@ -21,6 +21,8 @@ export interface CartaLocal {
 
 /** Respuesta de `getLocales`: locales, idiomas y catálogo de cartas. */
 export interface LocalesEmpresa {
+  /** Nombre del establecimiento; vacío si el backend no lo envía. */
+  hotel: string;
   locales: Local[];
   idiomas: string[];
   /** Catálogo de cartas de la empresa (los locales las usan por `codcarta`). */

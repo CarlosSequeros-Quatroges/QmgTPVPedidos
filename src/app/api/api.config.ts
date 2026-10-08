@@ -11,6 +11,9 @@
  *   dominio público (`…quatrogesvpn.com/…`) sin tocar nada y sin CORS.
  */
 
+/** Nombre del establecimiento si la config no lo indica. */
+const HOTEL_POR_DEFECTO = 'Mirador Atlántico';
+
 /** Path del endpoint por defecto (desde la raíz del host). */
 const ENDPOINT_POR_DEFECTO = '/mgwres/rest/pedidos';
 
@@ -33,6 +36,11 @@ interface Config {
    * la imagen predeterminada; `false` oculta la imagen y deja solo el texto.
    */
   mostrarImagenPorDefecto?: boolean;
+  /**
+   * Nombre del establecimiento. Se usa en la cabecera y en el título de la
+   * pestaña. Respaldo: manda el `hotel` que envíe `getLocales`.
+   */
+  hotel?: string;
 }
 
 function sinBarraFinal(s: string): string {
@@ -51,6 +59,7 @@ function construir(cfg: Config): string {
 
 let apiBaseActual = construir({});
 let mostrarImagenPorDefectoActual = true;
+let hotelActual = HOTEL_POR_DEFECTO;
 
 /** URL base de la API en uso. */
 export function apiBase(): string {
@@ -63,6 +72,11 @@ export function apiBase(): string {
  */
 export function mostrarImagenPorDefecto(): boolean {
   return mostrarImagenPorDefectoActual;
+}
+
+/** Nombre del establecimiento (cabecera y título de pestaña). */
+export function nombreHotel(): string {
+  return hotelActual;
 }
 
 /**
@@ -82,4 +96,6 @@ export async function cargarConfig(): Promise<void> {
   if (typeof cfg.mostrarImagenPorDefecto === 'boolean') {
     mostrarImagenPorDefectoActual = cfg.mostrarImagenPorDefecto;
   }
+  const hotel = cfg.hotel?.trim();
+  if (hotel) hotelActual = hotel;
 }
