@@ -1,7 +1,12 @@
 /**
- * Genera `src/app/build-info.ts` con la marca de tiempo de la compilación
- * (formato YYMMDDHHMMSS, hora local). Se ejecuta antes de cada build/serve.
- * El fichero está en .gitignore: se regenera, no se versiona.
+ * Genera, con la marca de tiempo de la compilación (formato YYMMDDHHMMSS, hora
+ * local), dos ficheros que se regeneran en cada build/serve (no se versionan):
+ *
+ * - `src/app/build-info.ts`: la versión que queda **compilada dentro** de la app.
+ * - `public/version.json`: la misma versión en un fichero suelto que se publica
+ *   junto a la app. La app lo consulta periódicamente y, si no coincide con la
+ *   que lleva compilada, es que se ha desplegado un build nuevo y recarga. Así
+ *   no depende de que el navegador/SW suelte el `index.html` cacheado.
  */
 import { writeFileSync } from 'node:fs';
 
@@ -21,4 +26,9 @@ const contenido =
   `export const BUILD_TIMESTAMP = '${ts}';\n`;
 
 writeFileSync(destino, contenido);
-console.log(`build-info.ts generado: ${ts}`);
+
+// La misma versión en un fichero suelto que el build copia a dist (public/).
+const versionJson = new URL('../public/version.json', import.meta.url);
+writeFileSync(versionJson, JSON.stringify({ build: ts }, null, 2) + '\n');
+
+console.log(`build-info.ts y version.json generados: ${ts}`);

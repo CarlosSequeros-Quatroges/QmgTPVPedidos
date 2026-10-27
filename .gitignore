@@ -31,8 +31,9 @@ yarn-error.log
 
 # Miscellaneous
 /.angular/cache
-# Generado en cada build (scripts/gen-build.mjs)
+# Generados en cada build (scripts/gen-build.mjs)
 /src/app/build-info.ts
+/public/version.json
 .sass-cache/
 /connect.lock
 /coverage
